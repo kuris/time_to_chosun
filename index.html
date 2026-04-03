@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="기록되지 않은 한국 현대사의 진실을 파헤치는 탐정 게임">
+  <title>시간의 도서관</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<div class="flash" id="flash"></div>
+
+<!-- 착륙 오버레이 -->
+<div id="landing-overlay">
+  <div class="landing-year" id="landing-year"></div>
+  <div class="landing-date" id="landing-date"></div>
+  <div class="landing-msg"  id="landing-msg"></div>
+</div>
+
+<!-- ══════════════════════════════
+     도서관 — 신문 선반
+══════════════════════════════ -->
+<div class="screen" id="screen-library">
+  <div class="library-title">TIME ARCHIVE</div>
+  <div class="library-subtitle">시간의 도서관</div>
+  <div class="library-desc">신문을 골라 그 시대로 들어가십시오</div>
+
+  <div class="shelf">
+    <div class="shelf-label">── 1980's : 격동과 소생 ──────────────────────────────</div>
+    <div class="shelf-row">
+      <div class="newspaper-item" id="np-item-choi1980" onclick="openNewspaper('choi1980')">
+        <div class="np-date">1980.05.18</div>
+        <div class="np-headline">비상계엄 전국 확대<br>군, 주요도시 장악</div>
+        <div class="np-status" id="np-status-choi1980">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-color79" onclick="openNewspaper('color79')">
+        <div class="np-date">1980.12.01</div>
+        <div class="np-headline">컬러 TV 방송 개막<br>안방 극장의 혁명</div>
+        <div class="np-status" id="np-status-color79">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-baseball82" onclick="openNewspaper('baseball82')">
+        <div class="np-date">1982.03.27</div>
+        <div class="np-headline">프로야구 공식 출범<br>어린이에겐 꿈을</div>
+        <div class="np-status" id="np-status-baseball82">● 미해결</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shelf">
+    <div class="shelf-label">── 1990's : 풍요와 비극 ──────────────────────────────</div>
+    <div class="shelf-row">
+      <div class="newspaper-item" id="np-item-seongsu94" onclick="openNewspaper('seongsu94')">
+        <div class="np-date">1994.10.22</div>
+        <div class="np-headline">성수대교 붕괴 참사<br>예견된 인재 비판</div>
+        <div class="np-status" id="np-status-seongsu94">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-sampoong95" onclick="openNewspaper('sampoong95')">
+        <div class="np-date">1995.06.30</div>
+        <div class="np-headline">삼풍백화점 붕괴<br>탐욕이 부른 참극</div>
+        <div class="np-status" id="np-status-sampoong95">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-imf1997" onclick="openNewspaper('imf1997')">
+        <div class="np-date">1997.11.21</div>
+        <div class="np-headline">정부, IMF 구제금융<br>공식 신청</div>
+        <div class="np-status" id="np-status-imf1997">● 미해결</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shelf">
+    <div class="shelf-label">── 2000's ~ Present : 진실의 기록 ──────────────────────────────</div>
+    <div class="shelf-row">
+      <div class="newspaper-item" id="np-item-it_bubble" onclick="openNewspaper('it_bubble')">
+        <div class="np-date">2000.02.15</div>
+        <div class="np-headline">코스닥 닷컴 열풍<br>디지털 신기루의 그림자</div>
+        <div class="np-status" id="np-status-it_bubble">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-worldcup02" onclick="openNewspaper('worldcup02')">
+        <div class="np-date">2002.06.19</div>
+        <div class="np-headline">월드컵 8강 신화<br>축제 속의 침묵</div>
+        <div class="np-status" id="np-status-worldcup02">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-sewol14" onclick="openNewspaper('sewol14')">
+        <div class="np-date">2014.04.17</div>
+        <div class="np-headline">세월호 침몰 사고<br>잠겨버린 골든타임</div>
+        <div class="np-status" id="np-status-sewol14">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-martial24" onclick="openNewspaper('martial24')">
+        <div class="np-date">2024.12.03</div>
+        <div class="np-headline">비상계엄 전격 선포<br>가장 긴 밤의 시작</div>
+        <div class="np-status" id="np-status-martial24">● 미해결</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="library-footer">── 총 10개의 신문 · 기록되지 않은 진실 ──</div>
+</div>
+
+<!-- ══════════════════════════════
+     신문 읽기
+══════════════════════════════ -->
+<div class="screen" id="screen-newspaper">
+  <div class="newspaper-wrap" id="newspaper-content"></div>
+</div>
+
+<!-- ══════════════════════════════
+     게임
+══════════════════════════════ -->
+<div class="screen" id="screen-game">
+  <div class="game-main">
+    <div class="game-header">
+      <div class="game-era-badge" id="game-era-badge">──</div>
+      <div class="game-location"  id="game-location">──</div>
+      <div class="game-clues"     id="game-clues">단서 0/5</div>
+    </div>
+    <div class="game-stats" id="game-stats">
+      <div class="stat-item"><span class="stat-label">MONEY</span><span class="stat-value" id="stat-money">100</span></div>
+      <div class="stat-item"><span class="stat-label">HP</span><span class="stat-value" id="stat-stamina">100</span></div>
+      <div class="stat-item"><span class="stat-label">MENTAL</span><span class="stat-value" id="stat-mental">100</span></div>
+      <div class="stat-item"><span class="stat-label">STRESS</span><span class="stat-value" id="stat-stress">0</span></div>
+    </div>
+    <div id="game-log"></div>
+    <div id="game-choices"></div>
+  </div>
+  <div class="clue-panel">
+    <div class="clue-panel-title">CLUES FOUND</div>
+    <div id="clue-list"></div>
+    <div class="mystery-bar-wrap">
+      <div class="mystery-bar-label">MYSTERY</div>
+      <div class="mystery-bar"><div class="mystery-bar-fill" id="mystery-fill"></div></div>
+      <div class="mystery-pct" id="mystery-pct">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     어드민 (시나리오 추가)
+══════════════════════════════ -->
+<div class="screen" id="screen-admin">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div class="admin-title">SCENARIO BUILDER</div>
+      <button class="admin-btn-back" onclick="backToLibrary()">← 도서관으로</button>
+    </div>
+
+    <div class="admin-body">
+      <form id="admin-form">
+        <!-- 기본 정보 -->
+        <div class="admin-section">
+          <div class="admin-section-title">기본 정보 (Metadata)</div>
+          <div class="admin-grid">
+            <div class="admin-field"><label>ID (Key)</label><input type="text" id="ad-id" placeholder="yeosu12 (영문/숫자)" required></div>
+            <div class="admin-field"><label>신문사 (Masthead)</label><input type="text" id="ad-masthead" placeholder="중앙일보"></div>
+            <div class="admin-field"><label>날짜 (Full Date)</label><input type="text" id="ad-date" placeholder="2016년 3월 10일 목요일"></div>
+            <div class="admin-field"><label>호수 (Issue)</label><input type="text" id="ad-issue" placeholder="제 1,234호"></div>
+            <div class="admin-field full"><label>메인 헤드라인</label><input type="text" id="ad-headline" placeholder="사건의 핵심 제목"></div>
+            <div class="admin-field full"><label>서브 헤드라인</label><input type="text" id="ad-sub" placeholder="제목을 보완하는 설명"></div>
+          </div>
+        </div>
+
+        <!-- 내용 -->
+        <div class="admin-section">
+          <div class="admin-section-title">본문 및 메모 (Content)</div>
+          <div class="admin-grid">
+            <div class="admin-field full"><label>컬럼 1 (Col 1)</label><textarea id="ad-col1" rows="3" placeholder="[단서 마커]를 포함할 수 있습니다."></textarea></div>
+            <div class="admin-field full"><label>컬럼 2 (Col 2)</label><textarea id="ad-col2" rows="3"></textarea></div>
+            <div class="admin-field full"><label>메모 (Memo)</label><textarea id="ad-memo" rows="2" placeholder="신문 하단에 적힐 힌트나 감상"></textarea></div>
+            <div class="admin-field"><label>착륙 연도 (Year)</label><input type="text" id="ad-land-year" placeholder="2016"></div>
+            <div class="admin-field"><label>착륙 날짜 (Date)</label><input type="text" id="ad-land-date" placeholder="2016년 3월 10일"></div>
+            <div class="admin-field full"><label>착륙 메시지</label><input type="text" id="ad-land-msg" placeholder="...착륙합니다."></div>
+          </div>
+        </div>
+
+        <!-- 단서 (동적) -->
+        <div class="admin-section">
+          <div class="admin-section-title">단서 목록 (Clues)</div>
+          <div id="ad-clue-list" class="admin-dynamic-list"></div>
+          <button type="button" class="admin-add-btn" onclick="adminUI.addClueRow()">+ 단서 추가</button>
+        </div>
+
+        <!-- 선택지 (동적) -->
+        <div class="admin-section">
+          <div class="admin-section-title">조사 선택지 (Choices)</div>
+          <div class="admin-field full"><label>탐사 배경 (Event Story)</label><textarea id="ad-eventStory" rows="2"></textarea></div>
+          <div class="admin-field full"><label>추리 통찰 (Mystery Insight)</label><textarea id="ad-insight" rows="2"></textarea></div>
+          <div id="ad-choice-list" class="admin-dynamic-list"></div>
+          <button type="button" class="admin-add-btn" onclick="adminUI.addChoiceRow()">+ 선택지 추가</button>
+        </div>
+
+        <!-- 결과 -->
+        <div class="admin-section">
+          <div class="admin-section-title">해결 결과 (Outcome)</div>
+          <div class="admin-field full"><label>해결 헤드라인</label><input type="text" id="ad-solveHeadline"></div>
+          <div class="admin-field full"><label>해결 엔딩</label><textarea id="ad-solveEnding" rows="3"></textarea></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="admin-footer">
+      <button class="admin-btn active" onclick="adminUI.generateCode()">코드 생성하기 (Generate Code)</button>
+      <div id="admin-code-wrap" class="admin-code-wrap">
+        <div class="admin-code-header">
+          <span>GENERATE JS OBJECT</span>
+          <button class="admin-copy-btn" onclick="adminUI.copyToClipboard()">COPY</button>
+        </div>
+        <pre id="admin-code-output"></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     해결
+══════════════════════════════ -->
+<div class="screen" id="screen-solved">
+  <div class="solved-newspaper" id="solved-content"></div>
+  <button class="shelf-back-btn" onclick="backToLibrary()">📚 신문을 선반에 꽂는다</button>
+</div>
+
+<!-- ══════════════════════════════
+     앱 진입점
+══════════════════════════════ -->
+<script type="module" src="./js/main.js"></script>
+
+</body>
+</html>
