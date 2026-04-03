@@ -172,10 +172,17 @@ body {
 }
 
 .game-header {
-  padding: 14px 20px; border-bottom: 1px solid #141414;
+  padding: 10px 20px; border-bottom: 1px solid #141414;
   display: flex; align-items: center; gap: 12px;
   background: #0a0a0a; position: sticky; top: 0; z-index: 10;
 }
+
+.game-btn-back {
+  background: transparent; color: #555; border: 1px solid #222;
+  font-size: 9px; padding: 4px 10px; cursor: pointer; transition: all 0.2s;
+  font-family: inherit; letter-spacing: 1px;
+}
+.game-btn-back:hover { color: #888; border-color: #333; background: #111; }
 
 .game-era-badge { font-size: 10px; background: #c8a96e; color: #080808; padding: 3px 10px; letter-spacing: 2px; font-weight: 800; }
 .game-location  { font-size: 11px; color: #555; flex: 1; }
