@@ -136,6 +136,13 @@ export class GameEngine {
         };
         area.appendChild(btn);
       });
+
+      // 선택지가 나타날 때 자동으로 스크롤
+      if (choices.length > 0) {
+        requestAnimationFrame(() => {
+          area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      }
     };
     waitAndShow();
   }
