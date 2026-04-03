@@ -111,5 +111,6 @@ export const scenarios_1990s = {
     enterLabel: '이 신문 속으로 들어간다',
     landing:   { year: '1997', date: '1997년 11월 21일', msg: '차가워진 가슴으로 서울 여의도로 착륙합니다...' },
     isGeneric:  false,
+    storyClueCount: 6, // 6 unique story clues in story_imf1997.js
   },
 };

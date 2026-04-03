@@ -139,11 +139,12 @@ export class LibraryUI {
 
     // 신문에서 찾은 단서를 초기 목록으로 설정
     this.engine.resetForCase(key);
-    if (np.isGeneric === false) {
-      this.engine.state.totalClues = 6;
-    } else {
-      this.engine.state.totalClues = (np.clues || []).length + (np.choices || []).filter(ch => ch.clue).length;
-    }
+    // 단서 합산 (신문 단서 + 조사/스토리 단서)
+    const npClueCount    = (np.clues || []).length;
+    const choiceClueCount = (np.choices || []).filter(ch => ch.clue).length;
+    const storyClueCount  = np.storyClueCount || (np.isGeneric === false ? 6 : 0);
+
+    this.engine.state.totalClues = npClueCount + choiceClueCount + storyClueCount;
     this.engine.state.cluesFound = [...this._npCluesFound];
     this._npCluesFound = [];
 

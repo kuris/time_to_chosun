@@ -24,6 +24,7 @@ export const scenarios_1980s = {
     enterLabel: '이 신문 속으로 들어간다',
     landing:   { year: '1980', date: '1980년 5월 18일', msg: '안개 자욱한 광주로 착륙합니다...' },
     isGeneric:  false,
+    storyClueCount: 6, // 6 unique story clues in story_1980.js
   },
 
   color79: {
