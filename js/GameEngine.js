@@ -148,39 +148,35 @@ export class GameEngine {
   }
 
   // ─────────────────────────────
-  //  단서 관리
+  //  단서 (Clues)
   // ─────────────────────────────
   addClue(id, label, desc) {
     if (this.state.cluesFound.includes(id)) return false;
     this.state.cluesFound.push(id);
-    this._addClueToPanel(label, desc, true);
-    this._updateMysteryBar();
+    this.audio.play('clue');
+    this.addClueToPanel(label, desc);
+    this.updateClueHeader();
     return true;
   }
 
-  addClueToPanel(label, desc, animate = false) {
-    this._addClueToPanel(label, desc, animate);
-  }
-
-  _addClueToPanel(label, desc, animate) {
+  addClueToPanel(label, desc, animate = true) {
     const list = document.getElementById('clue-list');
-    const item = document.createElement('div');
-    item.className = 'clue-item' + (animate ? '' : ' visible');
-    item.innerHTML = `<div class="clue-item-title">🔑 ${label}</div>${desc}`;
-    list.appendChild(item);
+    if (!list) return;
+
+    const div = document.createElement('div');
+    div.className = 'clue-item';
+    div.innerHTML = `<div class="clue-item-title">${label}</div><div class="clue-item-desc">${desc}</div>`;
+    list.appendChild(div);
 
     if (animate) {
-      this.audio.play('clue');
-      setTimeout(() => item.classList.add('visible'), 80);
+      setTimeout(() => div.classList.add('visible'), 50);
+    } else {
+      div.classList.add('visible');
     }
-
-    setTimeout(() => {
-      const panel = document.querySelector('.clue-panel');
-      if (panel) panel.scrollTop = panel.scrollHeight;
-    }, 150);
+    this.updateMysteryProgress();
   }
 
-  _updateMysteryBar() {
+  updateMysteryProgress() {
     const total = this.state.totalClues || 5;
     const found = this.state.cluesFound.length;
     const pct   = Math.min(100, Math.round((found / total) * 100));

@@ -69,7 +69,13 @@ export class LibraryUI {
     const np = this.newspapers[key];
     if (!np) return;
     this.engine.state.currentKey = key;
+    this.engine.state.currentKey = key;
     this._npCluesFound = [];
+
+    // UI 초기화 (수사 구역 숨김)
+    document.getElementById('field-notes-area').classList.remove('active');
+    document.getElementById('game-stats').classList.remove('active');
+    document.querySelector('.clue-panel').classList.remove('active');
 
     let col1 = np.col1 || '';
     let col2 = np.col2 || '';
@@ -142,7 +148,11 @@ export class LibraryUI {
     this._npCluesFound = [];
 
     this.landingTransition(np.landing.year, np.landing.date, np.landing.msg, () => {
-      this.showScreen('game');
+      // 수사 구역 활성화
+      document.getElementById('field-notes-area').classList.add('active');
+      document.getElementById('game-stats').classList.add('active');
+      document.querySelector('.clue-panel').classList.add('active');
+
       this.engine.clearEl('game-log');
       this.engine.clearEl('game-choices');
       this.engine.clearEl('clue-list');

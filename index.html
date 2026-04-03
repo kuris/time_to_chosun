@@ -113,32 +113,37 @@
 </div>
 
 <!-- ══════════════════════════════
-     신문 읽기
+     살아있는 신문 (기사 + 수사 통합)
 ══════════════════════════════ -->
 <div class="screen" id="screen-newspaper">
-  <div class="newspaper-wrap" id="newspaper-content"></div>
-</div>
-
-<!-- ══════════════════════════════
-     게임
-══════════════════════════════ -->
-<div class="screen" id="screen-game">
-  <div class="game-main">
-    <div class="game-header">
-      <button class="game-btn-back" onclick="backToLibrary()">← 도서관</button>
-      <div class="game-era-badge" id="game-era-badge">──</div>
-      <div class="game-location"  id="game-location">──</div>
-      <div class="game-clues"     id="game-clues">단서 0/5</div>
-    </div>
-    <div class="game-stats" id="game-stats">
-      <div class="stat-item"><span class="stat-label">MONEY</span><span class="stat-value" id="stat-money">100</span></div>
-      <div class="stat-item"><span class="stat-label">HP</span><span class="stat-value" id="stat-stamina">100</span></div>
-      <div class="stat-item"><span class="stat-label">MENTAL</span><span class="stat-value" id="stat-mental">100</span></div>
-      <div class="stat-item"><span class="stat-label">STRESS</span><span class="stat-value" id="stat-stress">0</span></div>
-    </div>
-    <div id="game-log"></div>
-    <div id="game-choices"></div>
+  <div class="game-header">
+    <button class="game-btn-back" onclick="backToLibrary()">← 도서관</button>
+    <div class="game-era-badge" id="game-era-badge">──</div>
+    <div class="game-location"  id="game-location">──</div>
+    <div class="game-clues"     id="game-clues">단서 0/5</div>
   </div>
+
+  <div class="game-stats" id="game-stats">
+    <div class="stat-item"><span class="stat-label">MONEY</span><span class="stat-value" id="stat-money">100</span></div>
+    <div class="stat-item"><span class="stat-label">HP</span><span class="stat-value" id="stat-stamina">100</span></div>
+    <div class="stat-item"><span class="stat-label">MENTAL</span><span class="stat-value" id="stat-mental">100</span></div>
+    <div class="stat-item"><span class="stat-label">STRESS</span><span class="stat-value" id="stat-stress">0</span></div>
+  </div>
+
+  <div class="newspaper-main-container">
+    <div class="newspaper-wrap" id="newspaper-content">
+      <!-- 신문 기사 본문이 여기에 렌더링됨 -->
+    </div>
+    
+    <!-- 현장 수사 일지 (신문 하단에 붙음) -->
+    <div class="field-notes-wrap" id="field-notes-area">
+      <div class="field-notes-header">INVESTIGATION LOG — 현장 수사 일지</div>
+      <div id="game-log"></div>
+      <div id="game-choices"></div>
+    </div>
+  </div>
+
+  <!-- 단서 패널 (사이드바) -->
   <div class="clue-panel">
     <div class="clue-panel-title">CLUES FOUND</div>
     <div id="clue-list"></div>
@@ -149,6 +154,15 @@
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════
+     구 수사 화면 (삭제 대상이나 메타데이터 유지를 위해 일단 주석 또는 제거)
+══════════════════════════════ -->
+<!-- 
+<div class="screen" id="screen-game">
+  ... (기존 내용은 newspaper 화면으로 흡수됨)
+</div> 
+-->
 
 <!-- ══════════════════════════════
      어드민 (시나리오 추가)
