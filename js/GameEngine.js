@@ -262,11 +262,16 @@ export class GameEngine {
   // ─────────────────────────────
   saveState() {
     const data = {
-      solved: this.state.solved,
-      // 추후 글로벌 스탯이나 해금 요소가 생기면 여기에 추가
+      solved:      this.state.solved,
+      currentKey:  this.state.currentKey,
+      cluesFound:  this.state.cluesFound,
+      usedChoices: this.state.usedChoices,
+      totalClues:  this.state.totalClues,
+      stats:       { ...this.state.stats },
+      logHTML:     document.getElementById('game-log') ? document.getElementById('game-log').innerHTML : '',
     };
     localStorage.setItem('time_library_save', JSON.stringify(data));
-    console.log('✅ Game progress saved.');
+    console.log('✅ Game progress auto-saved.');
   }
 
   loadState() {
@@ -274,9 +279,19 @@ export class GameEngine {
     if (!saved) return false;
     try {
       const data = JSON.parse(saved);
-      if (data.solved) {
-        this.state.solved = data.solved;
+      // 1. 해결 기록 복구
+      if (data.solved) this.state.solved = data.solved;
+
+      // 2. 현재 수사 세션 복구 (있다면)
+      if (data.currentKey) {
+        this.state.currentKey  = data.currentKey;
+        this.state.cluesFound  = data.cluesFound  || [];
+        this.state.usedChoices = data.usedChoices || [];
+        this.state.totalClues  = data.totalClues  || 0;
+        if (data.stats)   this.state.stats   = { ...data.stats };
+        if (data.logHTML) this.state._tempLogHTML = data.logHTML; // UI에서 처리하도록 임시 저장
       }
+
       console.log('📖 Game progress loaded.');
       return true;
     } catch (e) {

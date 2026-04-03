@@ -32,8 +32,13 @@ const checkSave = () => {
     modal.classList.add('active');
 
     document.getElementById('btn-load-save').onclick = () => {
-      engine.loadState();
-      library.updateSolvedUI();
+      const loaded = engine.loadState();
+      if (loaded) {
+        library.updateSolvedUI();
+        if (engine.state.currentKey) {
+          library.restoreSession();
+        }
+      }
       modal.classList.remove('active');
       audio.play('click');
     };

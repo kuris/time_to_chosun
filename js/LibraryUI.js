@@ -127,8 +127,21 @@ export class LibraryUI {
   findClueInNp(id, label, desc) {
     const el = document.querySelector(`[data-clue="${id}"]`);
     if (el) el.classList.add('found');
+
+    // 1. 임시 수집 (신문 읽기 단계)
     if (!this._npCluesFound.includes(id)) {
       this._npCluesFound.push(id);
+    }
+
+    // 2. 수령 즉시 반영 (이미 수사 중인 경우)
+    // 수사 상태일 때 기사를 다시 클릭하면 즉시 패널에 추가됨
+    if (this.engine.state.currentKey) {
+      const added = this.engine.addClue(id, label, desc);
+      if (added) {
+        this.audio.play('clue');
+      }
+    } else {
+      // 신문만 보던 중이라면 소리만 재생
       this.audio.play('clue');
     }
   }
@@ -151,8 +164,10 @@ export class LibraryUI {
     this.engine.state.cluesFound = [...this._npCluesFound];
     this._npCluesFound = [];
 
+    // 자동저장 시점 (수사 개시)
+    this.engine.saveState();
+
     this.landingTransition(np.landing.year, np.landing.date, np.landing.msg, () => {
-      // 수사 구역 활성화
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       document.querySelector('.clue-panel').classList.add('active');
@@ -163,14 +178,12 @@ export class LibraryUI {
       this.engine.resetMysteryBar();
       this.engine.renderStats();
 
-      // 신문에서 찾은 단서를 패널에 표시
       (np.clues || []).forEach(c => {
         if (this.engine.state.cluesFound.includes(c.id)) {
           this.engine.addClueToPanel(c.label, c.desc, false);
         }
       });
 
-      // 스토리 시작
       if (np.isGeneric === false && this.stories[key]) {
         this.stories[key](this.engine, (k, headline, labels, ending) =>
           this.solveCase(k, headline, labels, ending)
@@ -189,7 +202,6 @@ export class LibraryUI {
     this.engine.setEraBadge(np.landing.date);
     this.engine.setLocation('📍 ' + (np.location || '서울'));
 
-    // 배경 설명 및 통찰은 최초 1회만 출력 (중복 제거)
     this.engine.log('time', `[ ${np.landing.date} ${np.time || '오전'} ]`);
     this.engine.log('story', np.eventStory);
     if (np.mysteryInsight) this.engine.log('mystery', np.mysteryInsight);
@@ -212,7 +224,6 @@ export class LibraryUI {
     if (choices.length > 0) {
       this.engine.showChoices(choices);
     } else {
-      // 선택지가 모두 소진되었는데 해결이 안 된 경우 (신문 단서를 다 못 찾은 경우 등)
       this.engine.showChoices([{
         label:  '▶ 도서관으로 돌아가 신문을 다시 확인한다',
         action: () => this.backToLibrary(),
@@ -224,7 +235,6 @@ export class LibraryUI {
     const np = this.newspapers[key];
     const c  = np.choices[choiceIdx];
 
-    // 사용된 선택지로 기록
     if (!this.engine.state.usedChoices.includes(choiceIdx)) {
       this.engine.state.usedChoices.push(choiceIdx);
     }
@@ -234,7 +244,10 @@ export class LibraryUI {
 
     if (c.clue) {
       const found = this.engine.addClue(c.clue.id, c.clue.label, c.clue.desc);
-      if (found) this.engine.log('clue', '🔑 단서 발견 — ' + c.clue.label);
+      if (found) {
+        this.engine.log('clue', '🔑 단서 발견 — ' + c.clue.label);
+        this.engine.saveState(); // 자동저장 시점 (단서 획득)
+      }
     }
 
     this.engine.logD();
@@ -265,6 +278,7 @@ export class LibraryUI {
   // ─────────────────────────────
   solveCase(key, headline, clueLabels, ending) {
     this.engine.state.solved[key] = true;
+    this.engine.state.currentKey  = null; // 해결 시 진행 중 세션 초기화
     this.engine.saveState(); // 자동 저장
     this.audio.play('solve');
 
@@ -294,14 +308,36 @@ export class LibraryUI {
   // ─────────────────────────────
   //  로드된 데이터 UI 반영
   // ─────────────────────────────
-  updateSolvedUI() {
-    Object.keys(this.engine.state.solved).forEach(key => {
-      if (this.engine.state.solved[key]) {
-        const item   = document.getElementById('np-item-' + key);
-        const status = document.getElementById('np-status-' + key);
-        if (item)   item.classList.add('solved');
-        if (status) status.textContent = '✓ 해결됨';
-      }
+  // ─────── 세션 복구 ───────
+  restoreSession() {
+    const key = this.engine.state.currentKey;
+    if (!key) return;
+
+    // 1. 해당 신문 열기
+    this.openNewspaper(key);
+
+    // 2. 수사 영역 활성화
+    const area = document.querySelector('.field-notes-area');
+    if (area) area.classList.add('active');
+
+    // 3. 로그 복구
+    const log = document.getElementById('game-log');
+    if (log && this.engine.state._tempLogHTML) {
+      log.innerHTML = this.engine.state._tempLogHTML;
+      delete this.engine.state._tempLogHTML;
+      this.engine._scrollLog();
+    }
+
+    // 4. 단서 패널 및 미스터리 바 동기화
+    this.engine.updateMysteryProgress();
+    this.engine.renderStats();
+
+    // 5. 시각적 보정 (신문 본문에서 이미 찾은 단서들 하이라이트)
+    this.engine.state.cluesFound.forEach(id => {
+      const el = document.querySelector(`[data-clue="${id}"]`);
+      if (el) el.classList.add('found');
     });
+
+    console.log('🔄 Session restored for:', key);
   }
 }
