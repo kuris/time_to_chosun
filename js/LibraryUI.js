@@ -196,6 +196,12 @@ export class LibraryUI {
 
     if (choices.length > 0) {
       this.engine.showChoices(choices);
+    } else {
+      // 선택지가 모두 소진되었는데 해결이 안 된 경우 (신문 단서를 다 못 찾은 경우 등)
+      this.engine.showChoices([{
+        label:  '▶ 도서관으로 돌아가 신문을 다시 확인한다',
+        action: () => this.backToLibrary(),
+      }]);
     }
   }
 
