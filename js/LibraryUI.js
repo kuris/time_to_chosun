@@ -226,6 +226,21 @@ export class LibraryUI {
 
     if (choices.length > 0) {
       this.engine.showChoices(choices);
+    } else {
+      // 모든 선택지 소진 시 강제 귀환 버튼 (소프트락 방지)
+      this.engine.log('system', '이곳에서의 공식적인 조사는 모두 마친 것 같습니다. 도서관으로 돌아가 기록을 정리해야 합니다.');
+      this.engine.showChoices([{
+        label:  '▶ 도서관으로 돌아가 조사를 마친다',
+        isKey:  true,
+        action: () => {
+          const labels = this.engine.state.cluesFound.map(id => {
+            const from1 = (np.clues || []).find(cc => cc.id === id);
+            const from2 = (np.choices || []).find(ch => ch.clue && ch.clue.id === id)?.clue;
+            return (from1 || from2)?.label || '미상의 단서';
+          });
+          this.solveCase(key, np.solveHeadline, labels, np.solveEnding);
+        },
+      }]);
     }
   }
 

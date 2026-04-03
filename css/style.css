@@ -232,12 +232,13 @@ body:not(.theme-dark) {
 /* ════════════════════════════
    게임 화면
 ════════════════════════════ */
-#screen-game { flex-direction: row; min-height: 100vh; background: var(--bg-parchment); align-items: flex-start; }
+#screen-game { flex-direction: row; height: 100vh; max-height: 100vh; background: var(--bg-parchment); align-items: flex-start; overflow: hidden; }
 
 .game-main {
   flex: 1; display: flex; flex-direction: column;
   max-width: 750px; margin: 0 auto; width: 100%;
   border-right: 1px solid var(--panel-border);
+  height: 100%; overflow: hidden;
 }
 
 .game-header {
@@ -263,7 +264,6 @@ body:not(.theme-dark) {
 #game-log {
   flex: 1; overflow-y: auto; padding: 30px 28px;
   display: flex; flex-direction: column; gap: 4px;
-  height: calc(100vh - 200px);
 }
 #game-log::-webkit-scrollbar       { width: 4px; }
 #game-log::-webkit-scrollbar-track { background: var(--bg-parchment); }
