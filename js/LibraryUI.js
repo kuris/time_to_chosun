@@ -36,7 +36,8 @@ export class LibraryUI {
       if (el) el.innerHTML = '';
     });
 
-    let total = 0;
+    const renderCandidates = [];
+
     Object.entries(this.newspapers).forEach(([key, np]) => {
       const directClues = (Array.isArray(np.clues) ? np.clues.length : 0);
       const choiceClues = (Array.isArray(np.choices) ? np.choices.filter(c => c && c.clue).length : 0);
@@ -45,6 +46,16 @@ export class LibraryUI {
       // 단서가 존재하는 경우에만 5개 이하 시나리오를 숨깁니다.
       if (clueCount > 0 && clueCount <= 5) return;
 
+      renderCandidates.push({ key, np });
+    });
+
+    // 필터링 결과가 비어 있으면, 최소 한 개는 노출 (배포 환경 미니멈 안전장치)
+    if (renderCandidates.length === 0) {
+      Object.entries(this.newspapers).forEach(([key, np]) => renderCandidates.push({ key, np }));
+    }
+
+    let total = 0;
+    renderCandidates.forEach(({ key, np }) => {
       total++;
       const cat = np.category || '2000s';
       const shelf = document.getElementById(`shelf-${cat}`) || document.getElementById('shelf-2000s');
