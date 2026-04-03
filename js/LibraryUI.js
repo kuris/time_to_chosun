@@ -20,6 +20,7 @@ export class LibraryUI {
     window.enterEra       = (k) => this.enterEra(k);
     window.backToLibrary  = ()  => this.backToLibrary();
     window.findClueInNp   = (id, label, desc) => this.findClueInNp(id, label, desc);
+    window.toggleCluePanel = () => this.toggleCluePanel();
   }
 
   // ─────────────────────────────
@@ -81,8 +82,12 @@ export class LibraryUI {
     document.getElementById('game-location').textContent  = '도서관 내부 — 기록 보관소';
     document.getElementById('game-clues').textContent     = `단서 ${this._npCluesFound.length}/${totalNeeded}`;
 
-    // 사이드바 활성화 및 미스터리 바 표시
-    document.querySelector('.clue-panel').classList.add('active');
+    // 사이드바 활성화 및 미스터리 바 표시 (모바일에선 닫힌 채로 시작)
+    if (window.innerWidth > 768) {
+      document.querySelector('.clue-panel').classList.add('active');
+    } else {
+      document.querySelector('.clue-panel').classList.remove('active');
+    }
     document.getElementById('clue-list').innerHTML = '';
     this.engine.resetMysteryBar(totalNeeded);
     this.engine.renderStats();
@@ -129,7 +134,7 @@ export class LibraryUI {
     if (np.enterLabel && !solved) {
       html += `<button class="np-btn primary" onclick="enterEra('${key}')">${np.enterLabel} →</button>`;
     } else if (solved) {
-      html += `<button class="np-btn" style="color:#90b890;border-color:#90b89044;" disabled>✓ 이미 해결된 사건</button>`;
+      html += `<button class="np-btn" onclick="enterEra('${key}')" style="color:#90b890; border-color:rgba(144,184,144,0.4);">🔍 다시 수사하기 (재수사)</button>`;
     } else {
       // enterLabel 없는 generic 케이스도 진입 가능하게
       html += `<button class="np-btn primary" onclick="enterEra('${key}')">이 신문 속으로 들어간다 →</button>`;
@@ -155,7 +160,6 @@ export class LibraryUI {
 
     // 2. 수령 즉시 반영 (이미 수사 중이거나 신문 읽는 중)
     if (this.engine.state.currentKey) {
-      // 수사 중일 때
       const added = this.engine.addClue(id, label, desc);
       if (added) this.audio.play('clue');
     } else {
@@ -308,7 +312,11 @@ export class LibraryUI {
   //  사건 해결
   // ─────────────────────────────
   solveCase(key, headline, clueLabels, ending) {
-    this.engine.state.solved[key] = true;
+    this.engine.state.solved[key] = {
+      solved: true,
+      count:  this.engine.state.cluesFound.length,
+      total:  this.engine.state.totalClues
+    };
     this.engine.state.currentKey  = null; // 해결 시 진행 중 세션 초기화
     this.engine.saveState(); // 자동 저장
     this.audio.play('solve');
@@ -372,14 +380,33 @@ export class LibraryUI {
     console.log('🔄 Session restored for:', key);
   }
 
+  // 단서 패널 토글 (모바일용)
+  toggleCluePanel() {
+    const panel = document.querySelector('.clue-panel');
+    const overlay = document.getElementById('clue-panel-overlay');
+    panel.classList.toggle('active');
+    if (overlay) overlay.classList.toggle('active');
+    this.audio.play('click');
+  }
+
   // 해결 목록 UI 업데이트
   updateSolvedUI() {
     Object.keys(this.engine.state.solved || {}).forEach(key => {
-      if (this.engine.state.solved[key]) {
+      const record = this.engine.state.solved[key];
+      const isSolved = typeof record === 'object' ? record.solved : !!record;
+      
+      if (isSolved) {
         const item   = document.getElementById('np-item-' + key);
         const status = document.getElementById('np-status-' + key);
-        if (item)   item.classList.add('solved');
-        if (status) status.textContent = '✓ 해결됨';
+        if (item) item.classList.add('solved');
+        
+        if (status) {
+          if (typeof record === 'object' && record.total) {
+            status.innerHTML = `<span style="color:#c8a96e">✓ 해결됨</span> <span style="font-size:10px; opacity:0.6;">(진실 ${record.count}/${record.total})</span>`;
+          } else {
+            status.textContent = '✓ 해결됨';
+          }
+        }
       }
     });
   }
