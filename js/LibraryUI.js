@@ -42,8 +42,8 @@ export class LibraryUI {
       const choiceClues = (Array.isArray(np.choices) ? np.choices.filter(c => c && c.clue).length : 0);
       const clueCount = directClues + choiceClues;
 
-      // 단서 5개 이하(0포함)는 도서관에서 제외
-      if (clueCount <= 5) return;
+      // 단서가 존재하는 경우에만 5개 이하 시나리오를 숨깁니다.
+      if (clueCount > 0 && clueCount <= 5) return;
 
       total++;
       const cat = np.category || '2000s';
