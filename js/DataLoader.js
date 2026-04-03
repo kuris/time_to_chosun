@@ -98,12 +98,34 @@ export class DataLoader {
 
   safeParseJSON(str, fallback) {
     if (!str || str.trim() === '') return fallback;
+    let cleaned = str.trim();
+
     try {
-      // 엑셀에서 복사 시 따옴표 중첩 문제가 있을 수 있음
-      return JSON.parse(str);
+      // 1. 구글 시트 복사-붙여넣기 시 발생하는 따옴표 중첩 보정 로직
+      // 앞뒤가 따옴표로 감싸져 있고 내부도 따옴표 지옥인 경우를 처리
+      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+        // 내부의 "" 를 " 로 변환하기 전에, 이중/삼중 이스케이프된 것을 먼저 정리
+        // 8개/4개씩 겹친 따옴표를 2개로 압축
+        cleaned = cleaned.replace(/"{4,}/g, '""');
+      }
+
+      // JSON 표준에 맞게 파싱 시도
+      return JSON.parse(cleaned);
     } catch (e) {
-      console.warn('JSON 파싱 실패:', str, e);
-      return fallback;
+      // 2. 최후의 수단: 모든 연속된 따옴표를 하나로 강제 치환 (가장 강력한 보정)
+      try {
+        console.log('⚠️ JSON 보정 모드 진동 중...');
+        let brute = cleaned;
+        // 문법 파괴를 최소화하며 따옴표 정리
+        if (brute.startsWith('"') && brute.endsWith('"')) {
+          brute = brute.substring(1, brute.length - 1);
+        }
+        brute = brute.replace(/"+/g, '"');
+        return JSON.parse(brute);
+      } catch (e2) {
+        console.warn('❌ 완전 파손된 JSON 데이터:', cleaned);
+        return fallback;
+      }
     }
   }
 }
