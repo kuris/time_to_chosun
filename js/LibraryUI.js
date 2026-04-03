@@ -38,6 +38,10 @@ export class LibraryUI {
 
     let total = 0;
     Object.entries(this.newspapers).forEach(([key, np]) => {
+      const clueCount = (np.clues || []).length + ((np.choices || []).filter(c => c && c.clue).length || 0);
+      // 클루 5개 이하(짧은 시나리오)는 도서관에서 숨기기
+      if (clueCount <= 5) return;
+
       total++;
       const cat = np.category || '2000s';
       const shelf = document.getElementById(`shelf-${cat}`) || document.getElementById('shelf-2000s');
