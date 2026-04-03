@@ -22,17 +22,56 @@ export class DataLoader {
   }
 
   parseCSV(text) {
-    const lines = text.split(/\r?\n/);
-    if (lines.length < 2) return {};
+    const rows = [];
+    let currentRow = [];
+    let currentCell = '';
+    let inQuotes = false;
 
-    // 헤더 추출
-    const headers = this.splitCSVLine(lines[0]);
+    // ── Robust CSV State Machine Parser ──
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const next = text[i + 1];
+
+      if (inQuotes) {
+        if (char === '"' && next === '"') {
+          currentCell += '"'; // Escaped quote
+          i++; 
+        } else if (char === '"') {
+          inQuotes = false; // Quote closed
+        } else {
+          currentCell += char; // Regular char inside quotes (including newlines)
+        }
+      } else {
+        if (char === '"') {
+          inQuotes = true; // Quote started
+        } else if (char === ',') {
+          currentRow.push(currentCell.trim());
+          currentCell = '';
+        } else if (char === '\r' || char === '\n') {
+          // Row end
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== '')) rows.push(currentRow);
+          currentRow = [];
+          currentCell = '';
+          if (char === '\r' && next === '\n') i++; // Skip \n in CRLF
+        } else {
+          currentCell += char;
+        }
+      }
+    }
+    // Last cell/row handling
+    if (currentCell || currentRow.length > 0) {
+      currentRow.push(currentCell.trim());
+      if (currentRow.some(c => c !== '')) rows.push(currentRow);
+    }
+
+    if (rows.length < 2) return {};
+
+    const headers = rows[0];
     const newspapers = {};
 
-    for (let i = 1; i < lines.length; i++) {
-      if (!lines[i].trim()) continue;
-      
-      const values = this.splitCSVLine(lines[i]);
+    for (let i = 1; i < rows.length; i++) {
+      const values = rows[i];
       const row = {};
       headers.forEach((h, idx) => {
         row[h] = values[idx] || '';
@@ -40,7 +79,7 @@ export class DataLoader {
 
       if (!row.ID) continue;
 
-      // 데이터 매핑 및 역직렬화 (JSON)
+      // 데이터 매핑 및 역직렬화 (Heuristic Parser 사용)
       newspapers[row.ID] = {
         masthead: row.Masthead,
         date:     row.Date,
@@ -70,30 +109,9 @@ export class DataLoader {
     return newspapers;
   }
 
-  // 간단한 CSV 라인 파서 (따옴표 내 쉼표 처리)
-  splitCSVLine(line) {
-    const result = [];
-    let start = 0;
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-      if (line[i] === '"') {
-        inQuotes = !inQuotes;
-      } else if (line[i] === ',' && !inQuotes) {
-        result.push(this.cleanValue(line.substring(start, i)));
-        start = i + 1;
-      }
-    }
-    result.push(this.cleanValue(line.substring(start)));
-    return result;
-  }
-
+  // 더 이상 필요 없음: parseCSV 내부 로직으로 통합됨
   cleanValue(val) {
-    val = val.trim();
-    if (val.startsWith('"') && val.endsWith('"')) {
-      val = val.substring(1, val.length - 1).replace(/""/g, '"');
-    }
-    return val;
+    return val.trim();
   }
 
   safeParseJSON(str, fallback) {
