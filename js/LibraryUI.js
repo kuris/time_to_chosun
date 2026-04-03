@@ -20,6 +20,7 @@ export class LibraryUI {
     window.enterEra       = (k) => this.enterEra(k);
     window.backToLibrary  = ()  => this.backToLibrary();
     window.findClueInNp   = (id, label, desc) => this.findClueInNp(id, label, desc);
+    window.toggleCluePanel = () => this.toggleCluePanel();
 
     this.initTheme();
   }
@@ -53,10 +54,22 @@ export class LibraryUI {
   }
 
   // ─────────────────────────────
+  //  모바일 전역 토글
+  // ─────────────────────────────
+  toggleCluePanel() {
+    const el = document.querySelector('.clue-panel');
+    if (el) el.classList.toggle('active');
+  }
+
+  // ─────────────────────────────
   //  화면 전환
   // ─────────────────────────────
   showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    // 신규 화면 이동 시 패널 닫기 (모바일 대응)
+    const cp = document.querySelector('.clue-panel');
+    if (cp) cp.classList.remove('active');
+
     const el = document.getElementById('screen-' + id);
     if (el) el.classList.add('active');
   }

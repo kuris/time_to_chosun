@@ -440,3 +440,85 @@ body:not(.theme-dark) {
   from { opacity: 0; transform: translateY(30px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ════════════════════════════
+   모바일 전용 전역 스타일
+════════════════════════════ */
+.mobile-clue-btn {
+  display: none;
+  background: var(--accent-gold);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 10px rgba(184,134,11,0.3);
+}
+
+/* ════════════════════════════
+   반응형 미디어 쿼리 (모바일 대응)
+════════════════════════════ */
+@media (max-width: 768px) {
+  .theme-toggle { top: 15px; right: 15px; width: 34px; height: 34px; font-size: 16px; }
+
+  /* 도서관 메인 */
+  #screen-library { padding: 80px 20px 40px; justify-content: flex-start; }
+  .library-subtitle { font-size: 20px; }
+  .library-desc { font-size: 10px; margin-bottom: 40px; }
+  .shelf-row { gap: 12px; padding: 15px 10px 25px; flex-wrap: wrap; justify-content: center; }
+  .newspaper-item { width: 95px; height: 135px; }
+  .np-headline { font-size: 8px; }
+
+  /* 신문 읽기 */
+  #screen-newspaper { padding: 15px; }
+  .newspaper-wrap { padding: 25px 20px; }
+  .np-masthead-name { font-size: 22px; }
+  .np-main-headline { font-size: 18px; line-height: 1.4; }
+  .np-columns { grid-template-columns: 1fr; gap: 15px; }
+  .np-memo { font-size: 12px; padding: 12px; }
+
+  /* 게임 진행 */
+  #screen-game { flex-direction: column; height: 100vh; overflow: hidden; }
+  .game-main { border-right: none; height: 100%; }
+  .game-header { padding: 10px 15px; justify-content: space-between; height: 50px; }
+  .mobile-clue-btn { display: flex; }
+  .game-era-badge { font-size: 8px; padding: 3px 8px; }
+  .game-location, .game-clues { display: none; }
+  
+  #game-log { padding: 15px; flex: 1; }
+  .log-line { font-size: 14px; line-height: 1.8; }
+  #game-choices { padding: 12px 15px; min-height: auto; }
+  .btn-choice { font-size: 12px; padding: 10px 12px; }
+
+  /* 단서 패널 (드로어) */
+  .clue-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    height: 100vh;
+    z-index: 5000;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    background: var(--bg-panel);
+    border-left: 2px solid var(--accent-gold);
+    padding: 30px 20px;
+  }
+  .clue-panel.active { right: 0; }
+  .mystery-bar-wrap { margin-top: 30px; }
+  
+  /* 어드민 */
+  .admin-panel { padding: 20px 15px; }
+}
+
+@media (max-width: 480px) {
+  .newspaper-item { width: 85px; height: 120px; }
+  .np-masthead-name { font-size: 18px; }
+  .np-main-headline { font-size: 16px; }
+  .mobile-clue-btn .btn-text { display: none; }
+}
