@@ -191,7 +191,7 @@ export class GameEngine {
   }
 
   resetMysteryBar() {
-    this._updateMysteryBar();
+    this.updateMysteryProgress();
   }
 
   // ─────────────────────────────
