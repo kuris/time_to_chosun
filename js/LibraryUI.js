@@ -38,9 +38,13 @@ export class LibraryUI {
 
     let total = 0;
     Object.entries(this.newspapers).forEach(([key, np]) => {
-      const clueCount = (np.clues || []).length + ((np.choices || []).filter(c => c && c.clue).length || 0);
-      // 클루 5개 이하(짧은 시나리오)는 도서관에서 숨기기
-      if (clueCount <= 5) return;
+      const directClues = (Array.isArray(np.clues) ? np.clues.length : 0);
+      const choiceClues = (Array.isArray(np.choices) ? np.choices.filter(c => c && c.clue).length : 0);
+      const clueCount = directClues + choiceClues;
+      const hasClueMeta = (directClues > 0 || choiceClues > 0);
+
+      // 클루 메타 정보가 있는 경우에만 5개 이하를 건너뜁니다.
+      if (hasClueMeta && clueCount <= 5) return;
 
       total++;
       const cat = np.category || '2000s';
