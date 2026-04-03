@@ -30,7 +30,14 @@ const initApp = async () => {
   // 시나리오 로드 (GSheet)
   console.log('📦 시나리오 데이터를 가져오는 중...');
   const remoteNP = await dataLoader.loadScenarios();
-  const newspapers = remoteNP || FALLBACK_NP; // 실패 시 로컬 데이터 사용
+  
+  // 로컬 데이터(41개)와 리모트 데이터를 합침 (리모트가 우선순위)
+  const newspapers = {
+    ...FALLBACK_NP,
+    ...(remoteNP || {})
+  };
+  
+  console.log(`📚 총 ${Object.keys(newspapers).length}개의 시나리오를 로드했습니다.`);
   
   const library = new LibraryUI(engine, audio, newspapers, STORIES);
   const admin   = new AdminUI(library);
