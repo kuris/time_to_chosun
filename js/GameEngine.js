@@ -223,7 +223,11 @@ export class GameEngine {
 
     if (fill)   fill.style.width    = pct + '%';
     if (pctEl)  pctEl.textContent   = pct + '%';
-    if (clueEl) clueEl.textContent  = `단서 ${found}/${total}`;
+    if (clueEl) {
+      clueEl.textContent = `단서 ${found}/${total}`;
+      // 신규 단서 발견 시 박동 효과 제거
+      clueEl.classList.remove('clue-pulse');
+    }
   }
 
   resetMysteryBar() {

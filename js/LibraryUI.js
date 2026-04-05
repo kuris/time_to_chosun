@@ -505,8 +505,13 @@ export class LibraryUI {
           this.solveCase(key, np.solveHeadline, labels, np.solveEnding);
         },
       }]);
-    } else {
       this.engine.log('system', '아직 밝혀지지 않은 진실이 더 남아있는 것 같습니다...');
+      this.engine.log('system', 'TIP: 신문 기사의 본문에서 강조된 키워드들을 모두 수집했는지 확인해보세요.');
+      
+      // 단서 버튼 강조 효과 (박동)
+      const clueBtn = document.getElementById('game-clues');
+      if (clueBtn) clueBtn.classList.add('clue-pulse');
+      
       this._showInvestigationChoices(key); // 배경 설명 없이 선택지만 다시 출력
     }
   }
