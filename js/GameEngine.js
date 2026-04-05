@@ -224,20 +224,6 @@ export class GameEngine {
     if (fill)   fill.style.width    = pct + '%';
     if (pctEl)  pctEl.textContent   = pct + '%';
     if (clueEl) clueEl.textContent  = `단서 ${found}/${total}`;
-
-    // 모바일 전용 인디케이터 업데이트
-    const mobInd = document.getElementById('mobile-clue-indicator');
-    const mobCnt = document.getElementById('mobile-clue-count');
-    if (mobCnt) mobCnt.textContent = found;
-    if (mobInd && this.state.currentKey) {
-      // 수사 모드(신문 속)일 때만 활성화
-      const isIndDisabled = document.getElementById('game-clues').classList.contains('disabled');
-      if (!isIndDisabled && found > 0) {
-        mobInd.classList.add('active');
-      } else {
-        mobInd.classList.remove('active');
-      }
-    }
   }
 
   resetMysteryBar() {

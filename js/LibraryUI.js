@@ -199,8 +199,6 @@ export class LibraryUI {
   backToLibrary() {
     this.audio.play('click');
     document.getElementById('game-clues').classList.add('disabled');
-    const mobInd = document.getElementById('mobile-clue-indicator');
-    if (mobInd) mobInd.classList.remove('active');
     this.flashTransition(() => this.showScreen('library'));
   }
 
