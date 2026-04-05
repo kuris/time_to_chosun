@@ -21,6 +21,8 @@ export class LibraryUI {
     window.backToLibrary  = ()  => this.backToLibrary();
     window.findClueInNp   = (id, label, desc) => this.findClueInNp(id, label, desc);
     window.toggleCluePanel = () => this.toggleCluePanel();
+    window.showClueContext = (id) => this.showClueContext(id);
+    window.jumpToContext   = (id) => this.jumpToContext(id);
   }
 
   // ─────────────────────────────
@@ -230,6 +232,8 @@ export class LibraryUI {
         }
       });
 
+      this.engine.clearScenes(); // 새 시작 시 씬 레지스트리 초기화
+
       if (np.isGeneric === false && this.stories[key]) {
         this.stories[key](this.engine, (k, headline, labels, ending) =>
           this.solveCase(k, headline, labels, ending)
@@ -289,7 +293,7 @@ export class LibraryUI {
     this.engine.applyEffects(c.effect);
 
     if (c.clue) {
-      const found = this.engine.addClue(c.clue.id, c.clue.label, c.clue.desc);
+      const found = this.engine.addClue(c.clue.id, c.clue.label, c.clue.desc, 'generic', choiceIdx);
       if (found) {
         this.engine.log('clue', '🔑 단서 발견 — ' + c.clue.label);
         this.engine.saveState(); // 자동저장 시점 (단서 획득)
@@ -345,8 +349,12 @@ export class LibraryUI {
       </div>
       <div class="solved-stamp-wrap"><span class="solved-stamp">SOLVED</span></div>
       <div class="solved-headline">${headline}</div>
-      <div class="solved-clues"><div class="solved-clue-title">수집한 단서</div>
-        ${clueLabels.map(l => `<div class="solved-clue-item">🔑 ${l}</div>`).join('')}
+      <div class="solved-clues"><div class="solved-clue-title">수집한 단서 (클릭하여 맥락 확인)</div>
+        ${this.engine.state.cluesFound.map(id => {
+          const ctx = this.engine.state.clueContexts[id];
+          const label = ctx ? ctx.label : '알 수 없는 단서';
+          return `<div class="solved-clue-item clickable" onclick="showClueContext('${id}')">🔑 ${label}</div>`;
+        }).join('')}
       </div>
       <div class="solved-ending">${ending}</div>
     `;
@@ -420,5 +428,69 @@ export class LibraryUI {
         }
       }
     });
+  }
+
+  // ─────────────────────────────
+  //  단서 재열람 (Context Re-view)
+  // ─────────────────────────────
+  showClueContext(clueId) {
+    const ctx = this.engine.state.clueContexts[clueId];
+    if (!ctx) return;
+
+    document.getElementById('context-clue-title').textContent = ctx.label;
+    document.getElementById('context-clue-desc').textContent  = ctx.desc;
+    
+    const body = document.getElementById('context-log-body');
+    body.innerHTML = ctx.text.map(line => `
+      <div class="log-line ${line.type}" style="font-size:13px; margin-bottom:4px; opacity:0.8;">${line.msg}</div>
+    `).join('');
+
+    const modal = document.getElementById('context-modal');
+    modal.classList.add('active');
+
+    const jumpBtn = document.getElementById('btn-jump-context');
+    if (ctx.scene) {
+      jumpBtn.style.display = 'block';
+      jumpBtn.onclick = () => this.jumpToContext(clueId);
+    } else {
+      jumpBtn.style.display = 'none';
+    }
+  }
+
+  jumpToContext(clueId) {
+    const ctx = this.engine.state.clueContexts[clueId];
+    if (!ctx) return;
+
+    const key = this.engine.state.currentKey || Object.keys(this.newspapers).find(k => this.engine.state.solved[k]);
+    if (!key) return;
+
+    this.audio.play('click');
+    document.getElementById('context-modal').classList.remove('active');
+
+    // 시간 도약 시각 효과 시작
+    document.body.classList.add('time-glitch-active');
+
+    // 수사 재시작
+    this.enterEra(key);
+
+    // 랜딩 애니메이션 이후 점프 수행을 위한 훅
+    // (약 2.4초 정도 소요되므로 setTimeout으로 타이밍을 맞춤)
+    setTimeout(() => {
+      // 시간 도약 시각 효과 종료
+      document.body.classList.remove('time-glitch-active');
+
+      if (ctx.scene === 'generic') {
+        this._processChoice(key, ctx.choiceIdx);
+      } else {
+        const sceneFn = this.engine.getScene(ctx.scene);
+        if (typeof sceneFn === 'function') {
+          this.engine.logD();
+          this.engine.log('system', '⏳ 시간의 파편을 통해 과거의 특정 시점으로 도약했습니다.');
+          sceneFn();
+        } else {
+          this.engine.log('bad', '⚠️ 해당 시점의 기록이 손상되어 이동할 수 없습니다.');
+        }
+      }
+    }, 2500);
   }
 }

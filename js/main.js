@@ -10,6 +10,7 @@ import { NEWSPAPERS }      from './data/index.js';
 import { storyIMF1997 }    from './stories/story_imf1997.js';
 import { story1980 }       from './stories/story_1980.js';
 import { AdminUI }         from './AdminUI.js';
+import { ThemeManager }    from './ThemeManager.js';
 
 // ── 하드코딩 스토리 맵 ─────────────────────────────────────────
 // { scenarioKey: (engine, solveCase) => void }
@@ -24,6 +25,10 @@ const audio   = new AudioManager();
 const engine  = new GameEngine(audio);
 const library = new LibraryUI(engine, audio, NEWSPAPERS, STORIES);
 const admin   = new AdminUI(library);
+const theme   = new ThemeManager();
+
+// 전역 참조 (테마 매니저 등에서 접근 가능하게)
+window.audio = audio;
 
 // ── 세이브 로드 체크 ──
 const checkSave = () => {

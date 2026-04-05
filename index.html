@@ -24,6 +24,22 @@
   </div>
 </div>
 
+<!-- 단서 재열람 모달 (시간의 파편) -->
+<div id="context-modal" class="modal-overlay">
+  <div class="modal-content context-modal-content">
+    <div class="modal-header">TIME FRAGMENT — 시간의 파편</div>
+    <div class="context-clue-title" id="context-clue-title"></div>
+    <div class="context-clue-desc" id="context-clue-desc"></div>
+    <div class="context-log-scroll">
+      <div id="context-log-body"></div>
+    </div>
+    <div class="modal-btns" style="margin-top:20px;">
+      <button id="btn-jump-context" class="np-btn primary" style="width:100%; margin-bottom:10px;">⏳ 이 시점으로 이동 (재수사)</button>
+      <button onclick="document.getElementById('context-modal').classList.remove('active')" class="np-btn" style="width:100%">닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 착륙 오버레이 -->
 <div id="landing-overlay">
   <div class="landing-year" id="landing-year"></div>
@@ -35,6 +51,9 @@
      도서관 — 신문 선반
 ══════════════════════════════ -->
 <div class="screen" id="screen-library">
+  <div class="library-header-btn-row" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px;">
+    <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="padding: 8px 16px; border-radius: 20px; font-size: 11px;"></button>
+  </div>
   <div class="library-title">TIME ARCHIVE</div>
   <div class="library-subtitle">시간의 도서관</div>
   <div class="library-desc">신문을 골라 그 시대로 들어가십시오</div>
@@ -119,6 +138,7 @@
     <div class="game-era-badge" id="game-era-badge">──</div>
     <div class="game-location"  id="game-location">──</div>
     <div class="game-clues"     id="game-clues" onclick="toggleCluePanel()">단서 0/5</div>
+    <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="margin-left: 10px; border-radius: 20px; min-width: 100px;"></button>
   </div>
 
   <div class="game-stats" id="game-stats">

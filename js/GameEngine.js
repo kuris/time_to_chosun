@@ -16,6 +16,8 @@ export class GameEngine {
       currentKey: null,
       solved: {},        // { 'imf1997': true, ... }
       stats: { money: 100, stamina: 100, mental: 100, stress: 0 },
+      clueContexts: {},  // { clueId: { text: [], scene: string, choiceIdx: number } }
+      logHistory: [],    // 최근 로그 기록 (대화 맥락 파악용)
     };
 
     // ── 타이핑 큐 ──
@@ -24,6 +26,22 @@ export class GameEngine {
 
     // ── 의존성 주입 (LibraryUI가 세팅) ──
     this._onStaminaDepleted = null;
+    this._sceneRegistry = {}; // { sceneName: function }
+  }
+
+  // ─────────────────────────────
+  //  씬 레지스트리 (점프용)
+  // ─────────────────────────────
+  registerScene(name, fn) {
+    this._sceneRegistry[name] = fn;
+  }
+
+  getScene(name) {
+    return this._sceneRegistry[name];
+  }
+
+  clearScenes() {
+    this._sceneRegistry = {};
   }
 
   // ─────────────────────────────
@@ -44,6 +62,10 @@ export class GameEngine {
   // ─────────────────────────────
   log(type, msg, cb) {
     this._queue.push({ type, msg, cb });
+    // 최근 15줄의 로그 메시지만 히스토리에 유지
+    this.state.logHistory.push({ type, msg });
+    if (this.state.logHistory.length > 15) this.state.logHistory.shift();
+
     if (!this._busy) this._processQueue();
   }
 
@@ -151,9 +173,19 @@ export class GameEngine {
   // ─────────────────────────────
   //  단서 (Clues)
   // ─────────────────────────────
-  addClue(id, label, desc) {
+  addClue(id, label, desc, sceneName = null, choiceIdx = null) {
     if (this.state.cluesFound.includes(id)) return false;
     this.state.cluesFound.push(id);
+
+    // 단서 획득 당시의 대화 맥락 저장
+    this.state.clueContexts[id] = {
+      label: label,
+      desc:  desc,
+      text:  [...this.state.logHistory],
+      scene: sceneName,
+      choiceIdx: choiceIdx
+    };
+
     this.audio.play('clue');
     this.addClueToPanel(label, desc);
     this.updateMysteryProgress(); // 단서 카운트 및 미스터리 바 통합 업데이트
@@ -268,6 +300,7 @@ export class GameEngine {
       usedChoices: this.state.usedChoices,
       totalClues:  this.state.totalClues,
       stats:       { ...this.state.stats },
+      clueContexts: { ...this.state.clueContexts },
       logHTML:     document.getElementById('game-log') ? document.getElementById('game-log').innerHTML : '',
     };
     localStorage.setItem('time_library_save', JSON.stringify(data));
@@ -288,6 +321,7 @@ export class GameEngine {
         this.state.cluesFound  = data.cluesFound  || [];
         this.state.usedChoices = data.usedChoices || [];
         this.state.totalClues  = data.totalClues  || 0;
+        if (data.clueContexts) this.state.clueContexts = data.clueContexts;
         if (data.stats)   this.state.stats   = { ...data.stats };
         if (data.logHTML) this.state._tempLogHTML = data.logHTML; // UI에서 처리하도록 임시 저장
       }
