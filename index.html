@@ -18,6 +18,12 @@
 
 <div class="flash" id="flash"></div>
 
+<!-- 모바일 전용 단서 책갈피 -->
+<div id="mobile-clue-indicator" class="mobile-clue-indicator" onclick="toggleCluePanel()">
+  <div class="icon">CLUE</div>
+  <div class="count" id="mobile-clue-count">0</div>
+</div>
+
 <!-- 세이브 로드 프롬프트 -->
 <div id="save-modal" class="modal-overlay">
   <div class="modal-content">
@@ -117,7 +123,12 @@
      도서관 — 신문 선반
 ══════════════════════════════ -->
 <div class="screen" id="screen-library">
-  <div class="library-header-btn-row" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px;">
+  <div class="library-header-btn-row" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px; align-items: center;">
+    <div class="font-controls">
+      <button class="font-btn" onclick="setFontSize(0.85)" id="f-btn-s">A-</button>
+      <button class="font-btn active" onclick="setFontSize(1.0)" id="f-btn-m">A</button>
+      <button class="font-btn" onclick="setFontSize(1.2)" id="f-btn-l">A+</button>
+    </div>
     <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="padding: 8px 16px; border-radius: 20px; font-size: 11px;"></button>
   </div>
   <div class="library-title">TIME ARCHIVE</div>
@@ -278,8 +289,13 @@
     <button class="game-btn-back" onclick="backToLibrary()">← 도서관</button>
     <div class="game-era-badge" id="game-era-badge">──</div>
     <div class="game-location"  id="game-location">──</div>
-    <div class="game-clues"     id="game-clues" onclick="toggleCluePanel()">단서 0/5</div>
-    <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="margin-left: 10px; border-radius: 20px; min-width: 100px;"></button>
+    <div class="game-clues disabled" id="game-clues" onclick="toggleCluePanel()">단서 0/5</div>
+    <div class="font-controls" style="margin-left: auto;">
+      <button class="font-btn" onclick="setFontSize(0.85)" id="f-btn-s-game">A-</button>
+      <button class="font-btn active" onclick="setFontSize(1.0)" id="f-btn-m-game">A</button>
+      <button class="font-btn" onclick="setFontSize(1.2)" id="f-btn-l-game">A+</button>
+    </div>
+    <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="margin-left: 10px; border-radius: 20px; min-width: 80px; font-size: 10px;"></button>
   </div>
 
   <div class="game-stats" id="game-stats">

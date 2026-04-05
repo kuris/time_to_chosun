@@ -67,5 +67,24 @@ const handleRoute = () => {
 };
 
 window.addEventListener('hashchange', handleRoute);
+// ── 전역 폰트 제어 ──
+window.setFontSize = (scale) => {
+  document.documentElement.style.setProperty('--f-scale', scale);
+  
+  // 모든 폰트 컨트롤의 활성 상태 업데이트
+  document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // 해당하는 배율의 버튼에 active 추가
+  const findId = (val) => val === 0.85 ? 's' : val === 1.2 ? 'l' : 'm';
+  const suffix = findId(scale);
+  const targetIds = [`f-btn-${suffix}`, `f-btn-${suffix}-game`];
+  targetIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  });
+
+  audio.play('click');
+};
+
 handleRoute(); // 초기 실행
 checkSave();   // 세이브 체크

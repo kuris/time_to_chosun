@@ -198,6 +198,9 @@ export class LibraryUI {
 
   backToLibrary() {
     this.audio.play('click');
+    document.getElementById('game-clues').classList.add('disabled');
+    const mobInd = document.getElementById('mobile-clue-indicator');
+    if (mobInd) mobInd.classList.remove('active');
     this.flashTransition(() => this.showScreen('library'));
   }
 
@@ -218,6 +221,7 @@ export class LibraryUI {
     document.getElementById('game-era-badge').textContent = '──';
     document.getElementById('game-location').textContent  = '도서관 내부 — 기록 보관소';
     document.getElementById('game-clues').textContent     = `단서 ${this._npCluesFound.length}/${totalNeeded}`;
+    document.getElementById('game-clues').classList.add('disabled'); // 신문 읽기 단계에선 비활성
 
     const overlay = document.getElementById('clue-panel-overlay');
     const closeBtn = document.querySelector('.clue-panel-close');
@@ -366,6 +370,9 @@ export class LibraryUI {
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       
+      // 신문 속으로 들어온 시점에서만 단서체크 가능
+      document.getElementById('game-clues').classList.remove('disabled');
+
       // 모바일에서는 시대 진입 시 자동으로 단서창을 열지 않음
       if (window.innerWidth > 768) {
         document.querySelector('.clue-panel').classList.add('active');
@@ -584,6 +591,13 @@ export class LibraryUI {
 
   // 단서 패널 토글 (모바일용)
   toggleCluePanel() {
+    const clueBtn = document.getElementById('game-clues');
+    if (clueBtn && clueBtn.classList.contains('disabled')) {
+      // 비활성 상태면 동작 무시 (또는 안내)
+      this.audio.play('click'); // 클릭 피드백은 주되 열진 않음
+      return;
+    }
+
     const panel = document.querySelector('.clue-panel');
     const overlay = document.getElementById('clue-panel-overlay');
     panel.classList.toggle('active');
