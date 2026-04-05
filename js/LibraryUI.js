@@ -23,6 +23,22 @@ export class LibraryUI {
     window.toggleCluePanel = () => this.toggleCluePanel();
     window.showClueContext = (id) => this.showClueContext(id);
     window.jumpToContext   = (id) => this.jumpToContext(id);
+
+    // 지도 그리드 초기화
+    this._initMapGrid();
+  }
+
+  // ── 지도 도트 그리드 생성 ──
+  _initMapGrid() {
+    const g = document.getElementById('map-dots');
+    if (!g) return;
+    let html = '';
+    for(let x=0; x<200; x+=10) {
+      for(let y=0; y<300; y+=10) {
+        html += `<circle cx="${x}" cy="${y}" r="0.5" />`;
+      }
+    }
+    g.innerHTML = html;
   }
 
   // ─────────────────────────────
@@ -42,22 +58,76 @@ export class LibraryUI {
     setTimeout(() => { f.classList.remove('go'); if (cb) cb(); }, 800);
   }
 
-  landingTransition(year, date, msg, cb) {
+  landingTransition(year, date, msg, location, cb) {
     const ov = document.getElementById('landing-overlay');
     document.getElementById('landing-year').textContent = year;
     document.getElementById('landing-date').textContent = date;
     document.getElementById('landing-msg').textContent  = msg;
 
-    ['landing-year', 'landing-date', 'landing-msg'].forEach(id => {
+    // 타임머신 지도 좌표 매핑
+    this._updateMapTarget(location);
+
+    const elements = ['landing-year', 'landing-date', 'landing-msg', 'landing-map-container', 'landing-location', 'map-target'];
+    elements.forEach(id => {
       const el = document.getElementById(id);
+      if (!el) return;
       el.style.animation = 'none';
       void el.offsetWidth;
       el.style.animation = '';
+      el.classList.remove('active');
     });
 
     ov.classList.add('active');
+    document.getElementById('map-target').classList.add('active');
+    document.getElementById('landing-location').classList.add('active');
+
     this.audio.play('siren'); // 착륙 순간 빈티지 경보음
-    setTimeout(() => { ov.classList.remove('active'); if (cb) cb(); }, 2400);
+    // 애니메이션 시퀀스 완료 후 종료 (약 4.5초로 연장)
+    setTimeout(() => { ov.classList.remove('active'); if (cb) cb(); }, 4800);
+  }
+
+  _updateMapTarget(locationStr) {
+    const coordsMap = {
+      '서울': { x: 75, y: 75 },
+      '서초': { x: 78, y: 78 },
+      '여의도': { x: 72, y: 77 },
+      '명동': { x: 76, y: 76 },
+      '강남': { x: 79, y: 79 },
+      '잠실': { x: 82, y: 80 },
+      '부천': { x: 65, y: 82 },
+      '김포': { x: 60, y: 70 },
+      '성동': { x: 80, y: 75 },
+      '대구': { x: 135, y: 175 },
+      '구미': { x: 120, y: 165 },
+      '부산': { x: 145, y: 225 },
+      '김해': { x: 135, y: 220 },
+      '진도': { x: 50, y: 260 },
+      '광주': { x: 70, y: 220 },
+    };
+
+    let targetCoords = { x: 100, y: 150 }; // 기본값 (중심)
+    let cityName = 'UNKNOWN';
+
+    // 문자열에서 도시 키워드 추출
+    for (const [key, coords] of Object.entries(coordsMap)) {
+      if (locationStr && locationStr.includes(key)) {
+        targetCoords = coords;
+        cityName = key;
+        break;
+      }
+    }
+
+    const outer = document.getElementById('map-ping-outer');
+    const inner = document.getElementById('map-ping-inner');
+    const locText = document.getElementById('landing-location');
+
+    if (outer) { outer.setAttribute('cx', targetCoords.x); outer.setAttribute('cy', targetCoords.y); }
+    if (inner) { inner.setAttribute('cx', targetCoords.x); inner.setAttribute('cy', targetCoords.y); }
+    
+    if (locText) {
+      locText.textContent = `📍 TARGET: ${cityName} ACQUIRED`;
+      // 핑 좌측 하단에 텍스트 배치 (SVG 좌표가 아닌 화면 중앙 기준이라 절대 좌표 필요 시 보정 필요하지만 일단 맵 중앙 고정)
+    }
   }
 
   backToLibrary() {
@@ -211,7 +281,7 @@ export class LibraryUI {
     // 자동저장 시점 (수사 개시)
     this.engine.saveState();
 
-    this.landingTransition(np.landing.year, np.landing.date, np.landing.msg, () => {
+    this.landingTransition(np.landing.year, np.landing.date, np.landing.msg, np.location, () => {
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       

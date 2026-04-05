@@ -46,8 +46,25 @@
   </div>
 </div>
 
-<!-- 착륙 오버레이 -->
+<!-- 착륙 오버레이 (타임머신 연출) -->
 <div id="landing-overlay">
+  <div id="landing-map-container" class="landing-map-container">
+    <svg viewBox="0 0 200 300" class="landing-map-svg">
+      <!-- 맵 배경 도트 그리드 (디지털 느낌) -->
+      <g id="map-dots" fill="rgba(200,169,110,0.2)"></g>
+      <!-- 대한민국 간략화 와이어프레임 -->
+      <path d="M75,30 L90,40 L105,60 L115,100 L120,150 L110,200 L90,240 L70,270 L50,285 L40,270 L45,240 L55,200 L60,150 L55,100 L65,60 L70,40 Z" fill="none" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="3 3" />
+      <!-- 타겟 핑 -->
+      <g id="map-target" class="map-target">
+        <circle id="map-ping-outer" cx="0" cy="0" r="10" fill="none" stroke="red" stroke-width="1">
+          <animate attributeName="r" from="2" to="20" dur="1.5s" repeatCount="indefinite" />
+          <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite" />
+        </circle>
+        <circle id="map-ping-inner" cx="0" cy="0" r="3" fill="red" />
+      </g>
+    </svg>
+    <div id="landing-location" class="landing-location">TARGET ACQUIRED</div>
+  </div>
   <div class="landing-year" id="landing-year"></div>
   <div class="landing-date" id="landing-date"></div>
   <div class="landing-msg"  id="landing-msg"></div>

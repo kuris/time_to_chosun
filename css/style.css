@@ -283,12 +283,84 @@ body {
 .modal-btn.primary { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 800; }
 
 #landing-overlay {
-  position: fixed; inset: 0; background: var(--bg-app); z-index: 8888;
+  position: fixed; inset: 0; background: #000; z-index: 8888;
   display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  overflow: hidden;
 }
 #landing-overlay.active { display: flex; }
-.landing-year { font-size: 72px; font-weight: 800; color: #c8a96e; letter-spacing: 8px; animation: yearIn 0.8s 0.3s ease forwards; opacity: 0; }
-@keyframes yearIn { from { opacity: 0; transform: scale(1.3); } to { opacity: 1; transform: scale(1); } }
+
+/* 지도 컨테이너 */
+.landing-map-container {
+  width: 100%; height: 100%; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; opacity: 0; transition: opacity 0.5s;
+}
+#landing-overlay.active .landing-map-container { 
+  opacity: 1; animation: mapFadeOut 0.5s 1.8s forwards; 
+}
+
+.landing-map-svg {
+  width: 300px; height: 450px; filter: drop-shadow(0 0 10px var(--accent));
+  animation: mapScan 2s ease-in-out;
+}
+
+.map-target { opacity: 0; }
+.map-target.active { opacity: 1; transition: opacity 0.3s 0.5s; }
+
+.landing-location {
+  position: absolute; color: #ff0000; font-family: 'Courier New', Courier, monospace;
+  font-size: 14px; font-weight: 800; letter-spacing: 2px;
+  text-shadow: 0 0 8px #ff0000; opacity: 0;
+  pointer-events: none;
+}
+.landing-location.active { 
+  opacity: 1; animation: blink 0.2s 0.8s infinite alternate; 
+}
+
+@keyframes mapScan {
+  0% { transform: scale(1.1) translateY(20px); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes mapFadeOut {
+  to { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes blink {
+  from { opacity: 1; } to { opacity: 0.4; }
+}
+
+.landing-year { 
+  font-size: 72px; font-weight: 800; color: var(--accent); 
+  letter-spacing: 8px; opacity: 0; z-index: 10;
+  text-shadow: 0 0 20px rgba(200,169,110,0.5);
+}
+#landing-overlay.active .landing-year { 
+  animation: yearIn 0.8s 2s ease forwards; 
+}
+
+@keyframes yearIn { 
+  from { opacity: 0; transform: scale(1.3) translateY(20px); } 
+  to { opacity: 1; transform: scale(1) translateY(0); } 
+}
+
+.landing-date { 
+  font-size: 14px; color: var(--text-dim); opacity: 0; z-index: 10;
+}
+#landing-overlay.active .landing-date { 
+  animation: fadeIn 0.8s 2.3s forwards; 
+}
+
+.landing-msg { 
+  font-size: 12px; color: var(--accent); max-width: 300px; text-align: center; 
+  line-height: 1.6; opacity: 0; z-index: 10;
+}
+#landing-overlay.active .landing-msg { 
+  animation: fadeIn 0.8s 2.6s forwards; 
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
 
 /* ════════════════════════════
    어드민 패널 (Admin)
