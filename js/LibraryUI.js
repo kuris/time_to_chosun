@@ -26,6 +26,33 @@ export class LibraryUI {
 
     // 지도 그리드 초기화
     this._initMapGrid();
+    
+    // Leaflet 지도 초기화 (위성 줌 연출용)
+    this._initLeaflet();
+  }
+
+  // ── Leaflet 지도 초기화 ──
+  _initLeaflet() {
+    const mapEl = document.getElementById('map-zoom-container');
+    if (!mapEl) return;
+    
+    // 초기 줌은 한국 근해를 비춤
+    this.map = L.map('map-zoom-container', {
+      center: [36.5, 127.5],
+      zoom: 6,
+      zoomControl: false,
+      attributionControl: false,
+      scrollWheelZoom: false,
+      dragging: false,
+      touchZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false
+    });
+
+    // Esri World Imagery 위성 데이터 추가
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    }).addTo(this.map);
   }
 
   // ── 지도 도트 그리드 생성 ──
@@ -88,33 +115,47 @@ export class LibraryUI {
 
   _updateMapTarget(locationStr) {
     const coordsMap = {
-      '서울': { x: 405, y: 265 },
-      '서초': { x: 408, y: 268 },
-      '여의도': { x: 402, y: 267 },
-      '명동': { x: 406, y: 266 },
-      '강남': { x: 409, y: 269 },
-      '잠실': { x: 412, y: 270 },
-      '부천': { x: 395, y: 272 },
-      '김포': { x: 390, y: 260 },
-      '성동': { x: 410, y: 265 },
-      '대구': { x: 435, y: 325 },
-      '구미': { x: 420, y: 315 },
-      '부산': { x: 455, y: 345 },
-      '김해': { x: 445, y: 340 },
-      '진도': { x: 380, y: 360 },
-      '광주': { x: 395, y: 340 },
+      '서울': { lat: 37.5665, lng: 126.9780, x: 405, y: 265 },
+      '서초': { lat: 37.4833, lng: 127.0322, x: 408, y: 268 },
+      '여의도': { lat: 37.5216, lng: 126.9242, x: 402, y: 267 },
+      '명동': { lat: 37.5635, lng: 126.9850, x: 406, y: 266 },
+      '강남': { lat: 37.4979, lng: 127.0276, x: 409, y: 269 },
+      '잠실': { lat: 37.5133, lng: 127.1001, x: 412, y: 270 },
+      '부천': { lat: 37.5034, lng: 126.7660, x: 395, y: 272 },
+      '김포': { lat: 37.5843, lng: 126.7115, x: 390, y: 260 },
+      '성동': { lat: 37.5635, lng: 127.0365, x: 410, y: 265 },
+      '대구': { lat: 35.8714, lng: 128.6014, x: 435, y: 325 },
+      '구미': { lat: 36.1294, lng: 128.3436, x: 420, y: 315 },
+      '부산': { lat: 35.1796, lng: 129.0756, x: 455, y: 345 },
+      '김해': { lat: 35.2285, lng: 128.8894, x: 445, y: 340 },
+      '진도': { lat: 34.4868, lng: 126.2634, x: 380, y: 360 },
+      '광주': { lat: 35.1595, lng: 126.8526, x: 395, y: 340 },
     };
 
-    let targetCoords = { x: 400, y: 300 }; // 기본값 (지도 중앙)
+    let target = { lat: 37.5, lng: 127, x: 400, y: 300 }; // 기본값
     let cityName = 'UNKNOWN';
 
     // 문자열에서 도시 키워드 추출
-    for (const [key, coords] of Object.entries(coordsMap)) {
+    for (const [key, t] of Object.entries(coordsMap)) {
       if (locationStr && locationStr.includes(key)) {
-        targetCoords = coords;
+        target = t;
         cityName = key;
         break;
       }
+    }
+
+    // Leaflet 줌 애니메이션 설정
+    if (this.map) {
+      // 시작점 리셋 (한국 근해)
+      this.map.setView([36.5, 127.5], 6, { animate: false });
+      
+      // 0.5초 대기 후 다이빙 시작
+      setTimeout(() => {
+        this.map.flyTo([target.lat, target.lng], 17, {
+          duration: 3.5,
+          easeLinearity: 0.25
+        });
+      }, 500);
     }
 
     const outer = document.getElementById('map-ping-outer');
@@ -122,13 +163,13 @@ export class LibraryUI {
     const locText = document.getElementById('landing-location');
     const svgMap = document.querySelector('.landing-map-svg');
 
-    if (outer) { outer.setAttribute('cx', targetCoords.x); outer.setAttribute('cy', targetCoords.y); }
-    if (inner) { inner.setAttribute('cx', targetCoords.x); inner.setAttribute('cy', targetCoords.y); }
+    if (outer) { outer.setAttribute('cx', target.x); outer.setAttribute('cy', target.y); }
+    if (inner) { inner.setAttribute('cx', target.x); inner.setAttribute('cy', target.y); }
     
     // 줌을 위한 transform-origin 설정 (viewBox 800x600 기반)
     if (svgMap) {
-      const originX = (targetCoords.x / 800) * 100;
-      const originY = (targetCoords.y / 600) * 100;
+      const originX = (target.x / 800) * 100;
+      const originY = (target.y / 600) * 100;
       svgMap.style.transformOrigin = `${originX}% ${originY}%`;
     }
 

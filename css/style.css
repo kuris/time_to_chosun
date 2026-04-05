@@ -326,11 +326,32 @@ body {
 }
 
 /* 지도 컨테이너 */
+.map-zoom-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  filter: grayscale(80%) contrast(120%) brightness(0.6) sepia(20%);
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+#landing-overlay.active .map-zoom-container {
+  opacity: 1;
+}
+
+/* Leaflet UI 숨김 */
+.leaflet-control-zoom, .leaflet-control-attribution { display: none !important; }
+
+/* 기존 비주얼 레이어 조정 */
 .landing-map-container {
   width: 100%; height: 100%; position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; opacity: 0; transition: opacity 0.3s;
   background: radial-gradient(circle at center, rgba(166,139,103,0.1) 0%, transparent 70%);
+  z-index: 2; /* 지도 위에 렌더링 */
+  mix-blend-mode: color-dodge; /* 지도와 겹쳤을 때 하이라이트 효과 */
 }
 #landing-overlay.active .landing-map-container { 
   opacity: 1; animation: mapDive 3.2s cubic-bezier(0.7, 0, 0.3, 1) forwards; 
