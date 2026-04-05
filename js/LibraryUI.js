@@ -207,8 +207,7 @@ export class LibraryUI {
   openNewspaper(key) {
     const np = this.newspapers[key];
     if (!np) return;
-    this.engine.state.currentKey = key;
-    this.engine.state.currentKey = key;
+    this._currentNewspaperKey = key; // 내부 추적용 전역 변수 (필요 시)
     this._npCluesFound = [];
 
     // UI 초기화 (수사 구역 숨김 및 헤더 설정)
@@ -334,11 +333,10 @@ export class LibraryUI {
     if (!np) return;
 
     const isSameCase = (this.engine.state.currentKey === key);
-    const isSolved   = this.engine.state.solved[key];
     let isResuming   = false;
 
-    if (isSameCase && !isSolved) {
-      // 1. 동일 사건 재진입 (미해결 시): 기존 세션 유지
+    if (isSameCase) {
+      // 1. 현재 활성화된 수사 세션과 동일한 경우: 무조건 수사 재개
       isResuming = true;
       // 신문에서 새로 클릭해서 찾은 단서들을 병합
       this._npCluesFound.forEach(id => {
