@@ -252,7 +252,9 @@ export class LibraryUI {
     // 클릭 가능한 단서 마커 치환
     (np.clues || []).forEach(c => {
       if (!c.marker) return;
-      const tag  = `<span class="clue" data-clue="${c.id}" onclick="findClueInNp('${c.id}','${c.label}','${c.desc}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
+      const isFound = this.engine.state.cluesFound.includes(c.id);
+      const foundClass = isFound ? ' found' : '';
+      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInNp('${c.id}','${c.label}','${c.desc}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
       // 모든 발생 지점에 대해 전역 치환 (RegExp 활용)
       const safeMarker = c.marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
       col1 = col1.replace(new RegExp(safeMarker, 'g'), tag);

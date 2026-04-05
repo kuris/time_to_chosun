@@ -228,6 +228,12 @@ export class GameEngine {
       // 신규 단서 발견 시 박동 효과 제거
       clueEl.classList.remove('clue-pulse');
     }
+
+    // 본문 기사 내의 단서 마커들 상태 동기화
+    this.state.cluesFound.forEach(id => {
+      const elements = document.querySelectorAll(`[data-clue="${id}"]:not(.found)`);
+      elements.forEach(el => el.classList.add('found'));
+    });
   }
 
   resetMysteryBar() {
