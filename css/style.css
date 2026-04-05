@@ -29,27 +29,27 @@
 }
 
 .theme-sepia {
-  /* Sepia Theme (Light) - Refined "Apple Books" Style */
-  --bg-app: #f7f1e3;
-  --bg-screen: #fefaf0;
-  --bg-shelf: #f2ede0;
-  --bg-item: #eee4cc;
-  --bg-panel: #fefaf0;
+  /* Sepia Theme (Light) - Elegant "Modern Archive" Style */
+  --bg-app: #fafafa;
+  --bg-screen: #fcfcfc;
+  --bg-shelf: #f4f3ef;
+  --bg-item: #fdfdfd;
+  --bg-panel: #ffffff;
   
-  --text-main: #4a3728;
-  --text-dim: #7a6a52;
-  --text-muted: #a6967a;
-  --text-accent: #8b4513;
+  --text-main: #2d2621;
+  --text-dim: #7a7065;
+  --text-muted: #b5ada3;
+  --text-accent: #8c7355;
   
-  --accent: #b8860b;
-  --border-light: #e0d5ba;
-  --border-dim: #ebdcb2;
-  --border-item: #dccba3;
+  --accent: #a68b67;
+  --border-light: #ececea;
+  --border-dim: #e5e3de;
+  --border-item: #e1ddd5;
 
   /* Newspaper/Parchment */
-  --paper-bg: #fdf6e3;
+  --paper-bg: #fffefe;
   --paper-text: #1a1a1a;
-  --item-filter: sepia(0.35) contrast(0.9) brightness(0.9);
+  --item-filter: sepia(0.2) contrast(0.95) brightness(1.0);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
