@@ -78,12 +78,12 @@ body {
   flex-direction: column; align-items: center; justify-content: center;
   min-height: 100vh; background: var(--bg-screen); padding: 40px 20px;
 }
-.library-title    { font-size: 11px; letter-spacing: 8px; color: var(--text-muted); margin-bottom: 8px; }
-.library-subtitle { font-size: 28px; color: var(--text-accent); margin-bottom: 6px; letter-spacing: 2px; }
-.library-desc     { font-size: 11px; color: var(--text-muted); margin-bottom: 60px; letter-spacing: 3px; }
+.library-title    { font-size: calc(11px * var(--f-scale)); letter-spacing: 8px; color: var(--text-muted); margin-bottom: 8px; }
+.library-subtitle { font-size: calc(28px * var(--f-scale)); color: var(--text-accent); margin-bottom: 6px; letter-spacing: 2px; }
+.library-desc     { font-size: calc(11px * var(--f-scale)); color: var(--text-muted); margin-bottom: 60px; letter-spacing: 3px; }
 
 .shelf { width: 100%; max-width: 860px; margin-bottom: 40px; }
-.shelf-label { font-size: 10px; color: var(--text-muted); letter-spacing: 4px; margin-bottom: 12px; padding-left: 4px; }
+.shelf-label { font-size: calc(10px * var(--f-scale)); color: var(--text-muted); letter-spacing: 4px; margin-bottom: 12px; padding-left: 4px; }
 .shelf-row {
   display: flex; gap: 14px; padding: 20px 16px 28px;
   background: var(--bg-shelf); border-top: 3px solid var(--border-light);
@@ -116,9 +116,9 @@ body {
 }
 .newspaper-item.locked { opacity: 0.25; cursor: not-allowed; }
 
-.np-date      { font-size: 7px; color: var(--text-dim); letter-spacing: 1px; border-bottom: 1px solid var(--border-item); padding-bottom: 4px; margin-bottom: 5px; }
-.np-headline  { font-size: 9px; line-height: 1.6; color: var(--text-accent); font-weight: 700; flex: 1; }
-.np-status    { font-size: 8px; text-align: center; margin-top: 6px; padding: 3px; border-top: 1px solid var(--border-item); color: var(--text-muted); }
+.np-date      { font-size: calc(7px * var(--f-scale)); color: var(--text-dim); letter-spacing: 1px; border-bottom: 1px solid var(--border-item); padding-bottom: 4px; margin-bottom: 5px; }
+.np-headline  { font-size: calc(9px * var(--f-scale)); line-height: 1.6; color: var(--text-accent); font-weight: 700; flex: 1; }
+.np-status    { font-size: calc(8px * var(--f-scale)); text-align: center; margin-top: 6px; padding: 3px; border-top: 1px solid var(--border-item); color: var(--text-muted); }
 
 /* ════════════════════════════
    살아있는 신문 (기사 + 수사 통합)
@@ -150,10 +150,10 @@ body {
 }
 
 .np-masthead { text-align: center; border-bottom: 3px double #2a2a2a; border-top: 3px double #2a2a2a; padding: 10px 0; margin-bottom: 18px; }
-.np-masthead-name { font-size: 34px; font-weight: 800; letter-spacing: 8px; line-height: 1; }
-.np-masthead-info { display: flex; justify-content: space-between; font-size: 10px; margin-top: 6px; color: #555; letter-spacing: 1px; }
-.np-main-headline { font-size: 28px; font-weight: 800; text-align: center; line-height: 1.3; margin: 16px 0 8px; border-bottom: 2px solid #2a2a2a; padding-bottom: 14px; letter-spacing: 2px; }
-.np-sub-headline  { font-size: 13px; text-align: center; color: #555; margin-bottom: 18px; letter-spacing: 1px; }
+.np-masthead-name { font-size: calc(34px * var(--f-scale)); font-weight: 800; letter-spacing: 8px; line-height: 1; }
+.np-masthead-info { display: flex; justify-content: space-between; font-size: calc(10px * var(--f-scale)); margin-top: 6px; color: #555; letter-spacing: 1px; }
+.np-main-headline { font-size: calc(28px * var(--f-scale)); font-weight: 800; text-align: center; line-height: 1.3; margin: 16px 0 8px; border-bottom: 2px solid #2a2a2a; padding-bottom: 14px; letter-spacing: 2px; }
+.np-sub-headline  { font-size: calc(13px * var(--f-scale)); text-align: center; color: #555; margin-bottom: 18px; letter-spacing: 1px; }
 .np-columns       { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; border-bottom: 1px solid #aaa; padding-bottom: 16px; }
 .np-col-body      { font-size: calc(11px * var(--f-scale)); line-height: 2; color: #2a2a2a; }
 
@@ -220,9 +220,9 @@ body {
 .game-btn-back { background: var(--bg-app); color: var(--text-dim); border: 1px solid var(--border-item); padding: 5px 12px; font-size: 10px; cursor: pointer; }
 .game-btn-back:hover { color: var(--accent); border-color: var(--accent); }
 
-.game-era-badge { font-size: 10px; background: var(--accent); color: #080808; padding: 3px 10px; letter-spacing: 2px; font-weight: 800; }
-.game-location  { font-size: 11px; color: var(--text-dim); flex: 1; }
-.game-clues     { font-size: 11px; color: var(--accent); letter-spacing: 1px; cursor: pointer; transition: opacity 0.3s; }
+.game-era-badge { font-size: calc(10px * var(--f-scale)); background: var(--accent); color: #080808; padding: 3px 10px; letter-spacing: 2px; font-weight: 800; }
+.game-location  { font-size: calc(11px * var(--f-scale)); color: var(--text-dim); flex: 1; }
+.game-clues     { font-size: calc(11px * var(--f-scale)); color: var(--accent); letter-spacing: 1px; cursor: pointer; transition: opacity 0.3s; }
 .game-clues.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 
 /* 단서 패널 (사이드바) */
@@ -270,7 +270,7 @@ body {
   0%   { opacity: 0; transform: scale(0.88) rotate(-3deg); filter: grayscale(100%) sepia(100%); }
   100% { opacity: 1; transform: scale(1) rotate(0deg); filter: sepia(15%); }
 }
-.solved-headline { font-size: 22px; font-weight: 800; text-align: center; line-height: 1.4; margin: 14px 0; color: #8b1a1a; }
+.solved-headline { font-size: calc(22px * var(--f-scale)); font-weight: 800; text-align: center; line-height: 1.4; margin: 14px 0; color: #8b1a1a; }
 .solved-stamp-wrap { margin: 20px 0; text-align: center; perspective: 1000px; }
 .solved-stamp { 
   display: inline-block; border: 4px double #8b1a1a; color: #8b1a1a; 
@@ -283,7 +283,7 @@ body {
   0% { transform: scale(5) rotate(20deg); opacity: 0; filter: blur(10px); }
   100% { transform: scale(1) rotate(-12deg); opacity: 1; filter: blur(0); }
 }
-.solved-clue-item { font-size: 12px; line-height: 2; color: #444; padding-left: 12px; border-left: 2px solid #c8a96e; margin-bottom: 6px; }
+.solved-clue-item { font-size: calc(12px * var(--f-scale)); line-height: 2; color: #444; padding-left: 12px; border-left: 2px solid #c8a96e; margin-bottom: 6px; }
 .shelf-back-btn  { margin-top: 32px; background: transparent; color: var(--accent); border: 1px solid rgba(200,169,110,0.2); padding: 13px 36px; font-size: 12px; letter-spacing: 4px; cursor: pointer; }
 
 /* ════════════════════════════
@@ -508,7 +508,7 @@ body {
     margin-top: -4px; opacity: 0.6;
   }
 
-  /* 모바일 단서 인디케이터 (Bookmark) */
+  /* ───── 모바일 단서 인디케이터 (Bookmark) ───── */
   .mobile-clue-indicator {
     display: flex; position: fixed; right: 0; top: 50%; transform: translateY(-50%);
     background: var(--accent); color: #000; padding: 12px 6px 12px 10px;
@@ -523,6 +523,9 @@ body {
   .mobile-clue-indicator .count { font-size: 18px; line-height: 1; }
   .mobile-clue-indicator .icon  { font-size: 12px; opacity: 0.8; }
 }
+
+/* ───── 모바일 전용 UI 초기 상태 (PC에선 완전히 숨김) ───── */
+.mobile-clue-indicator { display: none; }
 
 /* 폰트 제어 버튼 스타일 */
 .font-controls { display: flex; align-items: center; gap: 4px; margin-left: 10px; border-left: 1px solid var(--border-light); padding-left: 10px; }
