@@ -27,152 +27,185 @@ export const danjongStory = (engine, solveCase) => {
     // ──────────────────────────────────────────────────
     suyang: {
       start: () => {
-        engine.log('time', '[ 1 챕터 — 눈 내리는 사저 ]');
-        engine.log('story', '1453년 무렵, 수양대군의 사저에는 차가운 북풍이 몰아치고 있습니다. 뜰에 쌓인 눈을 바라보며 당신은 생각합니다. 문종 형님은 떠났고, 어린 조카는 나약한 신하들에게 휘둘리고 있습니다. 조선의 종묘사직이 이대로 흔들리게 둘 것인가, 아니면 내가 직접 피를 묻힐 것인가.');
-        engine.log('inner', '“왕이 된다는 것은 개인의 욕심인가, 아니면 이 나라를 위한 숙명인가. 나는 이미 답을 알고 있다.”');
+        engine.log('time', '[ 1 챕터 — 설원 위의 고독 ]');
+        engine.log('story', '1453년 무렵, 수양대군의 사저에는 뼈를 시리게 하는 북풍이 몰아치고 있습니다. 마당에 쌓인 눈은 마치 갓 태어난 백성들의 순수함 같으면서도, 동시에 모든 흔적을 비정하게 지워버리는 죽음의 수의처럼 보입니다. 당신은 얼어붙은 연못가에 서서 생각합니다. 나약한 조카가 보위에 앉아 신하들에게 농락당하고 있는 이 현실이 정녕 조선이 가야 할 길인가. 아니면 내가 그 오명을 뒤집어쓰고 강력한 나라를 세워야 하는가.');
+        engine.log('inner', '“왕관은 차가운 얼음과 같다. 누군가는 그 냉기를 견뎌야 조선의 봄이 올 것이니. 그것을 짊어질 자는 이 나라에서 오직 나뿐이다.”');
         engine.showChoices([
-          { label: "▶ 한명회와 함께 거사 명단을 작성한다.", action: () => {
-            engine.modifyStat('stress', +10);
-            engine.log('story', '당신은 붓을 들어 정적들의 이름을 하나씩 지워나갑니다. 첫 번째 이름은 김종서. 그는 조선의 대호(大虎)이나, 당신의 길을 막는 사냥감일 뿐입니다.');
-            next('tiger');
+          { label: "▶ 한명회와 함께 정적들의 명단을 작성한다.", action: () => {
+            engine.modifyStat('stress', +15);
+            engine.log('story', '당신은 붓을 들어 정적들의 이름을 하나씩 적어 내려갑니다. 먹물이 번지는 모양이 마치 갓 흘린 피처럼 보이지만, 당신의 손은 단 한 번도 떨리지 않습니다. 첫 번째 이름은 대호(大虎) 김종서. 조선의 호랑이를 잡지 못하면 내가 사냥당할 뿐입니다.');
+            next('tiger_hunt');
           }},
           { label: "▶ 홀로 술을 마시며 망설임을 털어낸다.", action: () => {
-            engine.modifyStat('mental', -5);
-            engine.log('story', '독한 술이 목을 타고 넘어갑니다. 당신은 조카의 얼굴을 지워버리고 왕의 위엄만을 남기기로 맹세합니다.');
-            next('tiger');
-          }}
-        ]);
-      },
-      tiger: () => {
-        engine.log('time', '[ 2 챕터 — 대호를 사냥하다 ]');
-        engine.log('story', '김종서의 집 앞. 밤공기가 칼날처럼 날카롭습니다. 당신은 철퇴를 숨긴 장정들과 함께 그의 대문 앞에 섰습니다. 조선에서 가장 강한 남자를 굴복시켜야 비로소 당신의 시대가 열립니다.');
-        engine.log('inner', '심장이 요동친다. 이것은 반역인가, 혁명인가. 주사위는 던져졌다.');
-        engine.showChoices([
-          { label: "▶ 직접 김종서와 대면하여 위압한다.", action: () => {
-            engine.modifyStat('stress', +15);
-            engine.log('story', '당신은 당당히 걸어가 그를 마주합니다. 짧은 침묵 끝에 철퇴가 허공을 가르고, 조선의 호랑이가 비참하게 쓰러집니다.');
-            next('throne');
-          }},
-          { label: "▶ 신호를 내려 매복한 자들이 처리하게 한다.", action: () => {
             engine.modifyStat('mental', -10);
-            engine.log('story', '당신은 등을 돌립니다. 비명이 들려오고, 정적의 피가 대문을 적십니다. 당신은 이제 돌이킬 수 없는 왕의 길로 발을 내딛습니다.');
-            next('throne');
-          }}
-        ]);
-      },
-      throne: () => {
-        engine.log('time', '[ 3 챕터 — 옥좌의 무게 ]');
-        engine.log('story', '결국 당신은 근정전의 옥좌에 앉았습니다. 면류관의 구슬이 흔들리며 당신의 시야를 가립니다. 하지만 신하들의 눈빛은 예전과 다릅니다. 충성이 아닌 공포가 그들 사이를 흐르고 있습니다.');
-        engine.log('inner', '“왕관은 생각보다 무겁구나. 하지만 이 무게를 견디는 자만이 조선을 지탱할 수 있다.”');
-        engine.showChoices([
-          { label: "▶ 공신들에게 큰 상을 내려 체제를 굳힌다.", action: () => {
-            engine.modifyStat('money', -30);
-            engine.log('story', '당신은 곳간을 열고 귀한 보물들을 공신들에게 나누어줍니다. 그들의 입은 막았지만, 인심은 멀어져 갑니다.');
-            next('scholars');
+            engine.log('story', '독한 소주가 목을 타고 넘어갑니다. 술의 열기가 머릿속의 복잡한 번뇌를 태워버립니다. 조카의 슬픈 눈망울이 스쳐 가지만, 당신은 그 눈빛을 어방 속으로 밀어 넣습니다. 왕이 되려는 자에게 자비는 사치입니다.');
+            next('tiger_hunt');
           }},
-          { label: "▶ 엄격한 법집행으로 왕권을 과시한다.", action: () => {
-            engine.modifyStat('stress', +20);
-            engine.log('story', '당신은 사소한 반대조차 용납하지 않습니다. 감옥은 당신의 정적들로 가득 차고, 도성에는 정적이 흐릅니다.');
-            next('scholars');
+          { label: "▶ 밤새도록 병법서를 읽으며 전략을 가다듬는다.", action: () => {
+            engine.modifyStat('stamina', -10);
+            engine.log('story', '등불이 가물거리도록 병법서를 탐독합니다. 모든 우연을 배제하고 오직 필승의 길만을 계산합니다. 당신의 눈에는 이제 조카도, 동생도 아닌 오직 배치해야 할 말(馬)들만이 보입니다.');
+            next('tiger_hunt');
           }}
         ]);
       },
-      scholars: () => {
-        engine.log('time', '[ 4 챕터 — 집현전의 차가운 시선 ]');
-        engine.log('story', '당신이 아끼던 집현전 학사들—성삼문, 박팽년 등이 당신의 연회 제안을 연이어 거절합니다. 그들은 조카의 왕위를 뺏은 당신을 왕으로 인정하지 않는 듯합니다.');
-        engine.log('inner', '“내가 그토록 아꼈던 천재들이 이제는 나를 비수를 든 강도처럼 보는구나.”');
+      tiger_hunt: () => {
+        engine.log('time', '[ 2 챕터 — 대호를 사냥하다 ]');
+        engine.log('story', '김종서의 집 대문 앞. 밤공기가 비수를 품은 듯 살벌합니다. 당신은 철퇴를 품속에 숨긴 장정들과 함께 그의 거처 앞에 섰습니다. 조선에서 가장 강대한 세력을 가졌던 정승, 김종서와 마주할 시간입니다. 이 문을 넘는 순간, 당신은 영웅이 되거나 혹은 반역자가 될 것입니다.');
+        engine.log('inner', '심장 박동 소리가 고요한 밤을 깨뜨릴 것만 같다. 호랑이를 잡으려면 그 소굴로 들어가야 한다. 두려움은 보이지 마라.');
         engine.showChoices([
-          { label: "▶ 학사들을 압박하여 강제로 충성을 요구한다.", action: () => {
+          { label: "▶ 직접 김종서 앞에 서서 위압감을 행사한다.", action: () => {
+            engine.modifyStat('stress', +20);
+            engine.log('story', '당신은 당당히 걸어가 그를 마주합니다. 짧은 침묵은 수 만년처럼 느껴집니다. 당신의 눈빛에서 살기를 읽은 김종서가 입을 떼려는 찰나, 어둠 속에서 철퇴가 번개처럼 낙하합니다. 조선의 호랑이가 비참한 비명조차 지르지 못한 채 바닥을 적십니다.');
+            next('empty_throne');
+          }},
+          { label: "▶ 신호를 내려 매복한 자들이 즉시 처리하게 한다.", action: () => {
             engine.modifyStat('mental', -15);
-            next('guilt_dream');
+            engine.log('story', '당신은 등을 돌려 먼 곳을 바라봅니다. 둔탁한 타격음과 함께 거친 숨소리가 멎는 소리가 들려옵니다. 당신의 관복 끝에 튀긴 붉은 핏방울이 무겁게만 느껴집니다. 이제 대세는 당신의 것입니다.');
+            next('empty_throne');
           }},
-          { label: "▶ 진심 어린 글을 써서 그들을 설득해본다.", action: () => {
-            engine.modifyStat('stress', +10);
-            next('guilt_dream');
+          { label: "▶ 김종서의 아들을 인질로 잡아 항복을 권유한다.", action: () => {
+            engine.modifyStat('stress', +25);
+            engine.log('story', '비열하다는 소리를 들어도 상관없습니다. 그의 아들을 앞세워 김종서의 기세를 꺾어놓습니다. 무너진 호랑이의 눈에서 흐르는 절망을 보며, 당신은 권력의 잔인함을 다시 한번 체감합니다.');
+            next('empty_throne');
           }}
         ]);
       },
-      guilt_dream: () => {
-        engine.log('time', '[ 5 챕터 — 피 흘리는 조카 ]');
-        engine.log('story', '잠을 이루지 못하는 밤이 늘어갑니다. 꿈결에 어린 단종이 나타나 피눈물을 흘리며 묻습니다. "숙부님, 어찌 저를 버리셨나이까?" 당신은 식은땀을 흘리며 깨어납니다.');
-        engine.log('inner', '손을 씻어도 피 냄새가 가시지 않는 기분이다. 내가 정정당당했다면 이토록 괴로울 리 없다.');
+      empty_throne: () => {
+        engine.log('time', '[ 3 챕터 — 옥좌 위의 서늘함 ]');
+        engine.log('story', '결국 당신은 근정전의 옥좌에 앉았습니다. 면류관의 옥 구슬들이 잘그락거리며 당신의 시야를 가로막습니다. 하지만 가려진 시야 너머로 보이는 대신들의 눈빛은 예전과 전혀 다릅니다. 충성이 아닌, 언제 터질지 모르는 시한폭탄 같은 공포가 그들 사이를 흐르고 있습니다. 이 자리는 생각보다 춥고, 생각보다 넓습니다.');
+        engine.log('inner', '“모두가 고개를 숙이고 있지만, 그들의 마음속에는 누가 칼을 품고 있는가. 이제 나는 아무도 믿을 수 없다.”');
         engine.showChoices([
-          { label: "▶ 무시하고 정무에 더 매진한다.", action: () => {
-            engine.modifyStat('stress', +20);
-            next('exile_order');
+          { label: "▶ 공신들에게 막대한 상을 내려 결속을 다진다.", action: () => {
+            engine.modifyStat('money', -40);
+            engine.log('story', '국고를 열어 공신들을 돈과 땅으로 묶어둡니다. 그들의 입은 금사로 꿰맸지만, 백성들의 원성은 담 너머로 커져만 갑니다.');
+            next('scholar_tension');
           }},
-          { label: "▶ 전국의 사찰에 시주하며 마음을 다스린다.", action: () => {
-             engine.modifyStat('money', -20);
-             engine.modifyStat('mental', +10);
-             next('exile_order');
+          { label: "▶ 엄격한 법치와 숙청으로 반대파를 억누른다.", action: () => {
+            engine.modifyStat('stress', +30);
+            engine.log('story', '당신은 작은 반항조차 용납하지 않습니다. 의금부의 형틀이 마를 날이 없고, 도성의 밤은 비명 소리로 가득 찹니다. 당신은 조선을 공포라는 쇠사슬로 묶어버립니다.');
+            next('scholar_tension');
           }}
         ]);
       },
-      exile_order: () => {
-        engine.log('time', '[ 6 챕터 — 청령포로의 명령 ]');
-        engine.log('story', '정적들이 단종을 다시 옹립하려 한다는 밀고가 들어옵니다. 당신은 결단을 내려야 합니다. 조카를 도성에서 멀전 영월 청령포로 유배 보내야 합니다.');
-        engine.log('inner', '“죽이고 싶지는 않다. 하지만 그가 여기 있는 한 도전은 멈추지 않을 것이다.”');
+      scholar_tension: () => {
+        engine.log('time', '[ 4 챕터 — 집현전의 조용한 반항 ]');
+        engine.log('story', '당신이 그토록 아꼈던 집현전 학사들—성삼문, 박팽년 등이 당신의 연회 초대를 노골적인 핑계로 일관하며 거부합니다. 그들의 빈 자리가 연회장의 화려한 촛불보다 더 선명하게 당신을 괴롭힙니다. 그들은 조카의 왕위를 뺏은 당신을 왕이 아닌, 그저 보좌를 훔친 도적으로 보고 있습니다.');
+        engine.log('inner', '“내가 그토록 아꼈던 천재들이 이제는 나를 비수를 든 괴물처럼 여기는구나.”');
         engine.showChoices([
-          { label: "▶ 단호하게 영월 유배령을 내린다.", action: () => {
-            engine.addClue('exile_seal', '세조의 유배 인장', '조카를 영월로 보내기 위해 찍은 차가운 옥새의 흔적입니다.');
-            next('failed_assassin');
-          }}
-        ]);
-      },
-      failed_assassin: () => {
-        engine.log('time', '[ 7 챕터 — 연회장의 암살 시도 ]');
-        engine.log('story', '명나라 사신을 맞이하는 연회장. 성삼문과 그 일당이 칼을 숨겨 들었다는 첩보가 날아듭니다. 당신의 등 뒤에서 식은땀이 흐릅니다. 죽음이 지척에 와 있습니다.');
-        engine.showChoices([
-          { label: "▶ 즉시 연회를 중단하고 검문을 명령한다.", action: () => {
-             engine.modifyStat('stress', +15);
-             next('interrogate_sam');
-          }},
-          { label: "▶ 태연하게 행동하며 범인들이 스스로 움직이길 기다린다.", action: () => {
-             engine.modifyStat('mental', -10);
-             next('interrogate_sam');
-          }}
-        ]);
-      },
-      interrogate_sam: () => {
-        engine.log('time', '[ 8 챕터 — 성삼문과의 대결 ]');
-        engine.log('story', '붙잡혀 온 성삼문은 고문 앞에서도 당신을 "전하"라 부르지 않고 "수양"이라 부릅니다. 그의 눈빛은 타오르는 불길처럼 뜨겁습니다. 당신은 그의 기개 앞에 잠시 위축됩니다.');
-        engine.log('inner', '“저자의 충심이 나를 향했더라면 조선은 얼마나 더 위대해졌을까.”');
-        engine.showChoices([
-          { label: "▶ 가혹한 고문으로 그를 굴복시키려 한다.", action: () => {
+          { label: "▶ 그들을 압박하여 강제로 충성 서약을 받는다.", action: () => {
             engine.modifyStat('mental', -20);
-             next('betrayal_news');
+            engine.log('story', '강제로 붓을 쥐여주고 충성을 맹세하게 합니다. 하지만 그들이 쓴 글씨에는 영혼이 없습니다. 당신은 껍데기뿐인 복종을 얻었을 뿐입니다.');
+            next('nightmare_visions');
           }},
-          { label: "▶ 그의 재능이 아까워 마지막으로 회유를 시도한다.", action: () => {
-             engine.modifyStat('stress', +10);
-             next('betrayal_news');
+          { label: "▶ 진심 어린 서신으로 그들의 마음을 돌려보려 한다.", action: () => {
+            engine.modifyStat('stress', +15);
+            engine.log('story', '밤새도록 편지를 씁니다. "조선을 위해 어쩔 수 없는 선택이었다"고 항변해보지만, 돌아오는 것은 싸늘한 침묵과 경멜뿐입니다.');
+            next('nightmare_visions');
+          }},
+          { label: "▶ 일부러 그들 앞에서 어린 단종을 향한 자비를 베푼다.", action: () => {
+            engine.modifyStat('mental', +10);
+            engine.log('story', '단종에게 후한 대접을 내리는 척하며 연출을 시도합니다. 학사들의 의심어린 눈빛이 잠시나마 누그러지는 듯하지만, 가슴 속에 응어리진 불길은 꺼지지 않았습니다.');
+            next('nightmare_visions');
           }}
         ]);
       },
-      betrayal_news: () => {
-        engine.log('time', '[ 9 챕터 — 동생의 죽음 ]');
-        engine.log('story', '동생인 금성대군마저 단종 복위를 꾀했다는 소식이 들려옵니다. 살붙이조차 당신의 적이 되었습니다. 주위에는 오직 이익으로 얽힌 공신들뿐입니다.');
+      nightmare_visions: () => {
+        engine.log('time', '[ 5 챕터 — 피 흘리는 조카의 환영 ]');
+        engine.log('story', '깊은 밤, 침전에 홀로 누워있어도 잠은 당신을 외면합니다. 촛불이 일렁일 때마다 그림자가 단종의 모습으로 변하여 당신을 압박합니다. 꿈속에서 단종의 어머니, 현덕왕후가 나타나 당신의 목을 조르며 피눈물을 흘립니다. "숙부여, 정녕 당신의 손에 묻은 피가 닦일 줄 알았느냐!" 당신은 비명을 지르며 깨어납니다.');
+        engine.log('inner', '등 뒤가 서늘하다. 옷을 몇 겹이나 껴입어도 이 한기는 사라지지 않는다. 내가 죽인 자들의 원혼이 나를 끌어내리려 하는가.');
         engine.showChoices([
-          { label: "▶ 법대로 처리하라 지시한다.", action: () => {
-            engine.log('story', '당신은 눈물을 참으며 명령을 내립니다. 조선의 권력은 이제 당신에게만 집중되지만, 당신은 가장 고독한 인간이 됩니다.');
-            next('poison_finale');
+          { label: "▶ 무시하고 정무에 더욱 집착한다.", action: () => {
+            engine.modifyStat('stress', +25);
+            engine.log('story', '환상을 지우기 위해 밤낮없이 나랏일에 매달립니다. 당신의 몸은 축나고 성격은 더욱 포악해져 가며, 이제 당신의 곁에는 아무도 남지 않게 됩니다.');
+            next('exile_decision');
+          }},
+          { label: "▶ 대규모 시주를 통해 부처님의 자비를 구한다.", action: () => {
+            engine.modifyStat('money', -30);
+            engine.modifyStat('mental', +15);
+            engine.log('story', '전국의 사찰에 금을 내리고 불상을 조성합니다. 잠시나마 마음의 평안을 얻은 듯하지만, 눈을 감으면 여전히 영월의 파도 소리가 들려옵니다.');
+            next('exile_decision');
           }}
         ]);
       },
-      poison_finale: () => {
-        engine.log('time', '[ 10 챕터 — 비극의 끝, 영월의 소식 ]');
-        engine.log('story', '이제 마지막입니다. 단종이 살아있는 한 당신의 왕조는 영원히 불안할 것입니다. 금부도사 왕방연에게 사약을 들려 영월로 보냅니다. 밤바람이 창문을 거칠게 두드립니다.');
-        engine.log('inner', '“이것으로 모든 비극은 끝날 것이다. 아니, 나의 지옥은 이제 시작인가.”');
+      exile_decision: () => {
+        engine.log('time', '[ 6 챕터 — 영월, 청령포로의 유배 ]');
+        engine.log('story', '정적들이 단종을 다시 옹립하려 한다는 밀고가 빗발칩니다. 더 이상 그를 도성 근처에 둘 수 없습니다. 당신은 단종을 사면이 강과 절벽으로 둘러싸인 천혜의 감옥, 영월 청령포로 보낼 것을 명령합니다. 그것은 유배라는 이름의 사실상의 사형 선고와 같습니다.');
+        engine.log('inner', '“조카야, 너를 죽이고 싶지는 않았다. 하지만 네가 살아있는 한 조선의 하늘에 태양은 둘이 될 수밖에 없구나.”');
         engine.showChoices([
-          { label: "▶ 사약을 내리고 방문을 걸어 잠근다.", action: () => {
-             engine.addClue('last_poison', '부서진 사약 발', '어린 왕의 마지막을 지켜본 슬픈 도자기 파편입니다.');
-             next('ending');
+          { label: "▶ 단호하게 영월 유배령을 선포한다.", action: () => {
+            engine.addClue('exile_seal', '세조의 비정한 인장', '조카의 유배지에 찍힌 차가운 옥새의 낙인입니다.');
+            next('assassination_threat');
+          }},
+          { label: "▶ 유배길의 호위를 강화하여 상해를 방지한다.", action: () => {
+            engine.modifyStat('stress', +10);
+            engine.log('story', '혹시라도 가는 길에 해를 입을까 봐 당신의 최정예 군사들을 붙입니다. 비정함 속에서도 남은 일말의 죄책감이 당신을 괴롭힙니다.');
+            next('assassination_threat');
+          }}
+        ]);
+      },
+      assassination_threat: () => {
+        engine.log('time', '[ 7 챕터 — 연회장의 은밀한 비수 ]');
+        engine.log('story', '경회루에서 열린 연회. 화려한 가무가 이어지는 가운데, 당신은 한명회로부터 쪽지를 받습니다. "운검(雲劍) 성삼문과 유응부가 칼을 숨겼습니다. 거사가 임박했습니다." 주변을 둘러보자, 미소 짓고 있는 신하들의 옷자락 아래에서 차가운 금속 광채가 비치는 것만 같습니다.');
+        engine.showChoices([
+          { label: "▶ 즉시 호위무사를 불러 연회장을 폐쇄한다.", action: () => {
+            engine.modifyStat('stress', +20);
+            next('interrogation_hell');
+          }},
+          { label: "▶ 태연하게 술을 마시며 그들이 먼저 움직이게 유도한다.", action: () => {
+            engine.modifyStat('mental', -20);
+            next('interrogation_hell');
+          }},
+          { label: "▶ 범인을 지목하지 않고 모두에게 자백할 기회를 준다.", action: () => {
+            engine.modifyStat('stress', +15);
+            next('interrogation_hell');
+          }}
+        ]);
+      },
+      interrogation_hell: () => {
+        engine.log('time', '[ 8 챕터 — 성삼문의 위엄 앞에 서다 ]');
+        engine.log('story', '붙잡힌 성삼문을 국문합니다. 그는 무릎이 깨지고 살이 타는 고문 속에서도 당신을 향해 비웃음을 날립니다. "수양, 너는 왕이 아니다! 그저 어린 조카를 문 자취에 불과하다!" 당신은 그를 죽여야 마땅하지만, 그의 곧은 기개에 압도되어 말문이 막힙니다.');
+        engine.log('inner', '이런 자가 내 신하를 자처했더라면, 나는 세종을 넘어서는 성군이 되었을지도 모른다. 하지만 이제는 그를 찢어 죽여야만 내가 살 수 있다.');
+        engine.showChoices([
+          { label: "▶ 가혹한 처형으로 기를 꺾겠다 명령한다.", action: () => {
+            engine.modifyStat('mental', -25);
+            next('brother_blood');
+          }},
+          { label: "▶ 마지막까지 그의 재능을 아까워하며 회유한다.", action: () => {
+            engine.modifyStat('stress', +15);
+            next('brother_blood');
+          }}
+        ]);
+      },
+      brother_blood: () => {
+        engine.log('time', '[ 9 챕터 — 살붙이의 피까지 묻히다 ]');
+        engine.log('story', '당신의 친동생 금성대군마저 반란을 꾀했다는 보고가 들어옵니다. 이제 당신의 명령서는 가문 전체를 향합니다. 권력이라는 괴물은 형제도, 친구도 남기지 않습니다. 당신의 곁은 이제 텅 비어버렸고, 오직 찬바람만이 옥좌를 감쌉니다.');
+        engine.showChoices([
+          { label: "▶ 모든 역모자를 처단하라는 명을 고수한다.", action: () => {
+            engine.log('story', '당신의 명령으로 동생의 숨통마저 끊어집니다. 당신은 이제 피로 맺어진 진정한 왕이 되었습니다. 하지만 거울 속의 당신은 더 이상 예전의 수양대군이 아닙니다.');
+            next('final_poison');
+          }}
+        ]);
+      },
+      final_poison: () => {
+        engine.log('time', '[ 10 챕터 — 영월 청령포의 마지막 전언 ]');
+        engine.log('story', '이제 선택의 여지가 없습니다. 단종이 살아있는 한, 반란은 멈추지 않을 것입니다. 금부도사에게 사약을 들려 영월로 보냅니다. 창밖에는 비가 쏟아져 대지를 적십니다. 마치 하늘이 내리는 조카의 눈물 같습니다.');
+        engine.log('inner', '“끝내야 한다. 그래야 조선이 산다. 미안하다, 조카야. 지옥에서 만나자.”');
+        engine.showChoices([
+          { label: "▶ 사약 사발을 건네라는 명령을 최종 확인한다.", action: () => {
+            engine.addClue('last_poison_bowl', '단종의 사약 사발', '조선 사상 가장 슬픈 죽음을 담았던 낡은 사발입니다.');
+            next('ending');
+          }},
+          { label: "▶ 사약 대신 가문을 멸문시키고 단종은 홀로 두게 한다.", action: () => {
+            engine.modifyStat('stress', +30);
+            engine.log('story', '조카의 숨통은 끊지 못하지만, 그의 지지기반을 처참히 부숴버립니다. 그것은 죽음보다 더 가혹한 형벌이 될 것입니다.');
+            next('ending');
           }}
         ]);
       },
       ending: () => {
         engine.log('time', '[ 11 챕터 — 역사가 적을 이름, 세조 ]');
-        engine.log('story', '당신은 조선의 기틀을 다진 강력한 임금으로 기록될 것입니다. 하지만 후세는 당신이 조카의 목숨을 앗아간 비정한 숙부였다는 사실 또한 잊지 않을 것입니다. 당신은 승리했으나, 평화는 얻지 못했습니다.');
-        solveCase('danjong_multi', '피로 쓴 왕조의 설계도', ['세조의 야망'], '수양대군으로서 당신은 조선을 위해 가장 비정한 길을 선택했고, 그 대가로 평생의 악몽을 얻었습니다.');
+        engine.log('story', '당신은 결국 조선의 제7대 왕 세조가 되었습니다. 국방을 튼튼히 하고 법전을 정비하여 나라의 기틀을 세웠습니다. 하지만 후세는 당신을 위대한 왕이라 칭하면서도, 동시에 혈육을 죽인 비정한 숙부라 기록할 것입니다. 당신은 옥좌라는 차가운 바다 위에 홀로 떠 있는 고독한 승리자입니다.');
+        solveCase('danjong_multi', '피와 야망으로 세운 왕조', ['세조의 야망'], '수양대군으로서 당신은 조선을 위해 가장 비정한 길을 선택했고, 그 결과 찬란한 치적 뒤에 영원한 죄책감을 남겼습니다.');
       }
     },
 
