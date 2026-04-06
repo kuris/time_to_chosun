@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="조선왕조실록의 기록되지 않은 진실을 파헤치는 탐정 게임">
-  <title>시간의 도서관 : 실록편</title>
+  <title>시간의 도서관 : 단종편</title>
   <link rel="stylesheet" href="./css/style.css">
 
   <!-- Favicon (404 방지용 임시 설정) -->
@@ -74,11 +74,38 @@
   <div class="landing-msg"  id="landing-msg"></div>
 </div>
 
+<!-- 홀로그램 지도 오버레이 (단종편 전용) -->
+<div id="hologram-overlay" class="hologram-overlay">
+  <div class="hologram-scene-preview" id="hologram-scene-preview"></div>
+  <div class="hologram-relief-map" id="hologram-relief-map"></div>
+  <div class="hologram-info-overlay" id="hologram-info-overlay">
+    <div class="hologram-info-content">
+      <h3 id="holo-info-title">SITE IDENTIFIED</h3>
+      <p id="holo-info-desc">강원도 영월군 청령포 — 기록되지 않은 역사의 조각을 동기화합니다.</p>
+    </div>
+  </div>
+  <div class="hologram-glitch"></div>
+  <div class="hologram-text">TIME SYNCING... 1457 영월 청령포</div>
+</div>
+
+<!-- POV 선택 화면 -->
+<div class="screen" id="screen-pov-selection">
+  <div class="pov-header">
+    <div class="pov-title">역사의 이면에 선 자들</div>
+    <div class="pov-subtitle">동일한 사건, 다른 네 개의 진실. 당신은 누구의 기록을 남기겠습니까?</div>
+  </div>
+  <div class="pov-grid" id="pov-grid">
+    <!-- JS에서 동적으로 생성 -->
+  </div>
+  <button class="np-btn" onclick="backToLibrary()" style="margin-top: 40px; border-radius: 20px;">기록 보관소로 돌아가기</button>
+</div>
+
 <!-- ══════════════════════════════
      사고(史庫) 선반 (Records Shelf)
 ══════════════════════════════ -->
 <div class="screen" id="screen-library">
   <div class="library-header-btn-row" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px; align-items: center;">
+    <button class="font-btn" style="width: auto; padding: 0 12px; border-radius: 20px; font-size: 10px; opacity: 0.8;" onclick="location.hash='#about'">📍 소문(About)</button>
     <div class="font-controls">
       <button class="font-btn" onclick="setFontSize(0.85)" id="f-btn-s">A-</button>
       <button class="font-btn active"  onclick="setFontSize(1.0)" id="f-btn-m">A</button>
@@ -87,7 +114,7 @@
     <button class="game-btn-back btn-theme-toggle" onclick="toggleTheme()" style="padding: 8px 16px; border-radius: 20px; font-size: 11px;"></button>
   </div>
   <div class="library-title">THE ANNALS</div>
-  <div class="library-subtitle">시간의 도서관 : 실록편</div>
+  <div class="library-subtitle">시간의 도서관 : 단종편</div>
   <div class="library-desc">기록을 골라 그 시대로 들어가십시오</div>
 
   <div class="shelf">
@@ -97,6 +124,11 @@
         <div class="np-date">1694.05.10</div>
         <div class="np-headline">저주와 염매<br>궁궐의 흉측한 그림자</div>
         <div class="np-status" id="np-status-curse1694">● 미해결</div>
+      </div>
+      <div class="newspaper-item" id="np-item-danjong_multi" onclick="openRecord('danjong_multi')">
+        <div class="np-date">1457.10.24</div>
+        <div class="np-headline">청령포의 비명<br>네 개의 시선</div>
+        <div class="np-status" id="np-status-danjong_multi">● 조사 가능</div>
       </div>
       <!-- 향후 새로운 실록 시나리오가 이곳에 추가됩니다 -->
       <div class="newspaper-item disabled" style="opacity: 0.3; cursor: default;">
@@ -109,9 +141,6 @@
 
   <div class="library-footer">
     <span>── 조선왕조실록 · 사라진 진실을 찾아서 ──</span>
-    <div style="margin-top: 15px;">
-      <button class="np-btn" style="font-size: 11px; padding: 6px 15px; border-radius: 20px; opacity: 0.8;" onclick="location.hash='#about'">📍 소개 (About)</button>
-    </div>
   </div>
 </div>
 
@@ -133,18 +162,18 @@
   </div>
 
   <div class="game-stats" id="game-stats">
-    <div class="stat-item"><span class="stat-label">엽전</span><span class="stat-value" id="stat-money">100</span></div>
-    <div class="stat-item"><span class="stat-label">기력</span><span class="stat-value" id="stat-stamina">100</span></div>
-    <div class="stat-item"><span class="stat-label">이성</span><span class="stat-value" id="stat-mental">100</span></div>
-    <div class="stat-item"><span class="stat-label">의심</span><span class="stat-value" id="stat-stress">0</span></div>
+    <div class="stat-item"><span class="stat-label" id="stat-money-label">엽전</span><span class="stat-value" id="stat-money">100</span></div>
+    <div class="stat-item"><span class="stat-label" id="stat-stamina-label">기력</span><span class="stat-value" id="stat-stamina">100</span></div>
+    <div class="stat-item"><span class="stat-label" id="stat-mental-label">이성</span><span class="stat-value" id="stat-mental">100</span></div>
+    <div class="stat-item"><span class="stat-label" id="stat-stress-label">의심</span><span class="stat-value" id="stat-stress">0</span></div>
   </div>
 
-  <div class="newspaper-main-container">
-    <div class="newspaper-wrap" id="newspaper-content">
-      <!-- 신문 기사 본문이 여기에 렌더링됨 -->
-    </div>
-    
-    <!-- 현장 수사 기록 (조보 하단에 붙음) -->
+    <div class="newspaper-main-container">
+      <div class="newspaper-wrap" id="newspaper-content">
+        <!-- 기록 본문이 여기에 렌더링됨 -->
+      </div>
+      
+      <!-- 현장 수사 기록 (실록 하단에 붙음) -->
     <div class="field-notes-wrap" id="field-notes-area">
       <div class="field-notes-header">INVESTIGATION RECORDS — 수사 기록</div>
       <div id="game-log"></div>
@@ -170,7 +199,7 @@
 ══════════════════════════════ -->
 <!-- 
 <div class="screen" id="screen-game">
-  ... (기존 내용은 newspaper 화면으로 흡수됨)
+  ... (기존 내용은 기록 화면으로 흡수됨)
 </div> 
 -->
 
@@ -255,7 +284,7 @@
 ══════════════════════════════ -->
 <div class="screen" id="screen-solved">
   <div class="solved-newspaper" id="solved-content"></div>
-  <button class="shelf-back-btn" onclick="backToLibrary()">📚 기록을 다시 넣는다</button>
+  <button class="shelf-back-btn" onclick="backToLibrary()">📚 기록을 사고에 다시 넣는다</button>
 </div>
 
 <!-- ══════════════════════════════
@@ -267,13 +296,13 @@
 <div class="screen" id="screen-about">
   <div class="about-container">
     <div class="about-header">
-      <div class="about-header-main">ABOUT — 시간의 도서관 : 실록편</div>
+      <div class="about-header-main">ABOUT — 시간의 도서관 : 단종편</div>
       <div class="about-header-sub">RECOVERY OF UNRECORDED TRUTH</div>
     </div>
     
     <div class="about-content">
       <section class="about-section">
-        <p><strong>시간의 도서관 : 실록편</strong>은 조선왕조실록과 흠흠신서 등 실제 사료를 기반으로 한 창작 수사 게임입니다.</p>
+        <p><strong>시간의 도서관 : 단종편</strong>은 조선왕조실록과 흠흠신서 등 실제 사료를 기반으로 한 창작 수사 게임입니다.</p>
         <p>이곳에 수록된 기록과 사건은 실제 역사적 사실을 모티브로 하되, 게임 속 단서, 증언, 결말, 해석은 대부분 작가의 상상력으로 창작된 픽션입니다.</p>
         <p>따라서 본 게임의 내용은 역사적 사실을 그대로 재현하거나 교육 목적으로 만들어진 것이 아니며, 실제 사건의 판결·진실을 대체하거나 왜곡하려는 의도가 전혀 없습니다.</p>
       </section>

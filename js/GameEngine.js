@@ -287,6 +287,25 @@ export class GameEngine {
     if (ss) ss.className = 'stat-value' + (s.stress > 70  ? ' minus' : '');
   }
 
+  updateStatLabels(labels) {
+    // labels: { money: '엽전', stamina: '기력', ... }
+    const mapping = {
+      money: 'stat-money-label',
+      stamina: 'stat-stamina-label',
+      mental: 'stat-mental-label',
+      stress: 'stat-stress-label'
+    };
+    Object.entries(labels).forEach(([key, text]) => {
+      const elId = mapping[key];
+      const el = document.getElementById(elId);
+      if (el) {
+        el.textContent = text;
+        el.classList.add('updating');
+        setTimeout(() => el.classList.remove('updating'), 600);
+      }
+    });
+  }
+
   // ─────────────────────────────
   //  유틸
   // ─────────────────────────────

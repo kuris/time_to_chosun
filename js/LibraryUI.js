@@ -79,7 +79,43 @@ export class LibraryUI {
       const seal = document.getElementById('map-target-seal');
       if(seal) seal.classList.remove('active');
       if (cb) cb(); 
-    }, 4500);
+    }, 5500); 
+  }
+
+  // ── 홀로그램 부조 지도 연출 (단종편 전용) ──
+  hologramTransition(cb) {
+    const ov = document.getElementById('hologram-overlay');
+    if (!ov) { if (cb) cb(); return; }
+
+    // 초기화
+    ov.classList.remove('phase-scenic', 'phase-sync', 'phase-info');
+    ov.classList.add('active');
+    
+    // 🔊 진입 사이렌 효과음
+    this.audio.play('siren'); 
+
+    // [1단계] 현장 식별 (0.8s ~ 2.8s)
+    setTimeout(() => {
+      ov.classList.add('phase-scenic');
+    }, 800);
+
+    // [2단계] 시간 동기화 및 홀로그램 전개 (2.8s ~ 5.5s)
+    setTimeout(() => {
+      ov.classList.remove('phase-scenic');
+      ov.classList.add('phase-sync');
+      this.audio.play('paper'); // 치직거리는 느낌의 대용 사운드
+    }, 2800);
+
+    // [3단계] 데이터 오버레이 (3.8s ~ 6.0s)
+    setTimeout(() => {
+      ov.classList.add('phase-info');
+    }, 3800);
+
+    // [종료] (6.5s 후 실제 게임 화면으로)
+    setTimeout(() => {
+      ov.classList.remove('active', 'phase-scenic', 'phase-sync', 'phase-info');
+      if (cb) cb();
+    }, 6500);
   }
 
   _updateJoseonTarget(locationStr) {
@@ -138,7 +174,7 @@ export class LibraryUI {
   openRecord(key) {
     const np = this.newspapers[key];
     if (!np) return;
-    this._currentNewspaperKey = key; // 내부 추적용 전역 변수 (필요 시)
+    this._currentRecordKey = key; // 내부 추적용 전역 변수 (통일)
     this._npCluesFound = [];
 
     // UI 초기화 (수사 구역 숨김 및 헤더 설정)
@@ -266,7 +302,7 @@ export class LibraryUI {
         this.audio.play('clue');
       }
       // 상부 카운트 및 미스터리 바 업데이트
-      const np = this.newspapers[this._currentNewspaperKey];
+      const np = this.newspapers[this._currentRecordKey];
       const totalNeeded = (np.clues || []).length + (np.choices || []).filter(ch => ch.clue).length;
       document.getElementById('game-clues').textContent = `단서 ${this._npCluesFound.length}/${totalNeeded}`;
       
@@ -282,6 +318,12 @@ export class LibraryUI {
   enterEra(key) {
     const np = this.newspapers[key];
     if (!np) return;
+
+    // 0. Multi-POV인 경우 전용 선택 화면으로
+    if (np.isMultiPOV && !this._currentPOV) {
+      this.showPOVSelection(key);
+      return;
+    }
 
     const isSameCase = (this.engine.state.currentKey === key);
     let isResuming   = false;
@@ -316,9 +358,20 @@ export class LibraryUI {
     // 연출 데이터 추출 (객체형 landing 또는 평탄화된 landYear/landDate 모두 지원)
     const lYear = (np.landing && np.landing.year) || np.landYear || "";
     const lDate = (np.landing && np.landing.date) || np.landDate || "";
-    const lMsg  = (np.landing && np.landing.msg)  || np.landMsg  || "";
+    let lMsg    = (np.landing && np.landing.msg)  || np.landMsg  || "";
 
-    this.landingTransition(lYear, lDate, lMsg, np.location, () => {
+    // POV 전용 메시지 반영
+    if (this._currentPOV && np.povs && np.povs[this._currentPOV]) {
+      lMsg = np.povs[this._currentPOV].landMsg || lMsg;
+      // 스탯 라벨 업데이트
+      this.engine.updateStatLabels(np.povs[this._currentPOV].stats);
+    }
+
+    const transitionFn = (this._currentPOV === 'suyang' || this._currentPOV === 'sayuksin' || this._currentPOV === 'kimjil' || this._currentPOV === 'historian') 
+                        ? (cb) => this.hologramTransition(cb) 
+                        : (cb) => this.landingTransition(lYear, lDate, lMsg, np.location, cb);
+
+    transitionFn(() => {
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       
@@ -480,7 +533,7 @@ export class LibraryUI {
       }]);
     } else {
       this.engine.log('system', '아직 밝혀지지 않은 진실이 더 남아있는 것 같습니다...');
-      this.engine.log('system', 'TIP: 신문 기사의 본문에서 강조된 키워드들을 모두 수집했는지 확인해보세요.');
+      this.engine.log('system', 'TIP: 기록 본문에서 강조된 키워드들을 모두 수집했는지 확인해보세요.');
       
       // 단서 버튼 강조 효과 (박동)
       const clueBtn = document.getElementById('game-clues');
@@ -497,10 +550,17 @@ export class LibraryUI {
     this.engine.state.solved[key] = {
       solved: true,
       count:  this.engine.state.cluesFound.length,
-      total:  this.engine.state.totalClues
+      total:  this.engine.state.totalClues,
+      povCompletion: { ...(this.engine.state.solved[key]?.povCompletion || {}) }
     };
-    this.engine.state.currentKey  = null; // 해결 시 진행 중 세션 초기화
-    this.engine.saveState(); // 자동 저장
+    
+    if (this._currentPOV) {
+      this.engine.state.solved[key].povCompletion[this._currentPOV] = true;
+    }
+
+    this.engine.state.currentKey  = null; 
+    this._currentPOV = null; // POV 종료
+    this.engine.saveState(); 
     this.audio.play('solve');
 
     const item   = document.getElementById('np-item-' + key);
@@ -596,8 +656,12 @@ export class LibraryUI {
         if (item) item.classList.add('solved');
         
         if (status) {
-          if (typeof record === 'object' && record.total) {
-                   status.innerHTML = `<span style="color:#b22222">✓ 해결됨</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${record.count}/${record.total})</span>`;
+          if (typeof record === 'object' && record.povCompletion) {
+            const completedCount = Object.keys(record.povCompletion).length;
+            const totalPovs = 4;
+            status.innerHTML = `<span style="color:#b22222">✓ 관찰 완료</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${completedCount}/${totalPovs} POV)</span>`;
+          } else if (typeof record === 'object' && record.total) {
+            status.innerHTML = `<span style="color:#b22222">✓ 해결됨</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${record.count}/${record.total})</span>`;
           } else {
             status.textContent = '✓ 해결됨';
           }
@@ -668,5 +732,58 @@ export class LibraryUI {
         }
       }
     }, 2500);
+  }
+
+  // ─────────────────────────────
+  //  Multi-POV 시스템
+  // ─────────────────────────────
+  showPOVSelection(key) {
+    const np = this.newspapers[key];
+    const grid = document.getElementById('pov-grid');
+    grid.innerHTML = '';
+
+    const solvedData = this.engine.state.solved[key] || {};
+    const completion = solvedData.povCompletion || {};
+
+    Object.entries(np.povs).forEach(([id, p]) => {
+      const isSolved = completion[id];
+      const card = document.createElement('div');
+      card.className = `pov-card ${isSolved ? 'solved' : ''}`;
+      card.innerHTML = `
+        <div class="pov-role">${p.role}</div>
+        <div class="pov-name">${p.name}</div>
+        <div class="pov-desc">${p.desc}</div>
+        <button class="pov-btn-pick" onclick="selectPOV('${key}', '${id}')">${isSolved ? '다시 기록하기' : '이 시점으로 진입'}</button>
+      `;
+      grid.appendChild(card);
+    });
+
+    // ── 히든 엔딩 체크 ──
+    const completedCount = Object.keys(completion).length;
+    if (completedCount >= 4) {
+      const hiddenCard = document.createElement('div');
+      hiddenCard.className = 'pov-card hidden-unlocked';
+      hiddenCard.style.gridColumn = 'span 4';
+      hiddenCard.style.marginTop = '20px';
+      hiddenCard.style.background = 'linear-gradient(135deg, rgba(139,26,26,0.2), rgba(200,169,110,0.1))';
+      hiddenCard.style.borderColor = '#b22222';
+      hiddenCard.innerHTML = `
+        <div class="pov-role" style="color:#ff4d4d; opacity:1;">기록되지 않은 제 5의 진실</div>
+        <div class="pov-name" style="color:#ffc107;">새벽 안개 속의 나룻배</div>
+        <div class="pov-desc" style="color:#d9d0c1;">네 개의 엇갈린 시점이 하나로 모일 때, 비로소 역사의 틈새가 열립니다. 단종을 구출하기 위한 마지막 밤의 기록.</div>
+        <button class="pov-btn-pick" onclick="selectPOV('${key}', 'hidden')" style="background:#b22222; color:#fff; border:none; padding:15px;">단종 구출 작전 시작</button>
+      `;
+      grid.appendChild(hiddenCard);
+    }
+
+    window.selectPOV = (k, pid) => this.selectPOV(k, pid);
+    this.audio.play('paper');
+    this.showScreen('pov-selection');
+  }
+
+  selectPOV(key, povId) {
+    this._currentPOV = povId;
+    this.audio.play('click');
+    this.enterEra(key);
   }
 }
