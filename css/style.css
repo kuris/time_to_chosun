@@ -463,6 +463,7 @@ body {
 .joseon-target-seal {
   position: absolute; width: 80px; height: 80px;
   border: 4px double #b22222; opacity: 0;
+  top: 42%; left: 50%; /* 연도보다 약간 위로 배치하여 겹침 방지 */
   transform: translate(-50%, -50%) scale(2.5);
   transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex; align-items: center; justify-content: center;

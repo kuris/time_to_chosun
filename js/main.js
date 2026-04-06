@@ -84,5 +84,14 @@ window.setFontSize = (scale) => {
   audio.play('click');
 };
 
+// ── 글로벌 함수 노출 (HTML onclick 대응) ─────────────────────
+window.findClueInRecord = (id) => library.findClueInRecord(id);
+window.enterEra         = (key) => library.enterEra(key);
+window.backToLibrary    = () => library.backToLibrary();
+window.toggleCluePanel  = () => library.toggleCluePanel();
+window.openRecord       = (key) => library.openRecord(key);
+window.toggleTheme      = () => theme.toggleTheme();
+window.showClueContext  = (id) => library.showClueContext(id);
+
 handleRoute(); // 초기 실행
 checkSave();   // 세이브 체크

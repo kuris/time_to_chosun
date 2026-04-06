@@ -102,8 +102,11 @@ export class GameEngine {
     const speed = item.type === 'time' ? 30 : item.type === 'inner' ? 25 : this.TYPE_SPEED;
 
     const tick = () => {
-      if (i < item.msg.length) {
-        d.textContent += item.msg[i++];
+      // 메시지가 비정상적이거나 undefined인 경우에 대비한 방어 코드
+      const message = (item.msg !== undefined && item.msg !== null) ? String(item.msg) : "";
+
+      if (i < message.length) {
+        d.textContent += message[i++];
         this._scrollLog();
         if (Math.random() > 0.5) this.audio.play('type');
         setTimeout(tick, speed);
