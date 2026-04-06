@@ -15,6 +15,12 @@ export const danjongStory = (engine, solveCase) => {
     }
   };
 
+  const startStory = (title, text, choices) => {
+    engine.log('time', title);
+    engine.log('story', text);
+    engine.showChoices(choices);
+  };
+
   const nodes = {
     // ──────────────────────────────────────────────────
     //  1. 수양대군 (권력의 설계자)
