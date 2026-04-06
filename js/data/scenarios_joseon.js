@@ -114,6 +114,22 @@ export const scenarios_joseon = {
         desc: "나는 진실을 기록해야 했다. 붓 끝이 떨려도 후세에 전할 정직한 목소리만은 남기리라.",
         stats: { money: "지필묵", stamina: "기록의지", mental: "진실성", stress: "필화의 위험" },
         landMsg: "권력이 칼날을 휘두를 때, 붓은 무엇을 남길 수 있겠습니까?"
+      },
+      hanmyunghoe: {
+        id: "hanmyunghoe",
+        name: "한명회",
+        role: "권력의 설계자",
+        desc: "역사는 승자의 편이다. 나는 피를 묻히는 대신, 조선의 백 년을 설계하려고 한다.",
+        stats: { money: "정치자금", stamina: "모략", mental: "냉철함", stress: "업보" },
+        landMsg: "살생부를 펼치십시오. 오늘 밤, 조선의 주인들이 바뀔 것입니다."
+      },
+      eomheungdo: {
+        id: "eomheungdo",
+        name: "엄홍도",
+        role: "마지막 충성",
+        desc: "임금을 버린 세상에서, 나만이라도 그분의 수의가 되어드리고 싶었다.",
+        stats: { money: "장례물품", stamina: "기력", mental: "애민심", stress: "반역의 공포" },
+        landMsg: "차가운 강물에서 울리는 비명... 당신은 끝내 임금을 외면하지 못합니다."
       }
     },
 
@@ -124,7 +140,9 @@ export const scenarios_joseon = {
       { id: 'bloody_vow', marker: '[붉은 맹세]', label: '학사들의 혈서', desc: '죽음을 두려워하지 않는 6인 학사의 맹세가 서린 비단 조각입니다.' },
       { id: 'sam_poem', marker: '[절명시]', label: '성삼문의 마지막 시', desc: '죽음 앞에서도 의연했던 충신의 기개가 담긴 마지막 시구입니다.' },
       { id: 'informer_list', marker: '[배신의 명단]', label: '김질의 밀고 기록', desc: '성삼문 일당의 거사 계획을 구체적으로 고백한 김질의 기록입니다.' },
-      { id: 'buried_history', marker: '[숨겨진 사초]', label: '사관의 항아리', desc: '부끄러운 시대를 살았던 사관이 훗날을 위해 깊이 숨겨둔 사초입니다.' }
+      { id: 'buried_history', marker: '[숨겨진 사초]', label: '사관의 항아리', desc: '부끄러운 시대를 살았던 사관이 훗날을 위해 깊이 숨겨둔 사초입니다.' },
+      { id: 'myung_list', marker: '[살생부]', label: '한명회의 살생부', desc: '새로운 시대를 열기 위해 정적들의 운명을 결정지은 냉혹한 명단입니다.' },
+      { id: 'eom_loyalty', marker: '[장릉의 수호]', label: '장릉의 수호', desc: '멸문의 위협 속에서도 임금의 시신을 거둔 미천한 관리의 위대한 충절입니다.' }
     ],
 
     // 착륙 연출용 공통 데이터

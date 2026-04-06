@@ -10,6 +10,7 @@ export class LibraryUI {
     this.newspapers = newspapers;  // 전체 시나리오 데이터
     this.stories    = stories;     // 하드코딩 스토리 맵 { key: fn }
 
+    this.engine.ui  = this; // 스토리 내부에서 solveCase 등을 호출할 수 있도록 참조 주입
     this._npCluesFound = [];
 
     // 체력 0 → 도서관 귀환
@@ -394,7 +395,7 @@ export class LibraryUI {
       this.engine.updateStatLabels(np.povs[this._currentPOV].stats);
     }
 
-    const transitionFn = (this._currentPOV === 'suyang' || this._currentPOV === 'sayuksin' || this._currentPOV === 'kimjil' || this._currentPOV === 'historian') 
+    const transitionFn = (['suyang', 'sayuksin', 'kimjil', 'historian', 'hanmyunghoe', 'eomheungdo'].includes(this._currentPOV)) 
                         ? (cb) => this.hologramTransition(cb) 
                         : (cb) => this.landingTransition(lYear, lDate, lMsg, np.location, cb);
 
@@ -444,10 +445,8 @@ export class LibraryUI {
       this.engine.clearScenes(); // 새 시작 시 씬 레지스트리 초기화
 
       if (np.isGeneric === false && this.stories[key]) {
-        // 하드코딩 스토리
-        this.stories[key](this.engine, (k, headline, labels, ending) =>
-          this.solveCase(k, headline, labels, ending)
-        );
+        // 하드코딩 스토리 (엔진과 현재 시점 이름을 전달)
+        this.stories[key](this.engine, this._currentPOV);
 
         // 만약 중단된 씬이 있다면 해당 지점으로 점프
         if (isResuming && this.engine.state.currentScene) {
@@ -686,8 +685,9 @@ export class LibraryUI {
         if (status) {
           if (typeof record === 'object' && record.povCompletion) {
             // POV 기반 (Multi-POV)
+            const np = this.newspapers[key];
             const completedCount = Object.keys(record.povCompletion).length;
-            const totalPovs = 4; // 기본 4개 (단종 기준)
+            const totalPovs = np.povs ? Object.keys(np.povs).length : 4;
             
             let dotsHtml = '<div class="pov-completion-dots">';
             for(let i=0; i<totalPovs; i++) {
@@ -803,19 +803,21 @@ export class LibraryUI {
     });
 
     // ── 히든 엔딩 체크 ──
+    const totalPovs = Object.keys(np.povs).length;
     const completedCount = Object.keys(completion).length;
-    if (completedCount >= 4) {
+    
+    if (completedCount >= totalPovs) {
       const hiddenCard = document.createElement('div');
       hiddenCard.className = 'pov-card hidden-unlocked';
-      hiddenCard.style.gridColumn = 'span 4';
+      hiddenCard.style.gridColumn = '1 / -1'; // 전체 너비 사용
       hiddenCard.style.marginTop = '20px';
       hiddenCard.style.background = 'linear-gradient(135deg, rgba(139,26,26,0.2), rgba(200,169,110,0.1))';
       hiddenCard.style.borderColor = '#b22222';
       hiddenCard.innerHTML = `
-        <div class="pov-role" style="color:#ff4d4d; opacity:1;">기록되지 않은 제 5의 진실</div>
+        <div class="pov-role" style="color:#ff4d4d; opacity:1;">기록되지 않은 최후의 진실</div>
         <div class="pov-name" style="color:#ffc107;">새벽 안개 속의 나룻배</div>
-        <div class="pov-desc" style="color:#d9d0c1;">네 개의 엇갈린 시점이 하나로 모일 때, 비로소 역사의 틈새가 열립니다. 단종을 구출하기 위한 마지막 밤의 기록.</div>
-        <button class="pov-btn-pick" onclick="selectPOV('${key}', 'hidden')" style="background:#b22222; color:#fff; border:none; padding:15px;">단종 구출 작전 시작</button>
+        <div class="pov-desc" style="color:#d9d0c1;">모든 엇갈린 시점이 하나로 모일 때, 비로소 역사의 거대한 틈새가 열립니다. 단종을 구출하기 위한 마지막 밤의 기록.</div>
+        <button class="pov-btn-pick" onclick="selectPOV('${key}', 'hidden')" style="background:#b22222; color:#fff; border:none; padding:15px; cursor:pointer;">단종 구출 작전 시작</button>
       `;
       grid.appendChild(hiddenCard);
     }
