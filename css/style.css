@@ -811,11 +811,11 @@ body {
 
 /* 홀로그램 지도 (Hologram Overlay) */
 .hologram-overlay {
-  position: fixed; inset: 0; background: #000; z-index: 9999;
+  position: fixed; inset: 0; background: #000 !important; z-index: 99999 !important;
   display: none; flex-direction: column; align-items: center; justify-content: center;
   overflow: hidden; pointer-events: none;
 }
-.hologram-overlay.active { display: flex; animation: holoFadeIn 0.8s forwards; }
+.hologram-overlay.active { display: flex !important; animation: holoFadeIn 0.8s forwards; }
 
 .hologram-relief-map {
   width: 80vw; height: 80vh;
