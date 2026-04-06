@@ -111,11 +111,11 @@ export class LibraryUI {
       ov.classList.add('phase-info');
     }, 3800);
 
-    // [종료] (6.5s 후 실제 게임 화면으로)
+    // [종료] (5.0s 후 실제 게임 화면으로)
     setTimeout(() => {
       ov.classList.remove('active', 'phase-scenic', 'phase-sync', 'phase-info');
       if (cb) cb();
-    }, 6500);
+    }, 5000);
   }
 
   _updateJoseonTarget(locationStr) {
@@ -372,6 +372,7 @@ export class LibraryUI {
                         : (cb) => this.landingTransition(lYear, lDate, lMsg, np.location, cb);
 
     transitionFn(() => {
+      this.showScreen('newspaper'); 
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       
