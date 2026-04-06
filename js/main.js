@@ -61,6 +61,8 @@ const handleRoute = () => {
   const hash = window.location.hash;
   if (hash === '#/admin' || hash === '#admin') {
     library.showScreen('admin');
+  } else if (hash === '#/about' || hash === '#about') {
+    library.showScreen('about');
   } else if (hash === '#/library' || hash === '#library' || !hash) {
     library.showScreen('library');
   }
