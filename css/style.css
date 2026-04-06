@@ -776,6 +776,19 @@ body {
 .pov-title { font-size: 32px; font-weight: 800; color: var(--text-accent); letter-spacing: 4px; margin-bottom: 12px; }
 .pov-subtitle { font-size: 14px; color: var(--text-dim); opacity: 0.8; }
 
+.pov-completion-dots {
+  display: flex; gap: 4px; margin-top: 4px;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(178, 34, 34, 0.2); border: 1px solid rgba(178, 34, 34, 0.3);
+  transition: all 0.3s ease;
+}
+.dot.filled {
+  background: #b22222; border-color: #b22222;
+  box-shadow: 0 0 8px rgba(178, 34, 34, 0.6);
+}
+
 .pov-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
   width: 100%; max-width: 1100px;
@@ -932,7 +945,15 @@ body {
 }
 .np-pov-preview-role { font-size: 8px; color: #8b7e6d; margin-bottom: 6px; letter-spacing: 1px; }
 .np-pov-preview-name { font-size: 14px; font-weight: 800; color: #1a1a1a; margin-bottom: 4px; }
-.np-pov-preview-tag { font-size: 8px; color: #b22222; border-top: 1px solid #eee; padding-top: 4px; margin-top: 4px; width: 100%; opacity: 0.7; }
+.np-pov-preview-item.solved {
+  background: #f0f7f0;
+  border-color: #90b890;
+  opacity: 0.9;
+}
+.np-pov-preview-item.solved .np-pov-preview-tag {
+  color: #2e7d32;
+  border-top-color: #d0e0d0;
+}
 
 @media (max-width: 768px) {
   .np-pov-preview-grid { grid-template-columns: 1fr 1fr; }

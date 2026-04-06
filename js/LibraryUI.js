@@ -238,17 +238,23 @@ export class LibraryUI {
 
     // 🌟 Multi-POV 시나리오의 경우 선택 가능한 시선 미리보기 추가
     if (np.isMultiPOV && np.povs) {
+      const solvedData = this.engine.state.solved[key] || {};
+      const completion = solvedData.povCompletion || {};
+
       html += `
         <div class="np-pov-preview">
           <div class="np-pov-preview-title">── 기록될 네 개의 시선 ──</div>
           <div class="np-pov-preview-grid">
-            ${Object.values(np.povs).map(p => `
-              <div class="np-pov-preview-item">
-                <div class="np-pov-preview-role">${p.role}</div>
-                <div class="np-pov-preview-name">${p.name}</div>
-                <div class="np-pov-preview-tag">조사 가능</div>
-              </div>
-            `).join('')}
+            ${Object.entries(np.povs).map(([id, p]) => {
+              const isSolved = completion[id];
+              return `
+                <div class="np-pov-preview-item ${isSolved ? 'solved' : ''}">
+                  <div class="np-pov-preview-role" ${isSolved ? 'style="color:#90b890;"' : ''}>${p.role}</div>
+                  <div class="np-pov-preview-name" ${isSolved ? 'style="color:#a0cfa0;"' : ''}>${p.name}</div>
+                  <div class="np-pov-preview-tag">${isSolved ? '✓ 조사 완료' : '조사 가능' }</div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       `;
@@ -586,11 +592,10 @@ export class LibraryUI {
     this.audio.play('solve');
 
     const item   = document.getElementById('np-item-' + key);
-    const status = document.getElementById('np-status-' + key);
-    if (item)   item.classList.add('solved');
-    if (item)   item.classList.add('solved');
-    const isJoseon = document.body.classList.contains('theme-joseon');
-    if (status) status.textContent = isJoseon ? '✓ 해결' : '✓ 해결됨';
+    if (item) item.classList.add('solved');
+    
+    // 즉시 UI 업데이트 반영
+    this.updateSolvedUI();
 
     const np  = this.newspapers[key];
     let html  = `
@@ -679,10 +684,25 @@ export class LibraryUI {
         
         if (status) {
           if (typeof record === 'object' && record.povCompletion) {
+            // POV 기반 (Multi-POV)
             const completedCount = Object.keys(record.povCompletion).length;
-            const totalPovs = 4;
-            status.innerHTML = `<span style="color:#b22222">✓ 관찰 완료</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${completedCount}/${totalPovs} POV)</span>`;
+            const totalPovs = 4; // 기본 4개 (단종 기준)
+            
+            let dotsHtml = '<div class="pov-completion-dots">';
+            for(let i=0; i<totalPovs; i++) {
+              const isDone = i < completedCount;
+              dotsHtml += `<span class="dot ${isDone ? 'filled' : ''}"></span>`;
+            }
+            dotsHtml += '</div>';
+            
+            status.innerHTML = `
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                <span style="color:#b22222; font-size:11px; font-weight:bold;">${completedCount}/${totalPovs} POV</span>
+                ${dotsHtml}
+              </div>
+            `;
           } else if (typeof record === 'object' && record.total) {
+            // 일반 조사형
             status.innerHTML = `<span style="color:#b22222">✓ 해결됨</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${record.count}/${record.total})</span>`;
           } else {
             status.textContent = '✓ 해결됨';
@@ -774,6 +794,7 @@ export class LibraryUI {
       card.innerHTML = `
         <div class="pov-role">${p.role}</div>
         <div class="pov-name">${p.name}</div>
+        <div class="pov-status" style="font-size:10px; color:#2e7d32; font-weight:bold; margin-bottom:8px;">${isSolved ? '✓ 완료' : ''}</div>
         <div class="pov-desc">${p.desc}</div>
         <button class="pov-btn-pick" onclick="selectPOV('${key}', '${id}')">${isSolved ? '다시 기록하기' : '이 시점으로 진입'}</button>
       `;
