@@ -320,7 +320,13 @@ export class LibraryUI {
     // 2. 수령 즉시 반영 (이미 수사 중이거나 신문 읽는 중)
     if (this.engine.state.currentKey) {
       const added = this.engine.addClue(id, label, desc);
-      if (added) this.audio.play('clue');
+      if (added) {
+        this.audio.play('clue');
+        // 수사 중이라면 즉시 해결 가능 여부 확인 및 UI 갱신
+        if (this.engine.state.cluesFound.length >= this.engine.state.totalClues) {
+          this._showInvestigationChoices(this.engine.state.currentKey);
+        }
+      }
     } else {
       // 신문만 보던 중일 때도 패널에 이름과 설명 표시
       const alreadyInList = Array.from(document.querySelectorAll('.clue-item-title'))
@@ -475,10 +481,28 @@ export class LibraryUI {
     if (choices.length > 0) {
       this.engine.showChoices(choices);
     } else {
-      this.engine.showChoices([{
-        label:  '▶ 도서관으로 돌아가 신문을 다시 확인한다',
-        action: () => this.backToLibrary(),
-      }]);
+      const isSolveReady = this.engine.state.cluesFound.length >= this.engine.state.totalClues;
+      if (isSolveReady) {
+        this.engine.log('good', '모든 단서를 확보했습니다. 이제 진실을 기록할 수 있습니다.');
+        this.engine.showChoices([{
+          label:  '▶ 도서관으로 돌아가 기록한다',
+          isKey:  true,
+          action: () => {
+            const np = this.newspapers[key];
+            const labels = this.engine.state.cluesFound.map(id => {
+              const from1 = (np.clues || []).find(cc => cc.id === id);
+              const from2 = (np.choices || []).find(ch => ch.clue && ch.clue.id === id)?.clue;
+              return (from1 || from2)?.label || '미상의 단서';
+            });
+            this.solveCase(key, np.solveHeadline, labels, np.solveEnding);
+          },
+        }]);
+      } else {
+        this.engine.showChoices([{
+          label:  '▶ 도서관으로 돌아가 신문을 다시 확인한다',
+          action: () => this.backToLibrary(),
+        }]);
+      }
     }
   }
 
@@ -502,8 +526,7 @@ export class LibraryUI {
     }
 
     this.engine.logD();
-
-    const totalNeeded = (np.clues || []).length + (np.choices || []).filter(ch => ch.clue).length;
+    const totalNeeded = this.engine.state.totalClues;
     if (this.engine.state.cluesFound.length >= totalNeeded) {
       this.engine.log('good', '모든 단서를 확보했습니다. 진실의 윤곽이 드러납니다.');
       this.engine.showChoices([{
@@ -518,6 +541,7 @@ export class LibraryUI {
           this.solveCase(key, np.solveHeadline, labels, np.solveEnding);
         },
       }]);
+    } else {
       this.engine.log('system', '아직 밝혀지지 않은 진실이 더 남아있는 것 같습니다...');
       this.engine.log('system', 'TIP: 신문 기사의 본문에서 강조된 키워드들을 모두 수집했는지 확인해보세요.');
       
