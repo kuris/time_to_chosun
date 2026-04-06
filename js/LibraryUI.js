@@ -254,7 +254,7 @@ export class LibraryUI {
       if (!c.marker) return;
       const isFound = this.engine.state.cluesFound.includes(c.id);
       const foundClass = isFound ? ' found' : '';
-      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInNp('${c.id}','${c.label}','${c.desc}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
+      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInNp('${c.id}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
       // 모든 발생 지점에 대해 전역 치환 (RegExp 활용)
       const safeMarker = c.marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
       col1 = col1.replace(new RegExp(safeMarker, 'g'), tag);
@@ -297,7 +297,18 @@ export class LibraryUI {
     this.flashTransition(() => this.showScreen('newspaper'));
   }
 
-  findClueInNp(id, label, desc) {
+  findClueInNp(id) {
+    const np = this.newspapers[this._currentNewspaperKey];
+    if (!np) return;
+
+    // 단서 데이터 찾기 (신문 markers or choices)
+    let clueData = (np.clues || []).find(c => c.id === id);
+    if (!clueData) {
+      clueData = (np.choices || []).find(ch => ch.clue && ch.clue.id === id)?.clue;
+    }
+    if (!clueData) return;
+
+    const { label, desc } = clueData;
     const el = document.querySelector(`[data-clue="${id}"]`);
     if (el) el.classList.add('found');
 
