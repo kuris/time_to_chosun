@@ -142,12 +142,37 @@ body {
   border-color: var(--accent); 
   box-shadow: 0 0 30px rgba(166,139,103,0.3);
 }
+
+/* Joseon 모드에서 도서관 아이콘 한지 질감 및 가독성 강화 */
+.theme-joseon .newspaper-item {
+  background-image: var(--paper-bg-url);
+  background-repeat: repeat;
+  background-color: var(--paper-bg);
+  filter: none;
+  border-color: #3d342c;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.theme-joseon .newspaper-item .np-date { color: #5d5244; border-bottom-color: #c8a96e33; }
+.theme-joseon .newspaper-item .np-headline { color: #1a1a1a; font-weight: 800; }
+.theme-joseon .newspaper-item .np-status { color: #8b1a1a; border-top-color: #c8a96e33; font-weight: 800; }
+
 .newspaper-item.solved::after {
   content: 'SOLVED'; position: absolute; top: 15px; left: 10px;
   border: 2px solid #8b1a1a; color: #8b1a1a; font-size: 10px; font-weight: 900;
   padding: 2px 6px; transform: rotate(-15deg); letter-spacing: 1px;
   background: rgba(255,255,255,0.1); backdrop-filter: blur(1px);
   z-index: 5; pointer-events: none;
+}
+.theme-joseon .newspaper-item.solved::after {
+  content: ""; /* 조선 테마에선 텍스트 대신 어인 이미지 사용 시도 */
+  width: 40px; height: 40px;
+  background-image: var(--seal-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  transform: rotate(-5deg);
+  box-shadow: none;
+  top: 5px; left: 5px;
 }
 .newspaper-item.locked { opacity: 0.25; cursor: not-allowed; }
 
@@ -179,6 +204,8 @@ body {
   box-shadow: 0 0 80px rgba(0,0,0,0.95), inset 0 0 60px rgba(0,0,0,0.08);
   filter: sepia(35%); animation: paperIn 0.7s ease;
 }
+/* Joseon 테마에선 세피아 필터 제거하여 한지 질감 선명화 */
+.theme-joseon .newspaper-wrap { filter: none; }
 
 /* Joseon Memorial Style (상소문) */
 .theme-joseon .newspaper-wrap {

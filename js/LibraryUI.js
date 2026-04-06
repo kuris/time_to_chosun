@@ -313,7 +313,12 @@ export class LibraryUI {
     // 자동저장 시점 (수사 개시)
     this.engine.saveState();
 
-    this.landingTransition(np.landing.year, np.landing.date, np.landing.msg, np.location, () => {
+    // 연출 데이터 추출 (객체형 landing 또는 평탄화된 landYear/landDate 모두 지원)
+    const lYear = (np.landing && np.landing.year) || np.landYear || "";
+    const lDate = (np.landing && np.landing.date) || np.landDate || "";
+    const lMsg  = (np.landing && np.landing.msg)  || np.landMsg  || "";
+
+    this.landingTransition(lYear, lDate, lMsg, np.location, () => {
       document.getElementById('field-notes-area').classList.add('active');
       document.getElementById('game-stats').classList.add('active');
       
