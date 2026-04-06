@@ -117,6 +117,13 @@ export const scenarios_joseon = {
       }
     },
 
+    clues: [
+      { id: 'suyang_kill', marker: '[단종의 최후]', label: '수양의 비정함', desc: '권력을 위해 조카에게 사약을 내리기로 결정한 비정한 기록입니다.' },
+      { id: 'sayuksin_loyalty', marker: '[충의의 맹세]', label: '성삼문의 충절', desc: '죽음 앞에서도 굽히지 않은 충신의 일편단심을 담은 기록입니다.' },
+      { id: 'kimjil_betrayal', marker: '[살아남은 자]', label: '김질의 변절', desc: '가족과 생존을 위해 동료의 피를 대가로 지불한 배신의 기록입니다.' },
+      { id: 'historian_truth', marker: '[붓의 증언]', label: '사관의 직필', desc: '권력의 칼날 앞에서도 역사가로서 진실을 남기려 한 용기 있는 기록입니다.' }
+    ],
+
     // 착륙 연출용 공통 데이터
     landYear: "1457",
     landDate: "단종 5년 정축년 시월",
