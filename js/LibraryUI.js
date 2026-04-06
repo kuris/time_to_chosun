@@ -389,14 +389,16 @@ export class LibraryUI {
   // ─────────────────────────────
   _startGenericCase(key, isResuming = false) {
     const np = this.newspapers[key];
-    this.engine.setEraBadge(np.landing.date);
+    const lDate = (np.landing && np.landing.date) || np.landDate || np.date || "";
+    
+    this.engine.setEraBadge(lDate);
     this.engine.setLocation('📍 ' + (np.location || '서울'));
 
     if (!isResuming) {
-      this.engine.log('time', `[ ${np.landing.date} ${np.time || '오전'} ]`);
-      this.engine.log('story', np.eventStory);
+      this.engine.log('time', `[ ${lDate} ${np.time || '오전'} ]`);
+      this.engine.log('story', np.eventStory || (np.sub || '본격적인 수사를 시작합니다.'));
       if (np.mysteryInsight) this.engine.log('mystery', np.mysteryInsight);
-      this.engine.log('system', 'TIP: 신문 기사 본문의 강조된 키워드들도 수집해야 하는 단서입니다.');
+      this.engine.log('system', 'TIP: 기록 본문의 강조된 키워드들도 수집해야 하는 단서입니다.');
       this.engine.logD();
     }
 
