@@ -7,17 +7,13 @@ import { AudioManager }    from './AudioManager.js';
 import { GameEngine }      from './GameEngine.js';
 import { LibraryUI }       from './LibraryUI.js';
 import { NEWSPAPERS }      from './data/index.js';
-import { storyIMF1997 }    from './stories/story_imf1997.js';
-import { story1980 }       from './stories/story_1980.js';
 import { AdminUI }         from './AdminUI.js';
 import { ThemeManager }    from './ThemeManager.js';
 
 // ── 하드코딩 스토리 맵 ─────────────────────────────────────────
 // { scenarioKey: (engine, solveCase) => void }
-// 새 스토리를 추가하려면 여기에 한 줄만 추가하면 됩니다.
 const STORIES = {
-  imf1997:  storyIMF1997,
-  choi1980: story1980,
+  // 필요 시 여기에 스토리 전용 함수 등록
 };
 
 // ── 앱 초기화 ──────────────────────────────────────────────────

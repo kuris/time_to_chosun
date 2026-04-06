@@ -254,7 +254,7 @@ export class GameEngine {
     this.renderStats();
 
     if (this.state.stats.stamina <= 0 && this._onStaminaDepleted) {
-      this.log('bad', '⚠️ 체력이 바닥나 더 이상 조사를 계속할 수 없습니다...');
+      this.log('bad', '⚠️ 기력이 바닥나 더 이상 조사를 계속할 수 없습니다...');
       setTimeout(() => this._onStaminaDepleted(), 2000);
     }
   }

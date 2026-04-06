@@ -16,7 +16,7 @@ export class LibraryUI {
     this.engine._onStaminaDepleted = () => this.backToLibrary();
 
     // 전역 노출 (HTML onclick 속성에서 호출)
-    window.openNewspaper  = (k) => this.openNewspaper(k);
+    window.openRecord     = (k) => this.openRecord(k);
     window.enterEra       = (k) => this.enterEra(k);
     window.backToLibrary  = ()  => this.backToLibrary();
     window.findClueInNp   = (id, label, desc) => this.findClueInNp(id, label, desc);
@@ -24,48 +24,13 @@ export class LibraryUI {
     window.showClueContext = (id) => this.showClueContext(id);
     window.jumpToContext   = (id) => this.jumpToContext(id);
 
-    // 지도 그리드 초기화
-    this._initMapGrid();
-    
-    // Leaflet 지도 초기화 (위성 줌 연출용)
-    this._initLeaflet();
+    // 고지도 타겟 초기화
+    this._initJoseonMap();
   }
 
-  // ── Leaflet 지도 초기화 ──
-  _initLeaflet() {
-    const mapEl = document.getElementById('map-zoom-container');
-    if (!mapEl) return;
-    
-    // 초기 줌은 한국 근해를 비춤
-    this.map = L.map('map-zoom-container', {
-      center: [36.5, 127.5],
-      zoom: 6,
-      zoomControl: false,
-      attributionControl: false,
-      scrollWheelZoom: false,
-      dragging: false,
-      touchZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false
-    });
-
-    // Esri World Imagery 위성 데이터 추가
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19
-    }).addTo(this.map);
-  }
-
-  // ── 지도 도트 그리드 생성 ──
-  _initMapGrid() {
-    const g = document.getElementById('map-dots');
-    if (!g) return;
-    let html = '';
-    for(let x=0; x<200; x+=10) {
-      for(let y=0; y<300; y+=10) {
-        html += `<circle cx="${x}" cy="${y}" r="0.5" />`;
-      }
-    }
-    g.innerHTML = html;
+  // ── 조선 고지도 초기화 (Leaflet 제거) ──
+  _initJoseonMap() {
+    // Leaflet 의존성 제거됨. 고지도는 CSS 배경 및 Seal 마커로 연출.
   }
 
   // ─────────────────────────────
@@ -91,108 +56,73 @@ export class LibraryUI {
     document.getElementById('landing-date').textContent = date;
     document.getElementById('landing-msg').textContent  = msg;
 
-    // 타임머신 지도 좌표 매핑
-    this._updateMapTarget(location);
+    // 조선 고지도 표식(인장) 좌표 매핑
+    this._updateJoseonTarget(location);
 
-    const elements = ['landing-year', 'landing-date', 'landing-msg', 'landing-map-container', 'landing-location', 'map-target'];
+    const elements = ['landing-year', 'landing-date', 'landing-msg'];
     elements.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
       el.style.animation = 'none';
       void el.offsetWidth;
       el.style.animation = '';
-      el.classList.remove('active');
     });
 
     ov.classList.add('active');
-    document.getElementById('map-target').classList.add('active');
-    document.getElementById('landing-location').classList.add('active');
+    
+    // 이펙트 사운드 (향후 테마에 맞는 효과음으로 교체 가능)
+    this.audio.play('siren');
 
-    // ────────────────────────────
-    // 💡 중요: 오버레이가 활성화된(display: flex) 직후 지도의 크기를 재계산해야 합니다.
-    // ────────────────────────────
-    if (this.map) {
-      setTimeout(() => {
-        this.map.invalidateSize();
-      }, 50);
-    }
-
-    this.audio.play('siren'); // 착륙 순간 빈티지 경보음
-    // 애니메이션 시퀀스 완료 후 종료 (약 5.2초로 연장)
-    setTimeout(() => { ov.classList.remove('active'); if (cb) cb(); }, 5500);
+    // 애니메이션 시퀀스 완료 후 종료 (4.5초)
+    setTimeout(() => { 
+      ov.classList.remove('active'); 
+      const seal = document.getElementById('map-target-seal');
+      if(seal) seal.classList.remove('active');
+      if (cb) cb(); 
+    }, 4500);
   }
 
-  _updateMapTarget(locationStr) {
+  _updateJoseonTarget(locationStr) {
     const coordsMap = {
-      '서울': { lat: 37.5665, lng: 126.9780, x: 405, y: 265 },
-      '서초': { lat: 37.4833, lng: 127.0322, x: 408, y: 268 },
-      '여의도': { lat: 37.5216, lng: 126.9242, x: 402, y: 267 },
-      '명동': { lat: 37.5635, lng: 126.9850, x: 406, y: 266 },
-      '강남': { lat: 37.4979, lng: 127.0276, x: 409, y: 269 },
-      '잠실': { lat: 37.5133, lng: 127.1001, x: 412, y: 270 },
-      '부천': { lat: 37.5034, lng: 126.7660, x: 395, y: 272 },
-      '김포': { lat: 37.5843, lng: 126.7115, x: 390, y: 260 },
-      '성동': { lat: 37.5635, lng: 127.0365, x: 410, y: 265 },
-      '대구': { lat: 35.8714, lng: 128.6014, x: 435, y: 325 },
-      '구미': { lat: 36.1294, lng: 128.3436, x: 420, y: 315 },
-      '부산': { lat: 35.1796, lng: 129.0756, x: 455, y: 345 },
-      '김해': { lat: 35.2285, lng: 128.8894, x: 445, y: 340 },
-      '진도': { lat: 34.4868, lng: 126.2634, x: 380, y: 360 },
-      '광주': { lat: 35.1595, lng: 126.8526, x: 395, y: 340 },
+      '한성': { x: 50, y: 40 },
+      '한양': { x: 50, y: 40 },
+      '평양': { x: 40, y: 25 },
+      '개성': { x: 45, y: 35 },
+      '강화': { x: 42, y: 40 },
+      '수원': { x: 50, y: 45 },
+      '전주': { x: 45, y: 65 },
+      '나주': { x: 40, y: 80 },
+      '동래': { x: 65, y: 80 },
+      '부산': { x: 65, y: 80 },
+      '진도': { x: 35, y: 85 },
+      '제주': { x: 40, y: 98 },
+      '경주': { x: 65, y: 65 },
+      '함흥': { x: 60, y: 20 },
     };
 
-    let target = { lat: 37.5, lng: 127, x: 400, y: 300 }; // 기본값
-    let cityName = 'UNKNOWN';
-
-    // 문자열에서 도시 키워드 추출
+    let target = { x: 50, y: 50 }; // 기본값
     for (const [key, t] of Object.entries(coordsMap)) {
       if (locationStr && locationStr.includes(key)) {
         target = t;
-        cityName = key;
         break;
       }
     }
 
-    // Leaflet 줌 애니메이션 설정
-    if (this.map) {
-      // 시작점 리셋 (한국 근해)
-      this.map.setView([36.5, 127.5], 6, { animate: false });
-      
-      // 0.5초 대기 후 다이빙 시작
-      setTimeout(() => {
-        this.map.flyTo([target.lat, target.lng], 17, {
-          duration: 3.5,
-          easeLinearity: 0.25
-        });
-      }, 500);
+    // 인장(Seal) 생성 및 배치
+    let seal = document.getElementById('map-target-seal');
+    if (!seal) {
+      seal = document.createElement('div');
+      seal.id = 'map-target-seal';
+      seal.className = 'joseon-target-seal';
+      const container = document.getElementById('map-joseon-container');
+      if (container) container.appendChild(seal);
     }
-
-    const outer = document.getElementById('map-ping-outer');
-    const inner = document.getElementById('map-ping-inner');
-    const locText = document.getElementById('landing-location');
-    const svgMap = document.querySelector('.landing-map-svg');
-
-    if (outer) { outer.setAttribute('cx', target.x); outer.setAttribute('cy', target.y); }
-    if (inner) { inner.setAttribute('cx', target.x); inner.setAttribute('cy', target.y); }
     
-    // 줌을 위한 transform-origin 설정 (viewBox 800x600 기반)
-    if (svgMap) {
-      const originX = (target.x / 800) * 100;
-      const originY = (target.y / 600) * 100;
-      svgMap.style.transformOrigin = `${originX}% ${originY}%`;
-    }
-
-    if (locText) {
-      // 위성 데이터 느낌의 좌표 텍스트 생성
-      const lat = (33 + Math.random() * 5).toFixed(4);
-      const lng = (124 + Math.random() * 7).toFixed(4);
-      locText.innerHTML = `
-        <div style="font-size:10px; opacity:0.6; margin-bottom:4px;">SCANNING ARCHIVE...</div>
-        <div>LAT: ${lat}N</div>
-        <div>LNG: ${lng}E</div>
-        <div style="color:var(--accent); margin-top:8px;">LOC: ${cityName}</div>
-        <div style="font-size:18px; margin-top:4px;">LOCK-ON [OK]</div>
-      `;
+    if (seal) {
+      seal.classList.remove('active');
+      seal.style.left = target.x + '%';
+      seal.style.top  = target.y + '%';
+      setTimeout(() => seal.classList.add('active'), 500);
     }
   }
 
@@ -205,7 +135,7 @@ export class LibraryUI {
   // ─────────────────────────────
   //  신문 읽기
   // ─────────────────────────────
-  openNewspaper(key) {
+  openRecord(key) {
     const np = this.newspapers[key];
     if (!np) return;
     this._currentNewspaperKey = key; // 내부 추적용 전역 변수 (필요 시)
@@ -238,7 +168,7 @@ export class LibraryUI {
     this.engine.resetMysteryBar(totalNeeded);
     this.engine.renderStats();
 
-    // 복구 시 이미 찾은 신문 단서가 있다면 표시
+    // 복구 시 이미 찾은 기록 단서가 있다면 표시
     this._npCluesFound.forEach(id => {
       const c = (np.clues || []).find(x => x.id === id);
       if (c) this.engine.addClueToPanel(c.label, c.desc, false);
@@ -254,7 +184,7 @@ export class LibraryUI {
       if (!c.marker) return;
       const isFound = this.engine.state.cluesFound.includes(c.id);
       const foundClass = isFound ? ' found' : '';
-      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInNp('${c.id}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
+      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInRecord('${c.id}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
       // 모든 발생 지점에 대해 전역 치환 (RegExp 활용)
       const safeMarker = c.marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
       col1 = col1.replace(new RegExp(safeMarker, 'g'), tag);
@@ -278,18 +208,18 @@ export class LibraryUI {
 
     const solved = this.engine.state.solved[key];
     html += `<div class="np-action-row">
-      <button class="np-btn" onclick="backToLibrary()">← 선반으로</button>`;
+      <button class="np-btn" onclick="backToLibrary()">← 사고(史庫) 선반으로</button>`;
     if (np.enterLabel && !solved) {
       html += `<button class="np-btn primary" onclick="enterEra('${key}')">${np.enterLabel} →</button>`;
     } else if (solved) {
       html += `<button class="np-btn" onclick="enterEra('${key}')" style="color:#90b890; border-color:rgba(144,184,144,0.4);">🔍 다시 수사하기 (재수사)</button>`;
     } else {
       // enterLabel 없는 generic 케이스도 진입 가능하게
-      html += `<button class="np-btn primary" onclick="enterEra('${key}')">이 신문 속으로 들어간다 →</button>`;
+      html += `<button class="np-btn primary" onclick="enterEra('${key}')">기록 속으로 들어간다 →</button>`;
     }
     html += `</div>
     <div style="font-size:9px; color:#a67c00; margin-top:20px; text-align:center; opacity:0.8;">
-      💡 신문 기사 본문의 <span style="border-bottom:1px solid #c8a96e; background:rgba(200,169,110,0.1);">키워드</span>를 클릭하여 단서를 미리 수집할 수 있습니다.
+      💡 기록 본문의 <span style="border-bottom:1px solid #c8a96e; background:rgba(200,169,110,0.1);">키워드</span>를 클릭하여 단서를 미리 수집할 수 있습니다.
     </div>`;
 
     document.getElementById('newspaper-content').innerHTML = html;
@@ -297,8 +227,8 @@ export class LibraryUI {
     this.flashTransition(() => this.showScreen('newspaper'));
   }
 
-  findClueInNp(id) {
-    const np = this.newspapers[this._currentNewspaperKey];
+  findClueInRecord(id) {
+    const np = this.newspapers[this._currentRecordKey];
     if (!np) return;
 
     // 단서 데이터 찾기 (신문 markers or choices)
@@ -602,7 +532,7 @@ export class LibraryUI {
     if (!key) return;
 
     // 1. 해당 신문 열기
-    this.openNewspaper(key);
+    this.openRecord(key);
 
     // 2. 수사 영역 활성화
     const area = document.querySelector('.field-notes-area');
@@ -658,7 +588,7 @@ export class LibraryUI {
         
         if (status) {
           if (typeof record === 'object' && record.total) {
-            status.innerHTML = `<span style="color:#c8a96e">✓ 해결됨</span> <span style="font-size:11px; color:#c8a96e; font-weight:bold;">(${record.count}/${record.total})</span>`;
+                   status.innerHTML = `<span style="color:#b22222">✓ 해결됨</span> <span style="font-size:11px; color:#b22222; font-weight:bold;">(${record.count}/${record.total})</span>`;
           } else {
             status.textContent = '✓ 해결됨';
           }

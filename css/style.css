@@ -55,6 +55,30 @@
   --item-filter: sepia(0.2) contrast(0.95) brightness(1.0);
 }
 
+.theme-joseon {
+  /* Joseon Theme - Traditional Hanji & Ink Style */
+  --bg-app: #12100e;        /* Deep wood/ink */
+  --bg-screen: #1a1714;
+  --bg-shelf: #24201c;
+  --bg-item: #2d2824;
+  --bg-panel: #1a1714;
+  
+  --text-main: #d9d0c1;
+  --text-dim: #8b7e6d;
+  --text-muted: #5d5244;
+  --text-accent: #c4b396;
+  
+  --accent: #b22222;        /* Seal Red */
+  --border-light: #3d342c;
+  --border-dim: #2d261f;
+  --border-item: #42382e;
+
+  /* Records / Jobo */
+  --paper-bg: #f4ecd8;      /* Hanji color */
+  --paper-text: #1a1a1a;    /* Ink color */
+  --item-filter: sepia(0.4) contrast(1.1) brightness(0.9);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -62,10 +86,19 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg-app);
   color: var(--text-main);
-  font-family: 'Nanum Myeongjo', serif;
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
   min-height: 100vh;
   overflow-x: hidden;
   transition: background 0.3s, color 0.3s;
+}
+
+/* Joseon Theme Specifics */
+.theme-joseon body {
+  background-image: 
+    radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0),
+    linear-gradient(to right, rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 40px 40px, 100px 100px, 100px 100px;
 }
 
 .screen { display: none; }
@@ -314,134 +347,67 @@ body {
 
 #landing-overlay {
   position: fixed; inset: 0; background: #000; z-index: 8888;
-  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
   overflow: hidden;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Noto Serif KR', serif;
 }
 #landing-overlay.active { display: flex; }
 
-/* 위성 레이더 스캐닝 라인 */
-#landing-overlay::before {
-  content: ''; position: absolute; top: 50%; left: 50%;
-  width: 200vw; height: 1px; background: rgba(200,169,110,0.1);
-  transform: translate(-50%, -50%); z-index: 5;
-  animation: radarSweep 4s linear infinite;
-  pointer-events: none;
+.map-joseon-container {
+  position: absolute; inset: 0;
+  background-color: #f4ecd8; /* Hanji Base */
+  background-image: url('https://www.transparenttextures.com/patterns/papyrus-dark.png');
+  opacity: 0; transition: opacity 1.5s ease;
+  z-index: 1; filter: sepia(0.3) contrast(1.05);
 }
-@keyframes radarSweep {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
+#landing-overlay.active .map-joseon-container { opacity: 1; }
 
-/* 지도 컨테이너 */
-.map-zoom-container {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  filter: grayscale(80%) contrast(120%) brightness(0.6) sepia(20%);
-  opacity: 0;
-  transition: opacity 1s ease;
-  pointer-events: none;
-}
-#landing-overlay.active .map-zoom-container {
-  opacity: 1;
-}
-
-/* Leaflet UI 숨김 */
-.leaflet-control-zoom, .leaflet-control-attribution { display: none !important; }
-
-/* 기존 비주얼 레이어 조정 */
-.landing-map-container {
-  width: 100%; height: 100%; position: absolute; inset: 0;
+.joseon-target-seal {
+  position: absolute; width: 80px; height: 80px;
+  border: 4px double #b22222; opacity: 0;
+  transform: translate(-50%, -50%) scale(2.5);
+  transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex; align-items: center; justify-content: center;
-  flex-direction: column; opacity: 0; transition: opacity 0.3s;
-  background: radial-gradient(circle at center, rgba(166,139,103,0.1) 0%, transparent 70%);
-  z-index: 2; /* 지도 위에 렌더링 */
-  mix-blend-mode: color-dodge; /* 지도와 겹쳤을 때 하이라이트 효과 */
+  color: #b22222; font-weight: bold; z-index: 5;
+  background: rgba(178, 34, 34, 0.05);
 }
-#landing-overlay.active .landing-map-container { 
-  opacity: 1; animation: mapDive 3.2s cubic-bezier(0.7, 0, 0.3, 1) forwards; 
+.joseon-target-seal::before {
+  content: '時'; /* 시간의 시 (인장) */
+  font-size: 32px;
 }
-
-.landing-map-svg {
-  width: 180vw; height: 180vh; 
-  filter: drop-shadow(0 0 20px var(--accent));
-  transition: transform 2.8s cubic-bezier(0.7, 0, 0.3, 1);
-  transform-origin: center;
-}
-
-.map-target { opacity: 0; }
-.map-target.active { opacity: 1; transition: opacity 0.2s 0.5s; }
-
-/* 정밀 타겟 UI */
-.landing-location {
-  position: absolute; bottom: 15%; right: 10%;
-  color: #ff3333; font-size: 15px; font-weight: 800; letter-spacing: 2px;
-  text-shadow: 0 0 15px #ff3333; opacity: 0; z-index: 20;
-  text-align: right; line-height: 1.5;
-}
-.landing-location.active { 
-  opacity: 1; animation: techBlink 0.1s 1.2s infinite alternate; 
-}
-
-@keyframes mapDive {
-  0% { transform: scale(0.4); filter: blur(1px); opacity: 0; }
-  10% { opacity: 1; }
-  40% { transform: scale(0.45); filter: blur(0); }
-  70% { transform: scale(40); filter: blur(15px); opacity: 1; }
-  85% { opacity: 0.8; filter: blur(30px); }
-  100% { transform: scale(60); opacity: 0; }
-}
-
-@keyframes techBlink {
-  0% { opacity: 1; transform: skewX(0deg) scale(1); }
-  50% { opacity: 0.6; transform: skewX(5deg) scale(1.02); }
-  100% { opacity: 0.9; transform: skewX(-5deg) scale(0.98); }
-}
-
-@keyframes whiteout {
-  0% { background: transparent; }
-  80% { background: #fff; }
-  100% { background: var(--bg-app); }
-}
-#landing-overlay.active::after {
-  content: ''; position: fixed; inset: 0; pointer-events: none;
-  z-index: 9999; animation: whiteout 0.5s 2.2s forwards;
-}
+.joseon-target-seal.active { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
 
 .landing-year { 
-  font-size: 84px; font-weight: 900; color: var(--accent); 
-  letter-spacing: 12px; opacity: 0; z-index: 10000; position: relative;
-  text-shadow: 0 0 30px rgba(200,169,110,0.6);
-  font-family: 'Nanum Myeongjo', serif;
+  font-size: 80px; font-weight: 900; color: #1a1a1a; 
+  letter-spacing: 15px; opacity: 0; z-index: 10; position: relative;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 #landing-overlay.active .landing-year { 
-  animation: yearIn 0.7s 2.6s cubic-bezier(0.2, 0, 0.2, 1) forwards; 
-}
-
-@keyframes yearIn { 
-  from { opacity: 0; transform: scale(1.3) translateY(20px); } 
-  to { opacity: 1; transform: scale(1) translateY(0); } 
+  animation: jInUp 1s 1s forwards; 
 }
 
 .landing-date { 
-  font-size: 14px; color: var(--text-dim); opacity: 0; z-index: 10000; position: relative;
+  font-size: 18px; color: #443e38; opacity: 0; z-index: 10; position: relative;
+  letter-spacing: 8px; margin-top: -10px;
 }
 #landing-overlay.active .landing-date { 
-  animation: fadeIn 0.8s 2.3s forwards; 
+  animation: jInUp 1s 1.5s forwards; 
 }
 
 .landing-msg { 
-  font-size: 12px; color: var(--accent); max-width: 300px; text-align: center; 
-  line-height: 1.6; opacity: 0; z-index: 10000; position: relative;
+  font-size: 13px; color: #b22222; max-width: 400px; text-align: center; 
+  line-height: 2; opacity: 0; z-index: 10; position: relative; margin-top: 50px;
+  border-top: 1px solid rgba(178, 34, 34, 0.2); padding-top: 20px;
 }
 #landing-overlay.active .landing-msg { 
-  animation: fadeIn 0.8s 2.6s forwards; 
+  animation: jFadeIn 1.5s 2.5s forwards; 
 }
 
-@keyframes fadeIn { to { opacity: 1; } }
+@keyframes jInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes jFadeIn { to { opacity: 1; } }
 
 /* ════════════════════════════
    어드민 패널 (Admin)
