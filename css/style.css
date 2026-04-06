@@ -864,6 +864,26 @@ body {
 .hologram-info-content p { font-size: 14px; letter-spacing: 1px; font-weight: 500; }
 
 /* ── Phases ── */
+.hologram-text {
+  position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
+  color: #00f0ff; font-family: 'Courier New', Courier, monospace;
+  font-size: 14px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,240,255,0.7);
+  opacity: 0.8; animation: holoFlicker 2s infinite;
+}
+.hologram-glitch {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,240,255,0.03) 0px, rgba(0,240,255,0.03) 1px, transparent 1px, transparent 2px);
+  z-index: 10;
+}
+@keyframes holoFlicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.8; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.2; }
+}
+@keyframes holoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .hologram-overlay.phase-scenic .hologram-scene-preview { opacity: 0.8; }
 .hologram-overlay.phase-sync .hologram-scene-preview { opacity: 0; }
 .hologram-overlay.phase-sync .hologram-relief-map { opacity: 1; transform: rotateX(15deg) rotateZ(-1deg) scale(1.05); }
