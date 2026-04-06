@@ -234,6 +234,27 @@ export class LibraryUI {
       </div>
       <div class="np-main-headline">${np.headline}</div>
       <div class="np-sub-headline">${np.sub}</div>
+    `;
+
+    // 🌟 Multi-POV 시나리오의 경우 선택 가능한 시선 미리보기 추가
+    if (np.isMultiPOV && np.povs) {
+      html += `
+        <div class="np-pov-preview">
+          <div class="np-pov-preview-title">── 기록될 네 개의 시선 ──</div>
+          <div class="np-pov-preview-grid">
+            ${Object.values(np.povs).map(p => `
+              <div class="np-pov-preview-item">
+                <div class="np-pov-preview-role">${p.role}</div>
+                <div class="np-pov-preview-name">${p.name}</div>
+                <div class="np-pov-preview-tag">조사 가능</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    html += `
       <div class="np-columns">
         <div><div class="np-col-title">${np.col1_title || ''}</div><div class="np-col-body">${col1}</div></div>
         <div><div class="np-col-title">${np.col2_title || ''}</div><div class="np-col-body">${col2}</div></div>

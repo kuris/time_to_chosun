@@ -890,9 +890,30 @@ body {
 @keyframes statUpdate { 0% { transform: scale(1.1); color: #fff; } 100% { transform: scale(1); } }
 .stat-value.updating { animation: statUpdate 0.5s ease; }
 
+/* 시나리오 내 POV 미리보기 (네 개의 시선) */
+.np-pov-preview {
+  margin: 30px 0;
+  padding: 20px;
+  background: rgba(139, 26, 26, 0.03);
+  border: 1px solid rgba(139, 26, 26, 0.1);
+  border-radius: 4px;
+}
+.np-pov-preview-title {
+  font-size: 11px; color: #8b1a1a; letter-spacing: 5px; font-weight: 800;
+  text-align: center; margin-bottom: 20px; text-transform: uppercase;
+}
+.np-pov-preview-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+.np-pov-preview-item {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 12px 8px; background: #fff; border: 1px solid #d1c1a1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.np-pov-preview-role { font-size: 8px; color: #8b7e6d; margin-bottom: 6px; letter-spacing: 1px; }
+.np-pov-preview-name { font-size: 14px; font-weight: 800; color: #1a1a1a; margin-bottom: 4px; }
+.np-pov-preview-tag { font-size: 8px; color: #b22222; border-top: 1px solid #eee; padding-top: 4px; margin-top: 4px; width: 100%; opacity: 0.7; }
+
 @media (max-width: 768px) {
-  .pov-grid { grid-template-columns: 1fr 1fr; }
-  .pov-card { padding: 20px 15px; }
-  .pov-name { font-size: 18px; }
-  .hologram-relief-map { width: 95vw; height: 60vh; }
+  .np-pov-preview-grid { grid-template-columns: 1fr 1fr; }
 }

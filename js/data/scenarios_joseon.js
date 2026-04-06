@@ -73,6 +73,7 @@ export const scenarios_joseon = {
   danjong_multi: {
     id: "danjong_multi",
     isMultiPOV: true,
+    isGeneric: false,
     masthead: "승정원일기 (단종·세조실록)",
     date: "단종 5년(1457) 정축년",
     issue: "제 12권 (비망록)",
