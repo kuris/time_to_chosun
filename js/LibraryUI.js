@@ -597,6 +597,7 @@ export class LibraryUI {
     // 즉시 UI 업데이트 반영
     this.updateSolvedUI();
 
+    const isJoseon = document.body.classList.contains('theme-joseon');
     const np  = this.newspapers[key];
     let html  = `
       <div class="np-masthead">
