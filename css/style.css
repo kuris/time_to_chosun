@@ -73,10 +73,12 @@
   --border-dim: #2d261f;
   --border-item: #42382e;
 
-  /* Records / Jobo */
-  --paper-bg: #f4ecd8;      /* Hanji color */
-  --paper-text: #1a1a1a;    /* Ink color */
-  --item-filter: sepia(0.4) contrast(1.1) brightness(0.9);
+  /* Records / Jobo / Memorial */
+  --paper-bg-url: url('../assets/images/hanji_texture.png');
+  --paper-bg: #f4ecd8;
+  --paper-text: #1a1a1a;
+  --item-filter: sepia(0.2) contrast(1.1) brightness(1.0);
+  --seal-url: url('../assets/images/royal_seal.png');
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -177,6 +179,44 @@ body {
   box-shadow: 0 0 80px rgba(0,0,0,0.95), inset 0 0 60px rgba(0,0,0,0.08);
   filter: sepia(35%); animation: paperIn 0.7s ease;
 }
+
+/* Joseon Memorial Style (상소문) */
+.theme-joseon .newspaper-wrap {
+  background-image: var(--paper-bg-url);
+  background-repeat: repeat;
+  border: 1px solid #c8a96e33;
+  /* 상소문 특유의 접힘 그림자 효과 (Vertical Folds) */
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.8),
+    inset 0 0 100px rgba(0,0,0,0.05);
+  padding-top: 60px;
+  padding-bottom: 60px;
+  overflow: visible; /* Scroll ends를 보여주기 위해 */
+}
+
+.theme-joseon .newspaper-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none; opacity: 0.6;
+  /* 상소문 접힌 자국 연출 */
+  background: linear-gradient(to right, 
+    transparent 19%, rgba(0,0,0,0.05) 20%, transparent 21%,
+    transparent 39%, rgba(0,0,0,0.05) 40%, transparent 41%,
+    transparent 59%, rgba(0,0,0,0.05) 60%, transparent 61%,
+    transparent 79%, rgba(0,0,0,0.05) 80%, transparent 81%
+  );
+}
+
+/* 상하단 축(Scroll Ends) 장식 */
+.theme-joseon .newspaper-wrap::before {
+  content: "";
+  position: absolute;
+  top: -12px; left: -2%; width: 104%; height: 24px;
+  background: linear-gradient(to bottom, #2d1b0e, #4a3423, #2d1b0e);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  z-index: 10;
+}
 @keyframes paperIn {
   from { opacity: 0; transform: scale(0.93) translateY(24px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
@@ -219,6 +259,16 @@ body {
   display: none; 
   animation: slideUp 0.6s ease;
 }
+
+/* Joseon Theme Synchronization */
+.theme-joseon .field-notes-wrap {
+  background-image: var(--paper-bg-url);
+  background-repeat: repeat;
+  background-color: var(--paper-bg);
+  border-top: 2px solid #2d1b0e;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 10px 20px rgba(0,0,0,0.05);
+}
+
 .field-notes-wrap.active { display: block; }
 
 .field-notes-header {
@@ -269,6 +319,15 @@ body {
   position: absolute; right: -250px; top: 0;
   transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 500;
 }
+
+.theme-joseon .clue-panel {
+  background-image: var(--paper-bg-url);
+  background-repeat: repeat;
+  background-color: var(--paper-bg);
+  border-left: 1px solid #2d1b0e;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
 .clue-panel.active { right: 0; }
 .clue-panel-title { 
   font-size: 9px; color: var(--text-muted); letter-spacing: 5px; 
@@ -310,11 +369,23 @@ body {
 .solved-headline { font-size: calc(22px * var(--f-scale)); font-weight: 800; text-align: center; line-height: 1.4; margin: 14px 0; color: #8b1a1a; }
 .solved-stamp-wrap { margin: 20px 0; text-align: center; perspective: 1000px; }
 .solved-stamp { 
-  display: inline-block; border: 4px double #8b1a1a; color: #8b1a1a; 
-  font-size: 20px; font-weight: 900; padding: 6px 24px; 
-  letter-spacing: 10px; transform: rotate(-12deg); 
+  display: inline-block; 
+  width: 120px; height: 120px;
+  background-image: var(--seal-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: rotate(-12deg); 
   animation: stampImpact 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  opacity: 0; box-shadow: 0 0 10px rgba(139, 26, 26, 0.2);
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(139, 26, 26, 0.4));
+}
+/* Sepia 모드시 기존 방식 유지 */
+.theme-sepia .solved-stamp {
+  width: auto; height: auto; background: none;
+  border: 4px double #8b1a1a; color: #8b1a1a; 
+  font-size: 20px; font-weight: 900; padding: 6px 24px; 
+  letter-spacing: 10px;
 }
 @keyframes stampImpact {
   0% { transform: scale(5) rotate(20deg); opacity: 0; filter: blur(10px); }

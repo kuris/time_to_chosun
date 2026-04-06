@@ -499,7 +499,9 @@ export class LibraryUI {
     const item   = document.getElementById('np-item-' + key);
     const status = document.getElementById('np-status-' + key);
     if (item)   item.classList.add('solved');
-    if (status) status.textContent = '✓ 해결됨';
+    if (item)   item.classList.add('solved');
+    const isJoseon = document.body.classList.contains('theme-joseon');
+    if (status) status.textContent = isJoseon ? '✓ 해결' : '✓ 해결됨';
 
     const np  = this.newspapers[key];
     let html  = `
@@ -507,7 +509,7 @@ export class LibraryUI {
         <div class="np-masthead-name">${np.masthead}</div>
         <div class="np-masthead-info"><span>${np.date}</span><span>${np.issue}</span></div>
       </div>
-      <div class="solved-stamp-wrap"><span class="solved-stamp">SOLVED</span></div>
+      <div class="solved-stamp-wrap"><span class="solved-stamp">${isJoseon ? '' : 'SOLVED'}</span></div>
       <div class="solved-headline">${headline}</div>
       <div class="solved-clues"><div class="solved-clue-title">수집한 단서 (클릭하여 맥락 확인)</div>
         ${this.engine.state.cluesFound.map(id => {
