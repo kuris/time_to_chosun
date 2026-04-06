@@ -119,17 +119,12 @@ export const scenarios_joseon = {
 
     totalCluesNeeded: 15,
     clues: [
-      { id: 'suyang_kill', marker: '[단종의 최후]', label: '수양의 비정함', desc: '권력을 위해 조카에게 사약을 내리기로 결정한 비정한 기록입니다.' },
-      { id: 'suyang_exile', marker: '[유배지의 명단]', label: '수양의 유배령', desc: '단종을 영월로 보낸 비정한 군주의 명령이 담긴 명단입니다.' },
-      { id: 'suyang_poison', marker: '[부서진 사약 발]', label: '수양의 독살', desc: '조카의 목숨을 앗아간 비극의 현장 유물입니다.' },
-      { id: 'sayuksin_loyalty', marker: '[충의의 맹세]', label: '성삼문의 충절', desc: '죽음 앞에서도 굽히지 않은 충신의 일편단심을 담은 기록입니다.' },
-      { id: 'blood_vow', marker: '[혈서의 조각]', label: '사육신의 조각', desc: '죽음을 각오한 충신들의 맹세가 담긴 혈서 조각입니다.' },
-      { id: 'last_poem_text', marker: '[성삼문의 절명시]', label: '충신의 마지막 시', desc: '처형장으로 향하며 남긴 성삼문의 절명시 사본입니다.' },
-      { id: 'kimjil_betrayal', marker: '[살아남은 자]', label: '김질의 변절', desc: '가족과 생존을 위해 동료의 피를 대가로 지불한 배신의 기록입니다.' },
-      { id: 'kj_confess', marker: '[피 묻은 상소문]', label: '김질의 고발장', desc: '동료들을 배신하고 수양에게 바친 밀고의 기록입니다.' },
-      { id: 'historian_truth', marker: '[붓의 증언]', label: '사관의 직필', desc: '권력의 칼날 앞에서도 역사가로서 진실을 남기려 한 용기 있는 기록입니다.' },
-      { id: 'secret_diary', marker: '[사관의 비밀 비망록]', label: '삭제된 진실', desc: '공식 기록에서 삭제된 실록의 뒷면을 기록한 비밀 일기입니다.' },
-      { id: 'hiding_pot', marker: '[기록 항아리]', label: '숨겨진 사초', desc: '후세를 위해 땅속에 숨겨두었던 사관의 사초 항아리입니다.' }
+      { id: 'exile_seal', marker: '[권력의 옥새]', label: '수양의 유배 인장', desc: '조카를 영월로 보내기 위해 찍은 차가운 옥새의 흔적입니다.' },
+      { id: 'last_poison', marker: '[부서진 사약 발]', label: '어린 왕의 마지막', desc: '영월 청령포에서 단종의 마지막을 지켜본 슬픈 도자기 파편입니다.' },
+      { id: 'bloody_vow', marker: '[붉은 맹세]', label: '학사들의 혈서', desc: '죽음을 두려워하지 않는 6인 학사의 맹세가 서린 비단 조각입니다.' },
+      { id: 'sam_poem', marker: '[절명시]', label: '성삼문의 마지막 시', desc: '죽음 앞에서도 의연했던 충신의 기개가 담긴 마지막 시구입니다.' },
+      { id: 'informer_list', marker: '[배신의 명단]', label: '김질의 밀고 기록', desc: '성삼문 일당의 거사 계획을 구체적으로 고백한 김질의 기록입니다.' },
+      { id: 'buried_history', marker: '[숨겨진 사초]', label: '사관의 항아리', desc: '부끄러운 시대를 살았던 사관이 훗날을 위해 깊이 숨겨둔 사초입니다.' }
     ],
 
     // 착륙 연출용 공통 데이터
