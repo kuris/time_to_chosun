@@ -768,42 +768,126 @@ const danjongStory = (engine, pov) => {
     // ══════════════════════════════════════════════════════════════
     virtual_start: () => {
         engine.log('time', '[ 1 챕터 — 기나긴 꿈의 끝 ]');
-        engine.log('story', '1457년 가을, 사약이 내려오기 직전. 당신(단종)은 영월 청령포에서 깊은 적막에 잠겨있습니다. 하지만 당신이 그동안 목격한 여섯 화자의 희생과 진실의 조각들이 하나로 모여, 닫혀있던 다른 운명의 문을 엽니다.');
-        engine.log('inner', '“나를 지키고자 한 이들의 목숨이 헛되게 하지 않겠다. 역사의 기록에서 지워질지언정, 살아남자.”');
+        engine.log('story', '1457년 가을, 사약이 내려오기 직전. 영월 청령포의 밤은 칠흑같이 어둡습니다. 죽음이 문턱에 다가왔지만, 그동안 당신을 지키다 스러져간 이들의 희생이 당신의 마음속에 불꽃을 피웁니다.');
+        engine.log('inner', '“나를 지키고자 한 충신들의 목숨을 헛되게 할 수는 없다. 역사의 공식적인 기록에서는 죽은 자가 되겠으나, 살아남아 그들의 한을 증명하리라.”');
         engine.showChoices([
-          { label: "▶ 깊은 밤, 짙은 안개 속으로 몸을 숨긴다.", action: () => {
-            engine.modifyStat('기나긴 꿈', +25);
+          { label: "▶ 조심스럽게 문을 열고 어둠 속으로 발을 내디딘다.", action: () => {
+            engine.modifyStat('생명력', +10);
+            next('virtual_the_boat');
+          }},
+          { label: "▶ 은장도를 품에 숨긴 채 혹시 모를 관군에 대비하며 나선다.", action: () => {
+            engine.modifyStat('생명력', +5);
+            engine.modifyStat('행복도', -5);
             next('virtual_the_boat');
           }}
         ]);
     },
     virtual_the_boat: () => {
         engine.log('time', '[ 2 챕터 — 안개 속의 나룻배 ]');
-        engine.log('story', '안개로 뒤덮인 강가에 이르자, 엄홍도가 미리 띄워둔 비밀스러운 나룻배가 당신을 기다리고 있습니다. 멀리서 사약을 가져오는 군관들의 횃불이 보입니다.');
+        engine.log('story', '안개로 뒤덮인 서강 변에 이르자, 엄홍도가 남몰래 띄워둔 비밀스러운 나룻배가 당신을 기다리고 있습니다. 멀리서 금부도사 일행이 사약을 가져오는 횃불 불빛이 일렁입니다.');
         engine.showChoices([
-          { label: "▶ 군관들의 시선을 피해 배에 조용히 오른다.", action: () => {
-             engine.addClue('secret_boat_escape', '구원의 나룻배', '죽음의 늪에서 벗어나게 해준 유일한 희망입니다.');
-             engine.modifyStat('기나긴 꿈', +25);
+          { label: "▶ 군관들의 추격을 피하기 위해 가짜 유서와 용포 조각을 강물에 흘려보낸다.", action: () => {
+             engine.addClue('discarded_robe', '버려진 곤룡포 조각', '자살로 위장하기 위해 치밀하게 버려둔 왕의 흔적입니다.');
+             engine.modifyStat('기나긴 꿈', +10);
+             next('virtual_river_escape');
+          }},
+          { label: "▶ 뒤돌아볼 새도 없이 나룻배에 몸을 싣고 서둘러 노를 젓는다.", action: () => {
+             engine.addClue('secret_boat_escape', '구원의 나룻배', '모든 것을 버리고 생명을 선택한 은밀한 도피의 수단입니다.');
+             next('virtual_river_escape');
+          }}
+        ]);
+    },
+    virtual_river_escape: () => {
+        engine.log('time', '[ 3 챕터 — 새벽의 검문 ]');
+        engine.log('story', '배가 물살을 타고 하류로 내려가던 중, 산자락을 지키던 수문장의 초소 불빛과 마주칩니다. 달빛마저 구름에 가려 앞이 잘 보이지 않습니다.');
+        engine.showChoices([
+          { label: "▶ 배 밑바닥에 납작 엎드려 숨을 멈추고 떠내려간다.", action: () => {
+             engine.modifyStat('생명력', -10);
+             engine.modifyStat('기나긴 꿈', +5);
+             next('virtual_new_life');
+          }},
+          { label: "▶ 품에 있던 귀한 옥패를 바쳐 수문장을 조용히 매수한다.", action: () => {
+             engine.addClue('bribe_jade', '버려진 옥패', '임금의 신분을 증명하던 물건마저 생존을 위해 기꺼이 포기했습니다.');
+             engine.modifyStat('행복도', +5);
              next('virtual_new_life');
           }}
         ]);
     },
     virtual_new_life: () => {
-        engine.log('time', '[ 3 챕터 — 잊힌 이름, 새로운 평온 ]');
-        engine.log('story', '당신은 한양에서 멀리 떨어진 깊은 산골 마을에 평범한 촌부로 정착합니다. 백성들 사이에는 ‘새벽 안개 속에 작은 배를 탄 선녀가 어린 임금을 모시고 바다로 떠났다’는 전설만이 남았습니다.');
+        engine.log('time', '[ 4 챕터 — 도망자의 아침 ]');
+        engine.log('story', '며칠 밤낮을 산길로 걸어, 마침내 관군의 손길이 닿지 않는 강원도 깊은 산골짜기 촌락에 당도합니다. 사람들은 당신이 누군지 모릅니다.');
         engine.showChoices([
-          { label: "▶ 곤룡포를 불태우고 평범한 농상 생활을 시작한다.", action: () => {
-             engine.addClue('burned_royal_robe', '재가 된 곤룡포', '권력의 무게를 벗어던지고 완전한 자유를 얻었음을 상징합니다.');
-             engine.modifyStat('기나긴 꿈', +50);
+          { label: "▶ 왕의 옷차림을 모두 태워버리고 낡은 평복으로 갈아입는다.", action: () => {
+             engine.addClue('dirty_clothes', '낡은 평복', '권력의 무게를 완전히 벗어던진 촌부로서의 새 출발입니다.');
+             engine.modifyStat('기나긴 꿈', +15);
+             next('virtual_sejo_nightmare');
+          }},
+          { label: "▶ 벙어리 행세를 하며 마을 사람들 틈에 묵묵히 섞여든다.", action: () => {
+             engine.modifyStat('행복도', -10);
+             next('virtual_sejo_nightmare');
+          }}
+        ]);
+    },
+    virtual_sejo_nightmare: () => {
+        engine.log('time', '[ 5 챕터 — 버려둔 한양, 치유의 시간 ]');
+        engine.log('story', '밤마다 과거의 악몽에 시달립니다. 피를 흘리며 죽어간 사육신, 당신을 협박하던 숙부 수양대군의 차가운 눈빛. 그 환영들이 당신의 목을 조릅니다.');
+        engine.showChoices([
+          { label: "▶ 밤하늘의 쏟아질 듯한 별을 보며 복수심을 내려놓기로 결심한다.", action: () => {
+             engine.modifyStat('행복도', +20);
+             engine.modifyStat('기나긴 꿈', +10);
+             next('virtual_new_family');
+          }},
+          { label: "▶ 아픈 기억을 안고 무작정 장작을 패며 육체를 단련한다.", action: () => {
+             engine.modifyStat('생명력', +15);
+             next('virtual_new_family');
+          }}
+        ]);
+    },
+    virtual_new_family: () => {
+        engine.log('time', '[ 6 챕터 — 흙 묻은 두 손, 새로운 인연 ]');
+        engine.log('story', '계절이 여러 번 바뀌고 당신의 손엔 굳은살이 박혔습니다. 마을에서 아리랑을 부르며 밭을 매던 평범한 여인과 눈이 마주칩니다. 그녀는 당신의 차가운 두 손을 따뜻하게 잡아줍니다.');
+        engine.showChoices([
+          { label: "▶ 과거의 왕비 정순왕후를 마음에 묻고 그녀와 가약을 맺는다.", action: () => {
+             engine.addClue('village_wedding', '소박한 혼례복', '비운의 왕이 아닌 한 남자로서 평범한 사랑을 시작했음을 알립니다.');
+             engine.modifyStat('행복도', +30);
+             next('virtual_sejo_death');
+          }},
+          { label: "▶ 끝내 전처의 슬픈 눈동자를 잊지 못하고 홀로 살아가기를 택한다.", action: () => {
+             engine.modifyStat('행복도', -10);
+             engine.modifyStat('기나긴 꿈', +20);
+             next('virtual_sejo_death');
+          }}
+        ]);
+    },
+    virtual_sejo_death: () => {
+        engine.log('time', '[ 7 챕터 — 수양버들은 시들고 ]');
+        engine.log('story', '시간이 흐르고 흘러 당신이 청년에서 장년이 되었을 무렵, 상단 육의전 장사치들로부터 소문이 들려옵니다. "들었소? 세조 대왕께서 끔찍한 피부병으로 고생하시다 승하하셨다네."');
+        engine.showChoices([
+          { label: "▶ 허탈한 웃음을 지으며 허공을 향해 가벼운 술동이를 기울인다.", action: () => {
+             engine.modifyStat('기나긴 꿈', +20);
+             next('virtual_twilight_years');
+          }},
+          { label: "▶ 분노도 슬픔도 없이, 쥐고 있던 호미로 하던 밭매기를 멈추지 않는다.", action: () => {
+             engine.modifyStat('행복도', +15);
+             next('virtual_twilight_years');
+          }}
+        ]);
+    },
+    virtual_twilight_years: () => {
+        engine.log('time', '[ 8 챕터 — 전설이 된 과거 ]');
+        engine.log('story', '역사에선 세조 사후에도 여러 번 사화가 일고 피바람이 불었으나, 이 깊은 산골짜기에는 평화만이 가득합니다. 한때 조선의 가장 높은 자리에서 가장 큰 고통을 겪었던 당신은 이제 백발의 촌장이 되었습니다.');
+        engine.showChoices([
+          { label: "▶ 마을의 아이들을 무릎에 앉히고 호랑이보다 무서웠던 슬픈 임금님 이야기를 들려준다.", action: () => {
+             engine.addClue('legendary_story', '전설이 된 옛이야기', '단종 자신의 비극적 과거를 마침내 남의 이야기처럼 웃으며 풀게 된 치유의 증거입니다.');
              next('virtual_ending');
           }}
         ]);
     },
     virtual_ending: () => {
         engine.log('time', '[ 최종장 — 인간 노산군의 60년 ]');
-        engine.log('story', '수십 년이 흘렀습니다. 권좌를 피로 물들인 수양 일가는 단명하거나 병에 시달렸으나, 백발의 노인이 된 당신은 마을 아이들에게 옛이야기를 들려주며 평온하게 웃음 짓습니다. 이곳엔 비운의 단종은 없습니다. 그저 세월을 평온히 누린 따뜻한 노인이 있을 뿐입니다.');
-        engine.log('inner', '“권력은 거품처럼 스러졌으나, 나의 삶은 이렇듯 실재(實在)하며 온기로 가득하구나.”');
-        solveCase('danjong_multi', '진정한 행복과 60년의 평온', ['구원의 나룻배', '재가 된 곤룡포', '장릉의 수호'], '비극적인 역사의 기록을 넘어, 길고 험난했던 악몽에서 깨어나 한 인간으로서 가장 평화롭고 온전한 행복을 되찾았습니다.');
+        engine.log('story', '당신은 60여 년이라는 긴 세월을 살아냈습니다. 권좌를 훔치고 피를 묻힌 수양 일가는 병과 저주에 시달리며 단명했지만, 당신은 맑은 공기와 이웃들의 온기 속에서 가장 온전하게 수명을 누리고 평온하게 눈을 감습니다.');
+        engine.log('inner', '“허망한 권력은 안개처럼 스러졌으나, 나의 이 소박한 삶은 잔잔한 강물처럼 내내 흐르고 깊었구나.”');
+        solveCase('danjong_multi', '진정한 승리자의 60년 평온', ['구원의 나룻배', '낡은 평복', '소박한 혼례복', '전설이 된 옛이야기'], '역사에 기록된 무력한 패자가 아니라, 권력이라는 굴레를 끊어내고 한 인간으로서 마땅히 누려야 할 온전한 수명과 행복을 쟁취한 진정한 승리자의 삶입니다.');
     }
   };
 
