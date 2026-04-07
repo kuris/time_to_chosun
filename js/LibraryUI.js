@@ -581,8 +581,15 @@ export class LibraryUI {
       povCompletion: { ...(this.engine.state.solved[key]?.povCompletion || {}) }
     };
     
+    let isAllComplete = false;
     if (this._currentPOV) {
-      this.engine.state.solved[key].povCompletion[this._currentPOV] = true;
+      let povsInfo = this.engine.state.solved[key].povCompletion;
+      povsInfo[this._currentPOV] = true;
+      if (this.newspapers[key].isMultiPOV && this.newspapers[key].povs) {
+        if (Object.keys(povsInfo).length >= Object.keys(this.newspapers[key].povs).length) {
+          isAllComplete = true;
+        }
+      }
     }
 
     this.engine.state.currentKey  = null; 
@@ -613,6 +620,18 @@ export class LibraryUI {
         }).join('')}
       </div>
       <div class="solved-ending">${ending}</div>
+      ${isAllComplete ? `
+      <div class="hidden-ending-reveal" style="margin-top:30px; padding:25px; border:1px solid #cfa0a0; background:rgba(207,160,160,0.1); border-radius:6px; animation: fadeIn 3s ease;">
+        <div style="color:#cfa0a0; font-size:18px; font-weight:bold; margin-bottom:15px; letter-spacing:1px; border-bottom:1px solid rgba(207,160,160,0.3); padding-bottom:10px;">✨ 숨겨진 기록 해제 : 안개 속 나룻배</div>
+        <div style="color:#dcdcdc; font-size:15px; line-height:1.7; text-align:justify;">
+          단종의 비극을 둘러싼 여섯 개의 파편화된 진실이 마침내 하나로 연결되었습니다.<br><br>
+          <span style="font-style:italic; color:#fff; display:block; margin: 15px 0; border-left:3px solid #cfa0a0; padding-left:15px;">
+            "그날 밤, 동을산을 넘은 엄홍도의 등 뒤로 짙은 안개가 깔렸네. 관군들은 산을 샅샅이 뒤졌으나 사람 발자국 하나 찾지 못했지. 그런데 서강 하류에 사는 어부의 전언은 조금 달랐어. 달빛이 가려진 깊은 밤, 웬 거구가 곤룡포를 입은 소년을 나룻배에 태워 하류로, 하류로 떠내려갔다는 게야..."
+          </span>
+          당신은 역사의 잔혹한 패자의 기록 대신, 조선 백성들의 '희망'이라는 문장을 발견했습니다. 수양대군의 피 묻은 왕좌 너머 어딘가에서, 그는 어쩌면 아주 평온하고 자유로운 생을 살았을지도 모릅니다.
+        </div>
+      </div>
+      ` : ''}
     `;
 
     document.getElementById('solved-content').innerHTML = html;
