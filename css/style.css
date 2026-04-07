@@ -325,7 +325,7 @@ body {
 #game-choices { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
 .btn-choice {
   background: linear-gradient(90deg, rgba(200, 169, 110, 0.1) 0%, transparent 100%);
-  color: var(--text-main); 
+  color: var(--paper-text); 
   border: 1px solid rgba(200, 169, 110, 0.3);
   border-left: 3px solid var(--accent);
   padding: 14px 20px; 
