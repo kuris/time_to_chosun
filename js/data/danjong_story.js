@@ -500,10 +500,15 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 2 챕터 — 호랑이가 쓰러지던 밤 ]');
         engine.log('story', '김종서가 철퇴에 맞는 광경을 멀리서 지켜보았습니다. 손이 떨려 붓을 쥐기 힘들지만, 당신은 그 소리를 글자로 바꿉니다. “둔탁한 소리와 함께 조선의 기둥이 꺾였다.”');
         engine.showChoices([
-          { label: "▶ 소리 죽여 현장의 참혹함을 묘사한다.", action: () => {
-            engine.addClue('tiger_blood_note', '피 묻은 사본', '김종서의 죽음을 묘사한 생생한 사초의 일부분입니다.');
-            engine.addClue('eye_witness_log', '목격자의 비망록', '역사의 현장을 직접 지켜본 사관의 떨리는 필체가 남은 기록입니다.');
-            next('historian_censorship_battle');
+          { label: "▶ 소리 죽여 현장의 참혹함을 그대로 묘사한다.", action: () => {
+             engine.addClue('tiger_blood_note', '피 묻은 사본', '김종서의 죽음을 묘사한 생생한 사초의 일부분입니다.');
+             engine.modifyStat('stress', +15);
+             next('historian_censorship_battle');
+          }},
+          { label: "▶ 떨리는 손을 억누르며 정치적 배경을 중점적으로 기록한다.", action: () => {
+             engine.modifyStat('mental', +10);
+             engine.addClue('eye_witness_log', '목격자의 비망록', '역사의 현장을 직접 지켜본 사관의 떨리는 필체가 남은 기록입니다.');
+             next('historian_censorship_battle');
           }}
         ]);
     },
@@ -527,8 +532,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 4 챕터 — 계곡물에서의 세초(洗草) ]');
         engine.log('story', '사초를 씻어 먹을 지우는 의식인 세초가 진행됩니다. 하지만 당신은 지워져야 할 기록 중 가장 치명적인 부분을 몰래 빼돌려 소매 속에 숨깁니다.');
         engine.showChoices([
-          { label: "▶ 차가운 물속에 손을 담그고 기회를 엿본다.", action: () => {
+          { label: "▶ 차가운 물속에 손을 담그고 기회를 엿보아 기록을 빼돌린다.", action: () => {
             engine.addClue('washed_paper', '잉크 자국이 남은 종이', '완전히 지워지지 않은 진실이 담긴 종이입니다.');
+            engine.modifyStat('stamina', -5);
+            next('historian_spy_in_library');
+          }},
+          { label: "▶ 물을 흐려 감시를 분산시킨 후 사초를 숨긴다.", action: () => {
+            engine.modifyStat('stress', +10);
             next('historian_spy_in_library');
           }}
         ]);
@@ -539,6 +549,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 숨을 죽이고 그들을 피해 기록을 챙긴다.", action: () => {
              engine.addClue('stealthy_shoes', '소리 없는 버선', '기밀 유지를 위해 신발도 신지 않고 숨어 다녔던 사관의 흔적입니다.');
+             engine.modifyStat('stress', +20);
+             next('historian_colleague_purge');
+          }},
+          { label: "▶ 어둠 속에서 그들이 포기하고 물러나기를 끈기 있게 기다린다.", action: () => {
+             engine.modifyStat('stamina', -10);
              next('historian_colleague_purge');
           }}
         ]);
@@ -547,9 +562,14 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 6 챕터 — 동료의 죽음, 그리고 유언 ]');
         engine.log('story', '진실을 적던 동료 사관이 결국 압송됩니다. 그는 끌려가는 와중에도 당신에게 눈짓을 보냅니다. “남은 기록은 자네 몫일세.”');
         engine.showChoices([
-          { label: "▶ 그가 남긴 붓과 마지막 사고(史稿)를 수습한다.", action: () => {
+          { label: "▶ 그가 남긴 붓과 마지막 사고(史稿)를 눈물로 수습한다.", action: () => {
             engine.addClue('last_pen', '부러진 붓', '진실을 쓰다 부러진 사관의 숭고한 도구입니다.');
+            engine.modifyStat('mental', -15);
             next('historian_exile_sketch');
+          }},
+          { label: "▶ 슬픔을 억누르고 그가 미처 적지 못한 마지막 문장을 대신 완성한다.", action: () => {
+            engine.modifyStat('stress', +25);
+             next('historian_exile_sketch');
           }}
         ]);
     },
@@ -574,8 +594,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 9 챕터 — 잊힌 이름, 살아남은 문장 ]');
         engine.log('story', '수십 년이 흘렀습니다. 당신의 이름은 조정에서 잊혔지만, 당신이 숨긴 항아리 속 글자들은 여전히 그날의 피 냄새를 기억하고 있습니다.');
         engine.showChoices([
-          { label: "▶ 죽기 전, 자식에게 항아리의 위치를 알린다.", action: () => {
+          { label: "▶ 죽기 전, 자식에게 항아리의 위치를 알리며 진실을 전한다.", action: () => {
              engine.addClue('truth_seed', '진실의 씨앗', '역사의 진실을 후세에 전하겠다는 사관의 마지막 의지입니다.');
+             engine.modifyStat('mental', +10);
+             next('historian_ending');
+          }},
+          { label: "▶ 기록의 안전을 위해 묵묵히 함구하며 하늘의 뜻을 기다린다.", action: () => {
+             engine.modifyStat('stress', -10);
              next('historian_ending');
           }}
         ]);
@@ -610,6 +635,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 대군을 압박하여 거사 날짜를 확정한다.", action: () => {
              engine.addClue('map_of_purge', '청산(淸算)의 지도', '도성 내 정적들의 집 위치와 잠입 경로가 상세히 기록된 지도입니다.');
+             engine.modifyStat('stress', +10);
+             next('hanmyunghoe_shadow_army');
+          }},
+          { label: "▶ 대군의 고뇌를 이용해 충성심을 더욱 이끌어낸다.", action: () => {
+             engine.modifyStat('mental', +15);
              next('hanmyunghoe_shadow_army');
           }}
         ]);
@@ -620,6 +650,12 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 장정들에게 무거운 철퇴와 짧은 칼을 지급한다.", action: () => {
              engine.addClue('iron_hammer', '피 묻은 철퇴', '무인이 아닌 장정들이 김종서를 암살하기 위해 사용한 흉기입니다.');
+             engine.modifyStat('money', -20);
+             next('hanmyunghoe_final_list');
+          }},
+          { label: "▶ 장정들에게 술과 고기를 베풀어 사기를 높인다.", action: () => {
+             engine.modifyStat('money', -30);
+             engine.modifyStat('stamina', +10);
              next('hanmyunghoe_final_list');
           }}
         ]);
@@ -630,6 +666,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 냉혹하게 명단을 완성하고 인장을 찍는다.", action: () => {
             engine.addClue('myung_list', '한명회의 살생부', '새로운 시대를 열기 위해 정적들의 운명을 결정지은 냉혹한 명단입니다.');
+            engine.modifyStat('mental', -10);
+            next('hanmyunghoe_blood_banquet');
+          }},
+          { label: "▶ 아직 망설여지는 몇몇 이름을 남겨두고 잠시 명상을 한다.", action: () => {
+            engine.modifyStat('stress', +15);
             next('hanmyunghoe_blood_banquet');
           }}
         ]);
@@ -638,8 +679,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 5 챕터 — 계유정난, 피의 연회 ]');
         engine.log('story', '계유정난의 밤, 당신은 대군의 뒤에 서서 수첩을 엽니다. 이름이 불릴 때마다 대신들은 울부짖으며 사라집니다. 당신은 그 소리를 감미로운 음악처럼 감상합니다.');
         engine.showChoices([
-          { label: "▶ 명단에서 지운 사람들의 이름을 확인하며 미소 짓는다.", action: () => {
+          { label: "▶ 명단에서 지운 사람들의 이름을 확인하며 미조 짓는다.", action: () => {
              engine.addClue('poison_bead', '비수가 담긴 장신구', '연회장에서 정적들을 제거하기 위해 비밀리에 사용된 독 묻은 무기입니다.');
+             engine.modifyStat('mental', -5);
+             next('hanmyunghoe_scholar_trap');
+          }},
+          { label: "▶ 차가운 눈으로 학살의 현장을 기록하며 권력의 무게를 실감한다.", action: () => {
+             engine.modifyStat('stress', +20);
              next('hanmyunghoe_scholar_trap');
           }}
         ]);
@@ -650,6 +696,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 연회장에 별운검을 들이지 못하게 하여 거사를 원천 봉쇄한다.", action: () => {
              engine.addClue('sword_trap', '어긋난 칼날', '사육신의 거사가 실패하게 만든 결정적인 배치도입니다.');
+             engine.modifyStat('stress', +10);
+             next('hanmyunghoe_kingmaker_smile');
+          }},
+          { label: "▶ 거사의 현장을 직접 잡아내기 위해 연회장 구석에 잠복한다.", action: () => {
+             engine.modifyStat('stamina', -10);
              next('hanmyunghoe_kingmaker_smile');
           }}
         ]);
@@ -660,6 +711,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 화려하게 지어진 압구정에서 한강을 내려다본다.", action: () => {
              engine.addClue('silk_scroll', '왕비의 비단 서신', '한명회의 권세가 왕실까지 뻗어 있음을 보여주는 왕비의 비밀 서신입니다.');
+             engine.modifyStat('money', +100);
+             next('hanmyunghoe_hun_gu_power');
+          }},
+          { label: "▶ 정자에 앉아 흘러가는 강물을 보며 다음 수를 구상한다.", action: () => {
+             engine.modifyStat('mental', +5);
              next('hanmyunghoe_hun_gu_power');
           }}
         ]);
@@ -670,6 +726,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 영의정의 권위로 반대파를 압살한다.", action: () => {
              engine.addClue('han_seal', '영의정의 인장', '조선 최고 권력자로서 수없이 많은 명령을 내렸던 도장입니다.');
+             engine.modifyStat('mental', -10);
+             next('hanmyunghoe_succession_plan');
+          }},
+          { label: "▶ 사림들에게 미미한 관직을 주어 회유를 시도한다.", action: () => {
+             engine.modifyStat('money', -50);
              next('hanmyunghoe_succession_plan');
           }}
         ]);
@@ -678,7 +739,14 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 9 챕터 — 후계를 위한 설계 ]');
         engine.log('story', '세조가 승하한 후에도 당신의 권력은 건재합니다. 예종, 성종까지 당신의 입김이 닿지 않는 곳이 없습니다. 당신은 조선을 당신의 가문으로 만들려 합니다.');
         engine.showChoices([
-          { label: "▶ 자신의 권력을 자손들에게 대대로 물려줄 계획을 세운다.", action: () => next('hanmyunghoe_fading_architect') }
+          { label: "▶ 자신의 권력을 자손들에게 대대로 물려줄 계획을 세운다.", action: () => {
+             engine.modifyStat('money', -100);
+             next('hanmyunghoe_fading_architect');
+          }},
+          { label: "▶ 가문의 안녕을 위해 왕실과의 혼인을 더욱 공고히 한다.", action: () => {
+             engine.modifyStat('stress', +20);
+             next('hanmyunghoe_fading_architect');
+          }}
         ]);
     },
     hanmyunghoe_fading_architect: () => {
@@ -707,6 +775,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 강가에 서서 멀리 청령포 쪽을 묵묵히 바라본다.", action: () => {
              engine.addClue('yeoungwol_fog', '차가운 물안개', '영월의 슬픈 분위기를 자아내는 짙은 안개 속에 감춰진 진실의 흔적입니다.');
+             engine.modifyStat('mental', -5);
+             next('eomheungdo_forbidden_news');
+          }},
+          { label: "▶ 허탈한 웃음을 지으며 관아로 발걸음을 재촉한다.", action: () => {
+             engine.modifyStat('stress', +10);
              next('eomheungdo_forbidden_news');
           }}
         ]);
@@ -715,8 +788,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 2 챕터 — 금지된 비보 ]');
         engine.log('story', '관아 마당에 들어서자마자 싸늘한 공기가 당신을 덮칩니다. 포졸들이 등을 돌린 채 수군거립니다. “들었는가? 청령포의 주인이 어젯밤 숨을 거두셨다네. 시신은 거두는 자가 없어 강물에 던져졌다더군.” 심장이 얼어붙는 것 같습니다.');
         engine.showChoices([
-          { label: "▶ 표정을 숨기고 포졸들의 대화를 엿듣는다.", action: () => {
+          { label: "▶ 표정을 숨기고 포졸들의 대화를 더욱 자세히 엿듣는다.", action: () => {
              engine.addClue('river_shadow', '서강의 그림자', '강가에서 누군가 은밀하게 움직였다는 포졸들의 수상한 증언입니다.');
+             engine.modifyStat('stress', +15);
+             next('eomheungdo_riverside_despair');
+          }},
+          { label: "▶ 비틀거리며 관아 구석으로 가서 소리 없이 오열한다.", action: () => {
+             engine.modifyStat('mental', -20);
              next('eomheungdo_riverside_despair');
           }}
         ]);
