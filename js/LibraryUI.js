@@ -253,6 +253,7 @@ export class LibraryUI {
           <div class="np-pov-preview-title">── 기록될 일곱 개의 시선 ──</div>
           <div class="np-pov-preview-grid">
             ${Object.entries(np.povs).map(([id, p]) => {
+              if (p.isHidden && !completion[id]) return ''; // 숨겨진 시나리오는 완료되기 전엔 렌더링 안함
               const isSolved = completion[id];
               return `
                 <div class="np-pov-preview-item ${isSolved ? 'solved' : ''}">
@@ -617,12 +618,18 @@ export class LibraryUI {
     };
     
     let isAllComplete = false;
+    let justUnlockedHidden = false; // 방금 일반 시나리오를 다 깨서 히든이 열린 경우
     if (this._currentPOV) {
       let povsInfo = this.engine.state.solved[key].povCompletion;
       povsInfo[this._currentPOV] = true;
       if (this.newspapers[key].isMultiPOV && this.newspapers[key].povs) {
-        if (Object.keys(povsInfo).length >= Object.keys(this.newspapers[key].povs).length) {
+        const nonHidden = Object.keys(this.newspapers[key].povs).filter(k => !this.newspapers[key].povs[k].isHidden);
+        const solvedCount = nonHidden.filter(k => povsInfo[k]).length;
+        if (solvedCount >= nonHidden.length) {
           isAllComplete = true;
+          if (this._currentPOV !== 'virtual') {
+            justUnlockedHidden = true;
+          }
         }
       }
     }
@@ -661,7 +668,7 @@ export class LibraryUI {
         }).join('')}
       </div>
       <div class="solved-ending">${ending}</div>
-      ${isAllComplete ? `
+      ${justUnlockedHidden ? `
       <div class="hidden-ending-reveal" style="margin-top:30px; padding:25px; border:1px solid #cfa0a0; background:rgba(207,160,160,0.1); border-radius:6px; animation: fadeIn 3s ease;">
         <div style="color:#cfa0a0; font-size:18px; font-weight:bold; margin-bottom:15px; letter-spacing:1px; border-bottom:1px solid rgba(207,160,160,0.3); padding-bottom:10px;">✨ 숨겨진 기록 해제 : 안개 속 나룻배</div>
         <div style="color:#dcdcdc; font-size:15px; line-height:1.7; text-align:justify;">
@@ -669,7 +676,7 @@ export class LibraryUI {
           <span style="font-style:italic; color:#fff; display:block; margin: 15px 0; border-left:3px solid #cfa0a0; padding-left:15px;">
             "그날 밤, 동을산을 넘은 엄홍도의 등 뒤로 짙은 안개가 깔렸네. 관군들은 산을 샅샅이 뒤졌으나 사람 발자국 하나 찾지 못했지. 그런데 서강 하류에 사는 어부의 전언은 조금 달랐어. 달빛이 가려진 깊은 밤, 웬 거구가 곤룡포를 입은 소년을 나룻배에 태워 하류로, 하류로 떠내려갔다는 게야..."
           </span>
-          당신은 역사의 잔혹한 패자의 기록 대신, 조선 백성들의 '희망'이라는 문장을 발견했습니다. 수양대군의 피 묻은 왕좌 너머 어딘가에서, 그는 어쩌면 아주 평온하고 자유로운 생을 살았을지도 모릅니다.
+          당신은 역사의 잔혹한 패자의 기록 대신, 조선 백성들의 '희망'이라는 문장을 발견했습니다. '서고(史庫) 선반'으로 돌아가 숨겨진 마지막 시나리오에 진입하세요.
         </div>
       </div>
       ` : ''}
@@ -855,6 +862,7 @@ export class LibraryUI {
     const completion = solvedData.povCompletion || {};
 
     Object.entries(np.povs).forEach(([id, p]) => {
+      if (p.isHidden) return; // 기본 카드로 렌더링 방지
       const isSolved = completion[id];
       const card = document.createElement('div');
       card.className = `pov-card ${isSolved ? 'solved' : ''}`;
