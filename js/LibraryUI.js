@@ -250,7 +250,7 @@ export class LibraryUI {
 
       html += `
         <div class="np-pov-preview">
-          <div class="np-pov-preview-title">── 기록될 네 개의 시선 ──</div>
+          <div class="np-pov-preview-title">── 기록될 일곱 개의 시선 ──</div>
           <div class="np-pov-preview-grid">
             ${Object.entries(np.povs).map(([id, p]) => {
               const isSolved = completion[id];
@@ -431,7 +431,10 @@ export class LibraryUI {
       }
 
       if (isResuming) {
-        this.engine.log('system', '⏳ 이전에 중단된 지점에서 수사를 재개합니다...');
+        const history = this.engine.state.logHistory;
+        if (history.length === 0 || !history[history.length - 1].text[0]?.includes('이전에 중단된 지점에서 수사를 재개합니다')) {
+          this.engine.log('system', '⏳ 이전에 중단된 지점에서 수사를 재개합니다...');
+        }
       } else {
         this.engine.clearEl('game-log');
         this.engine.clearEl('clue-list');

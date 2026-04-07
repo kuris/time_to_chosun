@@ -155,9 +155,15 @@ export class GameEngine {
         btn.onclick = () => {
           area.innerHTML = '';
           this.clearQueue();
+          
+          // 이미 지나간 선택지를 화면에 예쁘게 남기기
           const prev = document.createElement('div');
-          prev.className = 'log-line system';
-          prev.textContent = '▶ ' + c.label;
+          prev.className = 'log-line choice-selected';
+          
+          // label 내부에 이미 '▶'가 있을 수 있으므로 정규식으로 제거 후 깔끔하게 포맷팅
+          const cleanLabel = c.label.replace(/^▶\s*/, '');
+          prev.innerHTML = `<span style="color:var(--accent); margin-right:8px;">❖</span><span style="font-style:italic;">${cleanLabel}</span>`;
+          
           document.getElementById('game-log').appendChild(prev);
           this.logD();
           this.audio.play('click');
