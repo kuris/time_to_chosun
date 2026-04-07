@@ -224,6 +224,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 우아하지만 단호하게 대군의 제안을 거절한다.", action: () => {
              engine.addClue('sam_poem', '절명시', '수양대군의 회유에도 흔들리지 않았던 그날의 기개가 담긴 시구입니다.');
+             engine.modifyStat('stamina', -5);
+             next('sayuksin_secret_monologue');
+          }},
+          { label: "▶ 차를 조용히 들이키며 침묵으로 거절의 뜻을 전한다.", action: () => {
+             engine.modifyStat('stress', +10);
              next('sayuksin_secret_monologue');
           }}
         ]);
@@ -234,6 +239,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 무릎을 꿇고 왕에게 충성을 맹세한다.", action: () => {
              engine.addClue('secret_decree', '단종의 복위 교서', '어린 왕의 복위를 위해 준비했던 비밀스러운 명령서입니다.');
+             engine.modifyStat('mental', +10);
+             next('sayuksin_vow_meeting');
+          }},
+          { label: "▶ 주상의 손을 맞잡고 함께 눈물을 흘리며 결의를 다진다.", action: () => {
+             engine.modifyStat('stress', +15);
              next('sayuksin_vow_meeting');
           }}
         ]);
@@ -244,6 +254,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 각자의 손가락을 깨물어 혈서를 작성한다.", action: () => {
              engine.addClue('bloody_vow', '사육신의 혈서', '죽음을 두려워하지 않는 6인 충신의 의지가 담긴 비단 조각입니다.');
+             engine.modifyStat('stamina', -10);
+             next('sayuksin_sal_seng_bu');
+          }},
+          { label: "▶ 낮은 목소리로 동료들과 함께 충의를 읊조린다.", action: () => {
+             engine.modifyStat('mental', +5);
              next('sayuksin_sal_seng_bu');
           }}
         ]);
@@ -254,6 +269,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 자신의 운명을 직시하며 결전의 날을 기다린다.", action: () => {
              engine.addClue('tiger_seal', '호랑이 군단의 인장', '거사 당일 신호를 보내기 위해 준비했던 학사들의 도장입니다.');
+             engine.modifyStat('stress', -10);
+             next('sayuksin_banquet_dagger');
+          }},
+          { label: "▶ 살생부를 불태워버리고 마지막 남은 망설임을 없앤다.", action: () => {
+             engine.modifyStat('mental', +10);
              next('sayuksin_banquet_dagger');
           }}
         ]);
@@ -264,6 +284,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 숨겨진 비수를 확인하며 떨리는 손을 꽉 쥔다.", action: () => {
              engine.addClue('hidden_dagger', '연회장의 비수', '거사 실패 후 경회루 연못 근처에서 발견된 차가운 칼날입니다.');
+             engine.modifyStat('stamina', -5);
+             next('sayuksin_jil_eye');
+          }},
+          { label: "▶ 아무 말 없이 고개를 끄덕여 긴박한 눈인사를 나눈다.", action: () => {
+             engine.modifyStat('stress', +15);
              next('sayuksin_jil_eye');
           }}
         ]);
@@ -273,7 +298,14 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '동료 김질의 눈빛이 흔들리고 있습니다. 그는 당신과 눈을 맞추지 못하고 자꾸만 발끝을 내려다봅니다. 당신은 무언가 잘못되었음을 직감합니다.');
         engine.log('inner', '“질(質)아, 자네의 눈에 비친 것은 정의인가, 아니면 생존에 대한 갈구인가. 우리의 맹세가 무너지는 소리가 들리는구나.”');
         engine.showChoices([
-          { label: "▶ 그에게 다가가 마지막으로 어깨를 꽉 쥐어준다.", action: () => next('sayuksin_capture') }
+          { label: "▶ 그에게 다가가 마지막으로 어깨를 꽉 쥐어준다.", action: () => {
+             engine.modifyStat('mental', -5);
+             next('sayuksin_capture');
+          }},
+          { label: "▶ 싸늘한 눈길로 그의 눈동자를 꿰뚫어본다.", action: () => {
+             engine.modifyStat('stress', +10);
+             next('sayuksin_capture');
+          }}
         ]);
     },
     sayuksin_capture: () => {
@@ -282,6 +314,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 당당하게 고개를 들고 관군들을 마주한다.", action: () => {
              engine.addClue('broken_shackles', '부서진 쇠사슬', '심문을 위해 채워졌지만, 당신의 정신만은 묶지 못했던 쇠사슬입니다.');
+             engine.modifyStat('stamina', -10);
+             next('sayuksin_interrogation');
+          }},
+          { label: "▶ 묵묵히 포박을 받아들이며 먼 산을 응시한다.", action: () => {
+             engine.modifyStat('mental', -15);
              next('sayuksin_interrogation');
           }}
         ]);
@@ -292,6 +329,12 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 고문을 이겨내며 끝까지 주상의 안위만을 묻는다.", action: () => {
              engine.addClue('prison_ink', '옥중의 먹물', '고문 도중에도 자신의 의지를 남기기 위해 사용했던 먹물 자국입니다.');
+             engine.modifyStat('stamina', -20);
+             next('sayuksin_last_shout');
+          }},
+          { label: "▶ 인두의 뜨거움을 정면으로 받아내며 수양의 눈을 똑바로 본다.", action: () => {
+             engine.modifyStat('stamina', -40);
+             engine.modifyStat('mental', +10);
              next('sayuksin_last_shout');
           }}
         ]);
@@ -302,6 +345,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 눈을 부릅뜨고 수양의 위선을 꾸짖는다.", action: () => {
              engine.addClue('final_gaze', '주상을 향한 마지막 시선', '죽음 앞에서도 왕을 향한 흔들림 없는 충성을 보여준 눈빛의 기록입니다.');
+             engine.modifyStat('mental', +5);
+             next('sayuksin_execution');
+          }},
+          { label: "▶ 허탈하게 웃으며 역사의 심판을 경고한다.", action: () => {
+             engine.modifyStat('stress', -10);
              next('sayuksin_execution');
           }}
         ]);
@@ -312,6 +360,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ “이 몸이 죽어가서 무엇이 될고 하니...” 시를 읊으며 최후를 맞는다.", action: () => {
              engine.addClue('loyalist_cane', '유배지의 지팡이', '거사 전, 단종이 머무는 영월을 향해 절을 할 때 지탱했던 지팡이입니다.');
+             engine.modifyStat('stamina', -100);
+             next('sayuksin_ending');
+          }},
+          { label: "▶ 조용히 눈을 감고 청령포의 푸른 숲을 떠올리며 최후를 맞는다.", action: () => {
+             engine.modifyStat('stamina', -100);
              next('sayuksin_ending');
           }}
         ]);
