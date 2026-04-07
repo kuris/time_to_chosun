@@ -375,7 +375,19 @@ export class LibraryUI {
     } else {
       // 2. 새 사건 진입 또는 해결된 건 재수사: 초기화
       this.engine.resetForCase(key);
-      this.engine.state.cluesFound = [...this._npCluesFound];
+      this._npCluesFound.forEach(id => {
+        const c = (np.clues || []).find(x => x.id === id) || (np.choices || []).find(ch => ch.clue && ch.clue.id === id)?.clue;
+        if (c) {
+          this.engine.state.cluesFound.push(c.id);
+          this.engine.state.clueContexts[c.id] = {
+            label: c.label,
+            desc: c.desc,
+            text: [`[사건 기록 발견] : 조사에 앞서 미리 수집된 단서입니다.`],
+            scene: '기록 보관소',
+            choiceIdx: null
+          };
+        }
+      });
     }
 
     // 단서 합산 (신문 단서 + 조사/스토리 단서)
@@ -401,7 +413,7 @@ export class LibraryUI {
       this.engine.updateStatLabels(np.povs[this._currentPOV].stats);
     }
 
-    const transitionFn = (['suyang', 'sayuksin', 'kimjil', 'historian', 'hanmyunghoe', 'eomheungdo'].includes(this._currentPOV)) 
+    const transitionFn = (np.isMultiPOV) 
                         ? (cb) => this.hologramTransition(cb) 
                         : (cb) => this.landingTransition(lYear, lDate, lMsg, np.location, cb);
 
@@ -629,7 +641,13 @@ export class LibraryUI {
       <div class="solved-clues"><div class="solved-clue-title">수집한 단서 (클릭하여 맥락 확인)</div>
         ${this.engine.state.cluesFound.map(id => {
           const ctx = this.engine.state.clueContexts[id];
-          const label = ctx ? ctx.label : '알 수 없는 단서';
+          let label = '알 수 없는 단서';
+          if (ctx && ctx.label) {
+            label = ctx.label;
+          } else {
+            const fallback = (np.clues || []).find(c => c.id === id) || (np.choices || []).find(c => c.clue && c.clue.id === id)?.clue;
+            if (fallback) label = fallback.label;
+          }
           return `<div class="solved-clue-item clickable" onclick="showClueContext('${id}')">🔑 ${label}</div>`;
         }).join('')}
       </div>
