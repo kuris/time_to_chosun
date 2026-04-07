@@ -96,5 +96,23 @@ window.openRecord       = (key) => library.openRecord(key);
 window.toggleTheme      = () => theme.toggleTheme();
 window.showClueContext  = (id) => library.showClueContext(id);
 
+// ── 온보딩 함수 ─────────────────────
+window.openOnboarding = () => {
+  document.getElementById('onboarding-modal').classList.add('active');
+  audio.play('click');
+};
+window.closeOnboarding = () => {
+  document.getElementById('onboarding-modal').classList.remove('active');
+  localStorage.setItem('onboardingShown', 'true');
+  audio.play('click');
+};
+
+function checkOnboarding() {
+  if (!localStorage.getItem('onboardingShown')) {
+    setTimeout(() => window.openOnboarding(), 500); // UI 렌더링 후 살짝 여유를 둬서 띄움
+  }
+}
+
 handleRoute(); // 초기 실행
 checkSave();   // 세이브 체크
+checkOnboarding(); // 온보딩 체크

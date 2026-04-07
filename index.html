@@ -64,6 +64,31 @@
   </div>
 </div>
 
+<!-- 게임 플레이 가이드 온보딩 모달 -->
+<div id="onboarding-modal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 400px;">
+    <div class="modal-header">HOW TO PLAY — 수사 지침서</div>
+    <h2 style="margin-top:0; font-size: 18px; color: var(--text-main);">🕵️ 기록 속 진실을 파헤치는 법</h2>
+    
+    <div class="onboarding-steps" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px; text-align: left;">
+      <div class="onboarding-step" style="background: rgba(200, 169, 110, 0.05); padding: 12px; border-left: 3px solid var(--accent); border-radius: 4px;">
+        <div style="font-weight: bold; color: var(--accent); margin-bottom: 4px;">1. 사건 선택 📚</div>
+        <div style="font-size: 13px; color: var(--text-dim); line-height: 1.5;">서가에서 '미해결' 상태의 기록을 클릭하여 과거 현장으로 진입하세요.</div>
+      </div>
+      <div class="onboarding-step" style="background: rgba(200, 169, 110, 0.05); padding: 12px; border-left: 3px solid var(--accent); border-radius: 4px;">
+        <div style="font-weight: bold; color: var(--accent); margin-bottom: 4px;">2. 기록 수집 🔍</div>
+        <div style="font-size: 13px; color: var(--text-dim); line-height: 1.5;">본문 텍스트 내의 <span style="color: #6a9bd8; font-weight: bold;">파란색 단어</span>를 클릭하여 수사에 필요한 단서와 정황을 모으세요.</div>
+      </div>
+      <div class="onboarding-step" style="background: rgba(200, 169, 110, 0.05); padding: 12px; border-left: 3px solid var(--accent); border-radius: 4px;">
+        <div style="font-weight: bold; color: var(--accent); margin-bottom: 4px;">3. 행동 결단 ▷</div>
+        <div style="font-size: 13px; color: var(--text-dim); line-height: 1.5;">단서를 바탕으로 나타난 행동 선택지(▶)를 골라 진상을 밝히세요. <br>※ 선택에 따라 기력(스탯)이 소모되며 너무 낮아지면 쫓겨납니다.</div>
+      </div>
+    </div>
+    
+    <button onclick="window.closeOnboarding()" class="np-btn primary" style="width:100%; margin-top:25px;">수사 시작하기</button>
+  </div>
+</div>
+
 <!-- 착륙 오버레이 (고지도 전개 연출용) -->
 <div id="landing-overlay">
   <!-- 고지도 배경 레이어 (Leaflet 제거) -->
@@ -105,6 +130,7 @@
 ══════════════════════════════ -->
 <div class="screen" id="screen-library">
   <div class="library-header-btn-row" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px; align-items: center;">
+    <button class="font-btn" style="width: auto; padding: 0 12px; border-radius: 20px; font-size: 10px; opacity: 0.8;" onclick="window.openOnboarding()">❔ 하우투(How to)</button>
     <button class="font-btn" style="width: auto; padding: 0 12px; border-radius: 20px; font-size: 10px; opacity: 0.8;" onclick="location.hash='#about'">📍 소문(About)</button>
     <div class="font-controls">
       <button class="font-btn" onclick="setFontSize(0.85)" id="f-btn-s">A-</button>
