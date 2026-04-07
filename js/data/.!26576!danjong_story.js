@@ -1,0 +1,21 @@
+// ══════════════════════════════
+//  js/data/danjong_story.js
+//  단종: 네 개의 시선 - 시점별 상세 시나리오 데이터
+// ══════════════════════════════
+
+const danjongStory = (engine, pov) => {
+  const next = (nodeId) => {
+    if (nodes[nodeId]) {
+      nodes[nodeId]();
+    } else {
+      console.error(`Node not found: ${nodeId} for POV: ${pov}`);
+    }
+  };
+
+  const solveCase = (caseId, title, clues, summary) => {
+    if (engine.solve) {
+      engine.solve(caseId, title, clues, summary);
+    }
+  };
+
+    // ══════════════════════════════════════════════════════════════

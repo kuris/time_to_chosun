@@ -5,6 +5,7 @@
 
 const danjongStory = (engine, pov) => {
   const next = (nodeId) => {
+    engine.state.currentScene = nodeId;
     if (nodes[nodeId]) {
       nodes[nodeId]();
     } else {
@@ -28,10 +29,18 @@ const danjongStory = (engine, pov) => {
         engine.log('inner', '“사직이 위태롭다. 문종 형님께서 내게 남긴 것은 이 나라의 안위인가, 아니면 왕위에 대한 유혹인가. 내가 움직이지 않으면 이 나라는 신권에 먹히고 말 것이다.”');
         engine.showChoices([
           { label: "▶ 과녁을 향해 마지막 화살을 날리며 결의를 다진다.", action: () => {
+             engine.modifyStat('mental', +5);
              engine.addClue('suyang_bow', '대군의 활', '수양대군의 무(武)에 대한 기개와 결의가 서린 낡은 활입니다.');
              next('suyang_tiger_hunt');
           }},
-          { label: "▶ 활을 내려놓고 김종서의 집으로 향한다.", action: () => next('suyang_tiger_hunt') }
+          { label: "▶ 활을 내려놓고 차가운 눈으로 궁궐 쪽을 응시한다.", action: () => {
+             engine.modifyStat('stress', +10);
+             next('suyang_tiger_hunt');
+          }},
+          { label: "▶ 김종서의 집으로 사람을 보내 동태를 살핀다.", action: () => {
+             engine.modifyStat('money', -10);
+             next('suyang_tiger_hunt');
+          }}
         ]);
     },
     suyang_tiger_hunt: () => {
@@ -39,7 +48,12 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '계유년 십월의 밤. 당신은 한명회와 함께 김종서의 집을 직접 찾아갑니다. 차가운 철퇴가 어둠 속에서 번뜩입니다. "천둥소리가 나거든 시작하라." 당신의 명령에 역사는 요동치기 시작합니다.');
         engine.showChoices([
           { label: "▶ 직접 말을 몰아 거사의 최전선에 선다.", action: () => {
+             engine.modifyStat('stamina', -20);
              engine.addClue('black_armor', '검은 갑옷', '계유정난의 밤, 수양대군이 직접 몸에 걸쳤던 차가운 갑옷입니다.');
+             next('suyang_throne_entry');
+          }},
+          { label: "▶ 거리를 유지하며 한명회의 신호만을 기다린다.", action: () => {
+             engine.modifyStat('stress', +15);
              next('suyang_throne_entry');
           }}
         ]);
@@ -49,7 +63,14 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '근정전의 육좌에 앉아 있는 순간, 면류관의 옥 구슬들이 가볍게 흔들리며 차가운 소리를 냈습니다. 당신의 시야에 들어오는 대신들의 눈빛은 예전과 전혀 다릅니다. 이 자리는 생각보다 춥고, 생각보다 넓습니다.');
         engine.showChoices([
           { label: "▶ 엄격한 법치와 숙청으로 반대파를 억누른다.", action: () => {
+             engine.modifyStat('mental', -10);
+             engine.modifyStat('stress', +20);
              engine.addClue('secret_allies', '밀약의 명단', '수양대군의 거사를 도왔던 공신들의 은밀한 결탁 기록입니다.');
+             next('suyang_scholar_protest');
+          }},
+          { label: "▶ 인재들을 포용하며 민심을 먼저 수습하려 한다.", action: () => {
+             engine.modifyStat('money', -20);
+             engine.modifyStat('mental', +10);
              next('suyang_scholar_protest');
           }}
         ]);
@@ -59,7 +80,12 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '당신이 아꼈던 인재인 성삼문과 박팽년이 당신을 대하는 태도가 예전 같지 않습니다. 그들은 옥새를 전달하며 차가운 눈빛으로 당신을 바라봅니다.');
         engine.log('inner', '“내가 그토록 아꼈던 천재들이 이제는 나를 비수를 든 괴물처럼 여기는구나. 그들의 고결함이 가소로우면서도, 한편으론 시리도록 부럽다.”');
         engine.showChoices([
-          { label: "▶ 그들의 마음을 돌려보려 애쓴다.", action: () => {
+          { label: "▶ 그들의 고결함을 비웃으며 정당성을 주장한다.", action: () => {
+             engine.modifyStat('stress', -5);
+             next('suyang_nightmare_visions');
+          }},
+          { label: "▶ 묵묵히 그들의 눈빛을 받아내며 옥새를 쥔다.", action: () => {
+             engine.modifyStat('mental', -5);
              engine.addClue('regret_monologue', '새벽의 독백', '집현전 학사들의 배신감과 자신의 고독을 적어 내려간 비망록입니다.');
              next('suyang_nightmare_visions');
           }}
@@ -70,10 +96,15 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '깊은 밤, 촛불이 일렁일 때마다 현덕왕후의 원혼이 나타나 당신의 목을 조르는 꿈을 꿉니다. "숙부여, 정녕 당신의 손에 묻은 피가 닦일 줄 알았느냐!" 당신은 식은땀을 흘리며 깨어납니다.');
         engine.showChoices([
           { label: "▶ 무시하고 정무에 더욱 집착한다.", action: () => {
+             engine.modifyStat('stamina', -10);
              engine.addClue('cursed_sleep', '저주받은 꿈', '잠들지 못하는 밤, 당신을 괴롭히는 원혼의 흔적입니다.');
              next('suyang_exile_decision');
           }},
-          { label: "▶ 대규모 법회를 열어 죄를 씻으려 한다.", action: () => next('suyang_exile_decision') }
+          { label: "▶ 대규모 법회를 열어 죄를 씻으려 한다.", action: () => {
+             engine.modifyStat('money', -30);
+             engine.modifyStat('mental', +20);
+             next('suyang_exile_decision');
+          }}
         ]);
     },
     suyang_exile_decision: () => {
@@ -81,7 +112,12 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '당신은 결국 단종을 사면이 절벽으로 둘러싸인 천혜의 감옥, 영월 청령포로 보낼 것을 명합니다. 그것은 유배라는 이름의 사실상의 사형 선고입니다.');
         engine.showChoices([
           { label: "▶ 단호하게 영월 유배령을 최종 선포한다.", action: () => {
+             engine.modifyStat('mental', -15);
              engine.addClue('tainted_seal', '얼룩진 옥새', '단종을 유배 보낼 때 찍힌 차가운 옥새의 인장입니다.');
+             next('suyang_assassination_threat');
+          }},
+          { label: "▶ 잠시 주저하며 교서 위에 손을 얹고 망설인다.", action: () => {
+             engine.modifyStat('stress', +25);
              next('suyang_assassination_threat');
           }}
         ]);
@@ -91,7 +127,12 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '경회루 연회 중, 성삼문과 유응부가 칼을 숨겼다는 밀고를 받습니다. 웃음소리 뒤에 숨겨진 차가운 금속음이 들려오는 것만 같습니다.');
         engine.showChoices([
           { label: "▶ 즉시 호위무사를 불러 연회장을 폐쇄한다.", action: () => {
+             engine.modifyStat('stamina', -5);
              engine.addClue('shadow_guards', '그림자 호위병의 증언', '연회장의 어두운 그림자 속에 숨어 있던 자들의 은밀한 기록입니다.');
+             next('suyang_interrogation_hell');
+          }},
+          { label: "▶ 아무 일 없는 듯 연회를 계속하며 기회를 엿본다.", action: () => {
+             engine.modifyStat('stress', +30);
              next('suyang_interrogation_hell');
           }}
         ]);
@@ -101,7 +142,13 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '붙잡힌 성삼문을 직접 국문합니다. 그는 고문 속에서도 당신을 향해 비웃음을 날립니다. "수양, 너는 왕이 아니다!" 당신은 그의 기개에 질투와 경외감을 동시에 느낍니다.');
         engine.showChoices([
           { label: "▶ 차가운 눈으로 그의 최후를 지켜본다.", action: () => {
+             engine.modifyStat('mental', -20);
              engine.addClue('blood_edict', '피의 교서', '반역자들을 처벌하기 위해 내린 잔혹한 명령서입니다.');
+             next('suyang_final_poison');
+          }},
+          { label: "▶ 분노하여 직접 채찍을 들어 그를 윽박지른다.", action: () => {
+             engine.modifyStat('stamina', -15);
+             engine.modifyStat('stress', +10);
              next('suyang_final_poison');
           }}
         ]);
@@ -111,7 +158,12 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '금부도사 왕방연을 영월로 보냅니다. 그가 가져갈 상자 안에는 어린 왕의 숨을 거둘 사약이 담겨 있습니다. 당신은 창밖을 보며 애써 마음을 다잡습니다.');
         engine.showChoices([
           { label: "▶ 떨리는 손으로 사약 발에 인장을 찍는다.", action: () => {
+             engine.modifyStat('mental', -30);
              engine.addClue('poison_goblet', '최후의 사약 발', '어린 왕의 마지막을 지켜보았던 비극적인 도구의 흔적입니다.');
+             next('suyang_palace_whispers');
+          }},
+          { label: "▶ 마지막 순간까지 교서를 쥐고 고뇌한다.", action: () => {
+             engine.modifyStat('stress', +40);
              next('suyang_palace_whispers');
           }}
         ]);
@@ -121,7 +173,13 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '왕좌에 앉아 있지만, 복도에서 들려오는 발소리가 모두 당신을 해량하려는 자들의 것으로 들립니다. "전하, 정녕 편안하시옵니까?"라는 환청이 귓가를 맴돕니다.');
         engine.showChoices([
           { label: "▶ 종묘를 찾아가 조상신들께 정당성을 호소한다.", action: () => {
+             engine.modifyStat('mental', +10);
              engine.addClue('ancestral_vow', '종묘의 맹세', '종묘의 차가운 바닥에서 왕권을 지키겠다 맹세한 기록입니다.');
+             next('suyang_building_nation');
+          }},
+          { label: "▶ 환청을 지우기 위해 밤새 술에 의지한다.", action: () => {
+             engine.modifyStat('stamina', -30);
+             engine.modifyStat('stress', -10);
              next('suyang_building_nation');
           }}
         ]);
@@ -130,7 +188,14 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 11 챕터 — 세조의 업적 뒤의 어둠 ]');
         engine.log('story', '경국대전을 편찬하고 국가의 기틀을 다집니다. 하지만 당신의 손에 묻은 피는 화려한 업적 아래 여전히 붉게 일렁이고 있습니다. 백성들은 당신을 두려워하지만, 사랑하지는 않습니다.');
         engine.showChoices([
-          { label: "▶ 역사에 남을 위대한 왕이 되겠노라 다짐한다.", action: () => next('suyang_ending') }
+          { label: "▶ 역사에 남을 위대한 왕이 되겠노라 다짐한다.", action: () => {
+             engine.modifyStat('mental', +15);
+             next('suyang_ending');
+          }},
+          { label: "▶ 신권을 억제하고 왕권을 더욱 공고히 한다.", action: () => {
+             engine.modifyStat('stress', +15);
+             next('suyang_ending');
+          }}
         ]);
     },
     suyang_ending: () => {
@@ -700,10 +765,26 @@ const danjongStory = (engine, pov) => {
   };
 
   const startNode = `${pov}_start`;
-  if (nodes[startNode]) {
-    nodes[startNode]();
+  
+  if (engine.state.currentScene && nodes[engine.state.currentScene]) {
+    // ──────── 수사 재개 시 ────────
+    // 기존 로그(DOM)를 비우고 현재 챕터만 다시 출력하여 중복 방지
+    const logEl = document.getElementById('game-log');
+    if (logEl) logEl.innerHTML = '';
+    
+    engine.clearQueue();
+    engine.log('system', '⏳ 파편화된 기억 속에서 현재 챕터를 재구성합니다...');
+    engine.logD();
+    
+    nodes[engine.state.currentScene]();
   } else {
-    console.error(`Invalid POV for danjongStory: ${pov}`);
+    // ──────── 새 수사 시작 ────────
+    engine.state.currentScene = startNode;
+    if (nodes[startNode]) {
+      nodes[startNode]();
+    } else {
+      console.error(`Invalid POV for danjongStory: ${pov}`);
+    }
   }
 };
 

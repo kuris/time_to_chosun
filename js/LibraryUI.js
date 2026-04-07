@@ -802,22 +802,24 @@ export class LibraryUI {
       grid.appendChild(card);
     });
 
-    // ── 히든 엔딩 체크 ──
-    const totalPovs = Object.keys(np.povs).length;
-    const completedCount = Object.keys(completion).length;
+    // ── 작가만의 가상 시나리오 (행복한 단종) 해금 체크 ──
+    const nonHiddenPovs = Object.entries(np.povs).filter(([id, p]) => !p.isHidden);
+    const totalRequired = nonHiddenPovs.length;
+    const completedCount = nonHiddenPovs.filter(([id, p]) => completion[id]).length;
     
-    if (completedCount >= totalPovs) {
+    if (completedCount >= totalRequired) {
       const hiddenCard = document.createElement('div');
       hiddenCard.className = 'pov-card hidden-unlocked';
-      hiddenCard.style.gridColumn = '1 / -1'; // 전체 너비 사용
+      hiddenCard.style.gridColumn = '1 / -1'; 
       hiddenCard.style.marginTop = '20px';
-      hiddenCard.style.background = 'linear-gradient(135deg, rgba(139,26,26,0.2), rgba(200,169,110,0.1))';
-      hiddenCard.style.borderColor = '#b22222';
+      hiddenCard.style.background = 'linear-gradient(135deg, rgba(144,184,144,0.1), rgba(200,169,110,0.2))';
+      hiddenCard.style.borderColor = '#c8a96e';
+      hiddenCard.style.boxShadow = '0 0 20px rgba(200,169,110,0.3)';
       hiddenCard.innerHTML = `
-        <div class="pov-role" style="color:#ff4d4d; opacity:1;">기록되지 않은 최후의 진실</div>
-        <div class="pov-name" style="color:#ffc107;">새벽 안개 속의 나룻배</div>
-        <div class="pov-desc" style="color:#d9d0c1;">모든 엇갈린 시점이 하나로 모일 때, 비로소 역사의 거대한 틈새가 열립니다. 단종을 구출하기 위한 마지막 밤의 기록.</div>
-        <button class="pov-btn-pick" onclick="selectPOV('${key}', 'hidden')" style="background:#b22222; color:#fff; border:none; padding:15px; cursor:pointer;">단종 구출 작전 시작</button>
+        <div class="pov-role" style="color:#c8a96e; opacity:1; font-weight:bold;">작가만의 특별한 가상 기록</div>
+        <div class="pov-name" style="color:#fff; font-size:24px; text-shadow:0 0 10px rgba(255,255,255,0.5);">행복한 단종 — 긴 꿈의 끝</div>
+        <div class="pov-desc" style="color:#d9d0c1; line-height:1.6;">모든 엇갈린 기록이 하나로 모여 증명된 것은 죽음이 아닌 '희망'이었습니다. 역사라는 이름의 감옥을 부수고, 단종이 인간으로서 누린 60년의 평온한 세월을 따라갑니다.</div>
+        <button class="pov-btn-pick" onclick="selectPOV('${key}', 'virtual')" style="background:#c8a96e; color:#1a1a1a; font-weight:bold; border:none; padding:15px; cursor:pointer; width:100%; border-radius:4px; margin-top:10px;">가상 시나리오 진입 (행복한 엔딩)</button>
       `;
       grid.appendChild(hiddenCard);
     }

@@ -130,6 +130,15 @@ export const scenarios_joseon = {
         desc: "임금을 버린 세상에서, 나만이라도 그분의 수의가 되어드리고 싶었다.",
         stats: { money: "장례물품", stamina: "기력", mental: "애민심", stress: "반역의 공포" },
         landMsg: "차가운 강물에서 울리는 비명... 당신은 끝내 임금을 외면하지 못합니다."
+      },
+      virtual: {
+        id: "virtual",
+        name: "단종 (가상)",
+        role: "작가만의 상상",
+        desc: "만약 단종이 그날 밤 청령포에서 구출되어, 이름 없는 한 사람으로 행복하게 살다 죽었다면...",
+        stats: { money: "생활비", stamina: "생명력", mental: "행복도", stress: "기나긴 꿈" },
+        landMsg: "역사라는 이름의 감옥이 열리고, 새로운 시간이 흐르기 시작합니다.",
+        isHidden: true
       }
     },
 
