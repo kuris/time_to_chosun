@@ -359,7 +359,7 @@ export class LibraryUI {
       return;
     }
 
-    const isSameCase = (this.engine.state.currentKey === key);
+    const isSameCase = (this.engine.state.currentKey === key && this.engine.state.currentPOV === this._currentPOV);
     let isResuming   = false;
 
     if (isSameCase) {
@@ -375,6 +375,7 @@ export class LibraryUI {
     } else {
       // 2. 새 사건 진입 또는 해결된 건 재수사: 초기화
       this.engine.resetForCase(key);
+      this.engine.state.currentPOV = this._currentPOV;
       this._npCluesFound.forEach(id => {
         const c = (np.clues || []).find(x => x.id === id) || (np.choices || []).find(ch => ch.clue && ch.clue.id === id)?.clue;
         if (c) {
