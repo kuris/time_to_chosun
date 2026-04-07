@@ -804,8 +804,13 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '강가에는 대군의 무시무시한 방이 붙어 있습니다. "시신을 거두는 자는 삼족을 멸하리라." 마을 사람들은 눈길조차 주지 않고 서둘러 지나갑니다. 저 멀리 강물 위로 붉은 옷자락 같은 것이 일렁이는 것이 보입니다.');
         engine.log('inner', '“사람들이 고개를 돌리는구나. 충(忠)이란 것이 이토록 무거운 죄란 말인가. 내 자식들의 목숨과 바꿀 가치가 있는 일인가... 아니, 왕의 시신을 짐승의 먹이로 둘 순 없다.”');
         engine.showChoices([
-          { label: "▶ 떨리는 손을 꽉 쥐고 집으로 돌아온다.", action: () => {
+          { label: "▶ 떨리는 손을 꽉 쥐고 집으로 돌아와 거사를 준비한다.", action: () => {
             engine.addClue('edict_copy', '금지의 방', '단종의 시신을 수습하는 자를 처벌하겠다는 세조의 엄명입니다.');
+            engine.modifyStat('stress', +20);
+            next('eomheungdo_home_deliberation');
+          }},
+          { label: "▶ 강가에 묵묵히 서서 시신이 떠내려가는 방향을 눈에 담는다.", action: () => {
+            engine.modifyStat('mental', -10);
             next('eomheungdo_home_deliberation');
           }}
         ]);
@@ -816,6 +821,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ “부디 아비를 원망 말거라”라며 동의를 구한다.", action: () => {
              engine.addClue('final_whisper', '마지막 소문', '가족들 사이에서 오가는, 거사를 결심하게 만든 비장한 대화의 파편입니다.');
+             engine.modifyStat('mental', +10);
+             next('eomheungdo_preparing_coffin');
+          }},
+          { label: "▶ 아무 말 없이 아들들의 어깨를 한 번씩 꽉 쥐어준다.", action: () => {
+             engine.modifyStat('stress', +15);
              next('eomheungdo_preparing_coffin');
           }}
         ]);
@@ -824,8 +834,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 5 챕터 — 밤새 짠 초라한 관 ]');
         engine.log('story', '창고의 낡은 판자들을 꺼냅니다. 망치 소리가 밖으로 새 나갈까 봐 천으로 감싸고 조심스레 못을 박습니다. 재목이 모자라 당신의 책상까지 뜯어내 관을 만듭니다. 손톱 밑이 피로 물드나 고통조차 느껴지지 않습니다.');
         engine.showChoices([
-          { label: "▶ 밤을 새워 관을 완성한다.", action: () => {
+          { label: "▶ 밤을 새워 관을 완성하고 겉을 검은 천으로 감싼다.", action: () => {
             engine.addClue('eom_hammer', '피 묻은 망치', '한밤중 몰래 관을 짤 때 사용했던, 충심의 무게가 실린 도구입니다.');
+            engine.modifyStat('stamina', -20);
+            next('eomheungdo_cold_river_search');
+          }},
+          { label: "▶ 관의 틈새를 정성껏 메우며 속으로 마지막 기도를 올린다.", action: () => {
+            engine.modifyStat('mental', +10);
             engine.addClue('hidden_box', '빈 함', '관을 짜고 남은 목재로 만든, 알 수 없는 용도의 작은 상자입니다.');
             next('eomheungdo_cold_river_search');
           }}
@@ -835,8 +850,13 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 6 챕터 — 서강의 차가운 물속으로 ]');
         engine.log('story', '깊은 밤, 아들들과 함께 작은 나룻배를 탑니다. 횃불도 켜지 못한 채 손으로 차가운 강물을 더듬습니다. 물 밑의 돌이 아니라 부드러운 옷자락을 찾을 때마다 심장이 요동칩니다.');
         engine.showChoices([
-          { label: "▶ 깊은 물속으로 직접 몸을 던져 시신을 찾는다.", action: () => {
+          { label: "▶ 깊은 물속으로 직접 몸을 던져 시신을 끝까지 찾아낸다.", action: () => {
              engine.addClue('forbidden_boat', '비밀스러운 나룻배', '시신을 수습하기 위해 띄웠던, 역사의 물줄기를 바꾼 작은 배입니다.');
+             engine.modifyStat('stamina', -30);
+             next('eomheungdo_finding_the_sun');
+          }},
+          { label: "▶ 아들들을 시켜 나뭇가지로 강 밑을 조심스레 훑는다.", action: () => {
+             engine.modifyStat('stress', +20);
              next('eomheungdo_finding_the_sun');
           }}
         ]);
@@ -846,8 +866,13 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '드디어 찾았습니다. 물속에 잠긴 단종의 시신은 마치 잠든 아이처럼 평온합니다. 당신은 전하의 차가운 시신을 가슴에 꼭 안고 울음을 삼킵니다. 그런데 이상합니다. 전하의 옷 한복판이 무언가에 의해 잘려나간 듯합니다.');
         engine.log('inner', '“전하, 전하... 어찌 이리 차가우십니까. 누가 전하의 마지막 길에서 이 조각을 가져갔단 말입니까.”');
         engine.showChoices([
-          { label: "▶ 젖은 관복을 자신의 겉옷으로 감싸 안는다.", action: () => {
+          { label: "▶ 젖은 곤룡포를 자신의 겉옷으로 감싸 안고 눈물을 흘린다.", action: () => {
             engine.addClue('last_robe', '젖은 곤룡포 조각', '차가운 강물 속에서 건져낸 단종의 마지막 수의입니다.');
+            engine.modifyStat('mental', -10);
+            next('eomheungdo_climbing_mountain');
+          }},
+          { label: "▶ 전하의 시신을 배 위로 모시고 수습하며 주변의 동태를 살핀다.", action: () => {
+            engine.modifyStat('stress', +15);
             next('eomheungdo_climbing_mountain');
           }}
         ]);
@@ -856,15 +881,27 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 8 챕터 — 동을산의 험난한 고개 ]');
         engine.log('story', '시신을 담은 관을 등에 지고 가파른 산길을 오릅니다. 갑자기 쏟아지기 시작한 눈이 앞을 가립니다. 발을 헛디딜 때마다 "멈춰라, 반역자야!"라는 환청이 들려오고, 관님의 무게는 점점 천근만근이 됩니다.');
         engine.showChoices([
-          { label: "▶ 이를 악물고 정상을 향해 한 걸음씩 내딛는다.", action: () => next('eomheungdo_noru_miracle') }
+          { label: "▶ 이를 악물고 정상을 향해 한 걸음씩 묵묵히 내딛는다.", action: () => {
+             engine.modifyStat('stamina', -50);
+             next('eomheungdo_noru_miracle');
+          }},
+          { label: "▶ 눈보라 속에서 잠시 멈춰 관음에 대고 전하께 정중히 고한다.", action: () => {
+             engine.modifyStat('mental', +10);
+             next('eomheungdo_noru_miracle');
+          }}
         ]);
     },
     eomheungdo_noru_miracle: () => {
         engine.log('time', '[ 9 챕터 — 노루가 비켜준 하늘의 자리 ]');
         engine.log('story', '눈보라 속에서 기운이 다해 쓰러지려 할 때, 기이한 광경을 봅니다. 노루 한 마리가 눈밭에 누워 있다가 당신을 보고 조용히 자리를 비켜줍니다. 그 자리에만 기적처럼 눈이 쌓이지 않았고, 땅은 어머니의 품처럼 보드랍습니다.');
         engine.showChoices([
-          { label: "▶ 그 따뜻한 자리를 전하의 묘자리로 정한다.", action: () => {
+          { label: "▶ 그 따뜻한 자리를 전하의 묘자리로 정하고 안치한다.", action: () => {
             engine.addClue('noru_hair', '노루털 한 움큼', '기적 같은 현장에 남겨진 하얀 털입니다. 누군가 미리 다녀간 듯한 흔적도 보입니다.');
+            engine.modifyStat('mental', +20);
+            next('eomheungdo_snow_burial');
+          }},
+          { label: "▶ 하늘이 내린 자리임을 확신하며 조용히 고개를 숙여 감사한다.", action: () => {
+            engine.modifyStat('stress', -10);
             next('eomheungdo_snow_burial');
           }}
         ]);
@@ -874,8 +911,13 @@ const danjongStory = (engine, pov) => {
         engine.log('story', '관군에게 들키지 않으려면 무덤인 것을 몰라야 합니다. 평평하게 땅을 다지고 낙엽을 덮습니다. 그런데 땅을 파던 중, 아들이 무언가를 발견합니다. "아버지, 여기... 전하의 가락지가 왜 여기 묻혀 있습니까?" 당신은 소름이 돋습니다.');
         engine.log('inner', '“죽었다던 임금의 가락지가 왜 땅속에... 마치 누군가 전하를 구출하려다 흘린 흔적 같지 않은가.”');
         engine.showChoices([
-          { label: "▶ 발견한 가락지를 품속 깊이 숨긴다.", action: () => {
+          { label: "▶ 발견한 가락지를 품속 깊이 숨기고 비밀을 간직한다.", action: () => {
              engine.addClue('seed_of_hope', '희망의 씨앗', '죽음을 위장하여 임금을 탈출시키려 했던 누군가의 은밀한 계획을 암시하는 복선입니다.');
+             engine.modifyStat('mental', +5);
+             next('eomheungdo_nameless_life');
+          }},
+          { label: "▶ 가락지를 다시 땅속 깊이 묻고 전하의 안식만을 기도한다.", action: () => {
+             engine.modifyStat('stress', +10);
              next('eomheungdo_nameless_life');
           }}
         ]);
@@ -884,7 +926,14 @@ const danjongStory = (engine, pov) => {
         engine.log('time', '[ 11 챕터 — 도망자의 세월, 마지막 전언 ]');
         engine.log('story', '당신은 가솔을 이끌고 깊은 산속으로 숨어듭니다. 호장이라는 이름도 버리고 평생을 숨어 삽니다. 하지만 죽기 직전, 당신은 아들들에게 믿기 힘든 말을 남깁니다. "그날 우리가 묻은 것은 정녕 전하의 육신이었을까, 아니면 조선의 슬픔이었을까..."');
         engine.showChoices([
-          { label: "▶ 의미심장한 미소를 지으며 눈을 감는다.", action: () => next('eomheungdo_ending') }
+          { label: "▶ 의미심장한 미소를 지으며 조용히 눈을 감는다.", action: () => {
+             engine.modifyStat('mental', +10);
+             next('eomheungdo_ending');
+          }},
+          { label: "▶ 아들들의 손을 맞잡으며 역사의 진실을 잊지 말라 당부한다.", action: () => {
+             engine.modifyStat('stress', -10);
+             next('eomheungdo_ending');
+          }}
         ]);
     },
     eomheungdo_ending: () => {
@@ -1010,6 +1059,11 @@ const danjongStory = (engine, pov) => {
         engine.showChoices([
           { label: "▶ 마을의 아이들을 무릎에 앉히고 호랑이보다 무서웠던 슬픈 임금님 이야기를 들려준다.", action: () => {
              engine.addClue('legendary_story', '전설이 된 옛이야기', '단종 자신의 비극적 과거를 마침내 남의 이야기처럼 웃으며 풀게 된 치유의 증거입니다.');
+             engine.modifyStat('행복도', +20);
+             next('virtual_ending');
+          }},
+          { label: "▶ 마을 어귀의 주막에 앉아 흐르는 강물을 보며 소리 없이 과거를 추억한다.", action: () => {
+             engine.modifyStat('기나긴 꿈', +10);
              next('virtual_ending');
           }}
         ]);
