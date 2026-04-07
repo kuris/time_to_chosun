@@ -309,6 +309,18 @@ body {
 .log-line.time    { color: #8b7d62; font-size: 11px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
 .log-line.system  { color: #888; font-style: italic; font-size: 12px; }
 .log-line.clue    { color: #a67c00; font-weight: 800; background: rgba(166,124,0,0.05); padding: 4px 8px; border-radius: 2px; }
+.log-line.tutorial { color: #5a759c; font-weight: bold; background: rgba(90,117,156,0.1); padding: 6px 10px; border-left: 3px solid #5a759c; margin: 10px 0; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); letter-spacing:-0.2px;}
+
+@keyframes tutorialFlash {
+  0% { box-shadow: 0 0 0px #5a759c; background: rgba(90,117,156, 0.2); }
+  50% { box-shadow: 0 0 10px #5a759c; background: rgba(90,117,156, 0.4); transform: scale(1.05); color: #000; }
+  100% { box-shadow: 0 0 0px #5a759c; background: rgba(90,117,156, 0.2); }
+}
+.tutorial-pulse {
+  animation: tutorialFlash 1.5s infinite;
+  border-radius: 4px;
+  display: inline-block;
+}
 
 #game-choices { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
 .btn-choice {

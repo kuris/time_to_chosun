@@ -217,11 +217,14 @@ export class LibraryUI {
     let col2 = np.col2 || '';
 
     // 클릭 가능한 단서 마커 치환
-    (np.clues || []).forEach(c => {
+    (np.clues || []).forEach((c, idx) => {
       if (!c.marker) return;
       const isFound = this.engine.state.cluesFound.includes(c.id);
       const foundClass = isFound ? ' found' : '';
-      const tag  = `<span class="clue${foundClass}" data-clue="${c.id}" onclick="findClueInRecord('${c.id}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
+      // 튜토리얼 유도를 위해 처음 단서 수집 전 첫 단서 표기
+      const pulseClass = (np.isTutorial && this.engine.state.cluesFound.length === 0 && idx === 0) ? ' tutorial-pulse' : '';
+      
+      const tag  = `<span class="clue${foundClass}${pulseClass}" data-clue="${c.id}" onclick="findClueInRecord('${c.id}')">${c.marker.replace(/\[|\]/g, '')}</span>`;
       // 모든 발생 지점에 대해 전역 치환 (RegExp 활용)
       const safeMarker = c.marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
       col1 = col1.replace(new RegExp(safeMarker, 'g'), tag);
@@ -478,7 +481,12 @@ export class LibraryUI {
       this.engine.log('time', `[ ${lDate} ${np.time || '오전'} ]`);
       this.engine.log('story', np.eventStory || (np.sub || '본격적인 수사를 시작합니다.'));
       if (np.mysteryInsight) this.engine.log('mystery', np.mysteryInsight);
-      this.engine.log('system', 'TIP: 기록 본문의 강조된 키워드들도 수집해야 하는 단서입니다.');
+      
+      if (np.isTutorial) {
+        this.engine.log('tutorial', '사서의 조언: 스크롤을 올려 본문의 파란 단어들을 클릭해 단서를 더 수집해 보십시오. 단서를 얻어야 특정 선택지가 열리기도 합니다.');
+      } else {
+        this.engine.log('system', 'TIP: 기록 본문의 강조된 키워드들도 수집해야 하는 단서입니다.');
+      }
       this.engine.logD();
     }
 
@@ -496,6 +504,9 @@ export class LibraryUI {
       }));
 
     if (choices.length > 0) {
+      if (np.isTutorial && this.engine.state.usedChoices.length === 0) {
+        this.engine.log('tutorial', '사서의 조언: 하단의 ▷ 모양 행동 선택지를 누르면 수사관으로서의 기력(스탯) 등 자원을 소모하며, 다음 사건의 국면으로 진행됩니다. 자원 관리에 유의하십시오.');
+      }
       this.engine.showChoices(choices);
     } else {
       const isSolveReady = this.engine.state.cluesFound.length >= this.engine.state.totalClues;
