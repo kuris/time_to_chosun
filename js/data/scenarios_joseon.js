@@ -90,7 +90,8 @@ export const scenarios_joseon = {
         role: "권력의 설계자",
         desc: "나는 나라를 구하려 했다. 강력한 왕권만이 종묘사직을 보존할 유일한 길이다.",
         stats: { money: "군자금", stamina: "결단력", mental: "정당성", stress: "죄책감" },
-        landMsg: "거사를 앞둔 긴박한 밤. 당신의 결단이 조선의 지도를 바꿀 것입니다."
+        landMsg: "거사를 앞둔 긴박한 밤. 당신의 결단이 조선의 지도를 바꿀 것입니다.",
+        clueCount: 10
       },
       sayuksin: {
         id: "sayuksin",
@@ -98,7 +99,8 @@ export const scenarios_joseon = {
         role: "고독한 충신",
         desc: "나는 끝까지 신하였다. 만고에 이름이 남지 않아도 좋으나, 주상만은 지켜야 했다.",
         stats: { money: "군비", stamina: "기력", mental: "충의", stress: "두려움" },
-        landMsg: "복위 거사의 비밀이 새어 나가고 있습니다. 고독한 사투가 시작됩니다."
+        landMsg: "복위 거사의 비밀이 새어 나가고 있습니다. 고독한 사투가 시작됩니다.",
+        clueCount: 10
       },
       kimjil: {
         id: "kimjil",
@@ -106,7 +108,8 @@ export const scenarios_joseon = {
         role: "배신의 고뇌",
         desc: "나는 살고 싶었을 뿐이다. 내 가족의 목숨이 동료들의 의리보다 무거웠다.",
         stats: { money: "회유금", stamina: "기력", mental: "생존본능", stress: "죄책감" },
-        landMsg: "동료들의 얼굴과 가족의 울음소리 사이에서, 당신은 무너지고 있습니다."
+        landMsg: "동료들의 얼굴과 가족의 울음소리 사이에서, 당신은 무너지고 있습니다.",
+        clueCount: 8
       },
       historian: {
         id: "historian",
@@ -114,7 +117,8 @@ export const scenarios_joseon = {
         role: "기록의 딜레마",
         desc: "나는 진실을 기록해야 했다. 붓 끝이 떨려도 후세에 전할 정직한 목소리만은 남기리라.",
         stats: { money: "지필묵", stamina: "기록의지", mental: "진실성", stress: "필화의 위험" },
-        landMsg: "권력이 칼날을 휘두를 때, 붓은 무엇을 남길 수 있겠습니까?"
+        landMsg: "권력이 칼날을 휘두를 때, 붓은 무엇을 남길 수 있겠습니까?",
+        clueCount: 10
       },
       hanmyunghoe: {
         id: "hanmyunghoe",
@@ -122,7 +126,8 @@ export const scenarios_joseon = {
         role: "권력의 설계자",
         desc: "역사는 승자의 편이다. 나는 피를 묻히는 대신, 조선의 백 년을 설계하려고 한다.",
         stats: { money: "정치자금", stamina: "모략", mental: "냉철함", stress: "업보" },
-        landMsg: "살생부를 펼치십시오. 오늘 밤, 조선의 주인들이 바뀔 것입니다."
+        landMsg: "살생부를 펼치십시오. 오늘 밤, 조선의 주인들이 바뀔 것입니다.",
+        clueCount: 10
       },
       eomheungdo: {
         id: "eomheungdo",
@@ -130,7 +135,8 @@ export const scenarios_joseon = {
         role: "마지막 충성",
         desc: "임금을 버린 세상에서, 나만이라도 그분의 수의가 되어드리고 싶었다.",
         stats: { money: "장례물품", stamina: "기력", mental: "애민심", stress: "반역의 공포" },
-        landMsg: "차가운 강물에서 울리는 비명... 당신은 끝내 임금을 외면하지 못합니다."
+        landMsg: "차가운 강물에서 울리는 비명... 당신은 끝내 임금을 외면하지 못합니다.",
+        clueCount: 6
       },
       virtual: {
         id: "virtual",
@@ -139,7 +145,8 @@ export const scenarios_joseon = {
         desc: "만약 단종이 그날 밤 청령포에서 구출되어, 이름 없는 한 사람으로 행복하게 살다 죽었다면...",
         stats: { money: "생활비", stamina: "생명력", mental: "행복도", stress: "기나긴 꿈" },
         landMsg: "역사라는 이름의 감옥이 열리고, 새로운 시간이 흐르기 시작합니다.",
-        isHidden: true
+        isHidden: true,
+        clueCount: 6
       }
     },
 

@@ -394,7 +394,12 @@ export class LibraryUI {
     // 단서 합산 (신문 단서 + 조사/스토리 단서)
     const npClueCount    = (np.clues || []).length;
     const choiceClueCount = (np.choices || []).filter(ch => ch.clue).length;
-    const storyClueCount  = np.storyClueCount || (np.isGeneric === false ? 6 : 0);
+    let storyClueCount  = 0;
+    if (np.isMultiPOV && this._currentPOV && np.povs[this._currentPOV]) {
+      storyClueCount = np.povs[this._currentPOV].clueCount || 6;
+    } else {
+      storyClueCount = np.storyClueCount || (np.isGeneric === false ? 6 : 0);
+    }
 
     this.engine.state.totalClues = npClueCount + choiceClueCount + storyClueCount;
     this._npCluesFound = [];
