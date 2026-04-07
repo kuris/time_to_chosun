@@ -11,23 +11,15 @@ export class ThemeManager {
 
   init() {
     this.applyTheme();
-    
-    // 전역 토글 함수 바인딩
-    window.toggleTheme = () => this.toggle();
+    // Expose explicit setter
+    window.setTheme = (name) => this.setTheme(name);
   }
 
-  toggle() {
-    if (this.theme === 'dark') this.theme = 'joseon';
-    else if (this.theme === 'joseon') this.theme = 'sepia';
-    else this.theme = 'dark';
-
+  setTheme(name) {
+    this.theme = name;
     localStorage.setItem('app-theme', this.theme);
     this.applyTheme();
-    
-    // 오디오 매니저가 있다면 클릭 효과음 재생
-    if (window.audio) {
-      window.audio.play('click');
-    }
+    if (window.audio) window.audio.play('click');
   }
 
   applyTheme() {
@@ -43,20 +35,8 @@ export class ThemeManager {
   }
 
   updateToggleButtons() {
-    const btns = document.querySelectorAll('.btn-theme-toggle');
-    let icon = '🌙';
-    let text = ' 다크 모드로';
-
-    if (this.theme === 'dark') {
-      icon = '🏮';
-      text = ' 조선 테마로';
-    } else if (this.theme === 'joseon') {
-      icon = '📜';
-      text = ' 세피아 모드로';
-    }
-    
-    btns.forEach(btn => {
-      btn.innerHTML = `<span>${icon}</span>${text}`;
-    });
+    // Update explicit buttons if present
+    document.querySelectorAll('.theme-controls .font-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tbtn-' + this.theme).forEach(btn => btn.classList.add('active'));
   }
 }

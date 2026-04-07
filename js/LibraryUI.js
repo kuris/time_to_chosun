@@ -178,6 +178,9 @@ export class LibraryUI {
     this._currentRecordKey = key; // 내부 추적용 전역 변수 (통일)
     this._npCluesFound = [];
 
+    const shelfPointer = document.getElementById('tutorial-shelf-pointer');
+    if (shelfPointer) shelfPointer.style.display = 'none';
+
     // UI 초기화 (수사 구역 숨김 및 헤더 설정)
     document.getElementById('field-notes-area').classList.remove('active');
     document.getElementById('game-stats').classList.remove('active');
@@ -703,6 +706,12 @@ export class LibraryUI {
 
   // 해결 목록 UI 업데이트
   updateSolvedUI() {
+    const pointer = document.getElementById('tutorial-shelf-pointer');
+    if (pointer) {
+      const hasSolvedAny = Object.keys(this.engine.state.solved || {}).length > 0;
+      pointer.style.display = hasSolvedAny ? 'none' : 'block';
+    }
+
     Object.keys(this.engine.state.solved || {}).forEach(key => {
       const record = this.engine.state.solved[key];
       const isSolved = typeof record === 'object' ? record.solved : !!record;
